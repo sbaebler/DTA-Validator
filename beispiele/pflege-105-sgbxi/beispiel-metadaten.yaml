@@ -1,0 +1,219 @@
+# Maschinenlesbare Beschreibung des Beispiel-Dateipaerchens TPLG0001 / TPLG0001.AUF
+#
+# Zweck: Erwartungswerte fuer Parser- und Regeltests, ohne die Beispieldateien
+# selbst parsen zu muessen. Feldkonventionen wie in knowledge-base/data/README.md:
+#   vertrauen: belegt | sekundaer | offen
+#
+# ACHTUNG: Die fachliche Struktur von PLGA/PLAA ist ERFUNDEN. Siehe README.md.
+
+schema_version: 1
+stand: 2026-08-31
+
+beispiel:
+  id: pflege-105-sgbxi-001
+  bezeichnung: Monatsabrechnung eines ambulanten Pflegedienstes, zwei Abrechnungsfaelle
+  verfahren: sgbxi-105
+  art: positivfall
+  vertrauen: offen
+  hinweis: >-
+    Transportrahmen an den belegten Vorgaben ausgerichtet, fachliche Segment- und
+    Feldstruktur von PLGA/PLAA erfunden. Nicht als Referenz fuer die Erzeugung
+    echter Abrechnungsdateien verwenden.
+  synthetisch: true
+  enthaelt_sozialdaten: false
+
+dateien:
+  nutzdaten:
+    name: TPLG0001
+    groesse_bytes: 1002
+    verschluesselt: false
+    hinweis: >-
+      Real waere dies der SECON-Umschlag (EnvelopedData ueber SignedData nach
+      Anlage 16 GGT). Hier liegt der entschluesselte Inhalt unter dem Dateinamen,
+      damit die Fixture ohne Schluesselmaterial nutzbar ist. Pruefstufe 2 ist mit
+      diesem Beispiel nicht testbar.
+    zeilenumbrueche: false
+    zeichensatz: ascii
+    zeichensatz_hinweis: >-
+      Umlaute und ss durchgaengig transliteriert. Der zulaessige Zeichensatz fuer
+      § 105 SGB XI ist nicht belegt; ASCII ist unter allen in Frage kommenden
+      Kodierungen byte-identisch.
+  auftragsdatei:
+    name: TPLG0001.AUF
+    groesse_bytes: 128
+    format: festsatz
+    satzlaenge_vertrauen: offen
+    satzlaenge_hinweis: >-
+      128 ist ein Platzhalter. Die echte Satzlaenge steht in Anlage 2 GGT und ist
+      nicht bekannt.
+
+dateiname:
+  wert: TPLG0001
+  test_echt: T
+  verfahrenskennung: PLG
+  verfahrenskennung_vertrauen: offen
+  verfahrenskennung_hinweis: Werteliste steht in Anlage 4 GGT, liegt nicht vor.
+  verfahrensversion: "0"
+  transfernummer: "001"
+
+beteiligte:
+  leistungserbringer:
+    name: Ambulanter Pflegedienst Sonnenhof GmbH
+    ik: "261099874"
+    strasse: Lindenweg 14
+    plz: "12345"
+    ort: Musterstadt
+  datenannahmestelle:
+    ik: "109999712"
+  kostentraeger:
+    bezeichnung: Pflegekasse
+    ik: "106999146"
+
+rechnung:
+  nummer: "2026070001"
+  datum: 2026-08-05
+  erstellungszeitpunkt: 2026-08-05T11:47:00
+  leistungszeitraum_von: 2026-07-01
+  leistungszeitraum_bis: 2026-07-31
+  waehrung: EUR
+  betrag_gesamt: 1671.00
+  zuzahlung: 0.00
+  eigenanteil: 0.00
+  zahlbetrag: 1671.00
+  umsatzsteuer:
+    satz_prozent: 0.00
+    befreit: true
+    grund: Pflegeleistungen nach SGB XI, § 4 Nr. 16 UStG
+
+abrechnungsfaelle:
+  - lfd_nr: "001"
+    versicherte:
+      name: Kerzenmacher
+      vorname: Hanna
+      geburtsdatum: 1948-03-12
+      kvnr: K741852967
+      pflegegrad: 3
+    positionen:
+      - {position: LK03, bezeichnung: Grosse Morgentoilette, menge: 20, einzelpreis: 24.50, betrag: 490.00}
+      - {position: LK15, bezeichnung: Hauswirtschaftliche Versorgung, menge: 8, einzelpreis: 18.20, betrag: 145.60}
+    summe: 635.60
+
+  - lfd_nr: "002"
+    versicherte:
+      name: Brinkmeier
+      vorname: Otto
+      geburtsdatum: 1939-11-27
+      kvnr: M305921844
+      pflegegrad: 4
+    positionen:
+      - {position: LK04, bezeichnung: Kleine Morgentoilette mit Lagern, menge: 31, einzelpreis: 28.90, betrag: 895.90}
+      - {position: LK31, bezeichnung: Wegepauschale, menge: 31, einzelpreis: 4.50, betrag: 139.50}
+    summe: 1035.40
+
+# Erwartungswerte fuer die Syntaxpruefung (Stufe 3)
+struktur:
+  trennzeichen:
+    komponente: ":"
+    datenelement: "+"
+    dezimal: "."
+    freigabe: "?"
+    reserviert: " "
+    segmentende: "'"
+    vertrauen: offen
+    hinweis: >-
+      EDIFACT-Defaults, uebernommen aus dem § 302-Beispiel der Wissensbibliothek.
+      Aus der Technischen Anlage zu verifizieren, insbesondere das Dezimalzeichen.
+  segmente_gesamt: 30            # ohne UNA
+  nachrichten: 3
+  datenaustauschreferenz: "00001"
+  nachrichten_details:
+    - {referenz: "00001", typ: PLGA, segmente: 8}
+    - {referenz: "00002", typ: PLAA, segmente: 10}
+    - {referenz: "00003", typ: PLAA, segmente: 10}
+  segmentfolge_plga: [FKT, REC, UST, SKO, GES, NAM]
+  segmentfolge_plaa: [FKT, REC, INV, NAD, ESK, EPL, EPL, GES]
+  segmentherkunft:
+    FKT: {herkunft: standardsegment, vertrauen: sekundaer}
+    REC: {herkunft: analog SLGA § 302, vertrauen: offen}
+    UST: {herkunft: analog SLGA § 302, vertrauen: offen}
+    SKO: {herkunft: analog SLGA § 302, vertrauen: offen}
+    GES: {herkunft: analog SLGA § 302, vertrauen: offen}
+    NAM: {herkunft: analog SLGA § 302, vertrauen: offen}
+    INV: {herkunft: standardsegment, vertrauen: sekundaer}
+    NAD: {herkunft: standardsegment, vertrauen: sekundaer}
+    ESK: {herkunft: analog SLLA § 302 (Einsatzkopfsegment), vertrauen: offen}
+    EPL: {herkunft: frei erfunden, vertrauen: offen}
+
+# Das Test-/Echt-Kennzeichen ist dreifach kodiert - Grundlage fuer eine
+# verfahrensuebergreifende Konsistenzpruefung.
+kreuzpruefungen:
+  test_echt:
+    dateiname_stelle_1: T
+    auftragssatz_position_25: T
+    unb_element_0035: "1"
+  absender_ik:
+    auftragssatz: "261099874"
+    nutzdaten_fkt: "261099874"
+  rechnungsbezug:
+    plga_rec: "2026070001:20260805"
+    plaa_rec: "2026070001:20260805"
+
+# Regeln aus knowledge-base/50-anforderungen/02-validierungsregeln.md, die dieses
+# Beispiel erfuellt. Eine korrekte Implementierung meldet hier keinen Befund.
+erfuellte_regeln:
+  - S0-ALL-001
+  - S0-ALL-002
+  - S0-ALL-003
+  - S0-ALL-004
+  - S0-ALL-007
+  - S1-ALL-004
+  - S1-ALL-005
+  - S1-ALL-007
+  - S1-ALL-008
+  - S3-ALL-001
+  - S3-ALL-002
+  - S3-ALL-003
+  - S3-ALL-004
+  - S3-ALL-005
+  - S3-ALL-006
+  - S3-XI-001
+  - S4-ALL-001
+  - S4-ALL-002
+  - S4-ALL-003
+  - S5-ALL-001
+  - S6-ALL-001
+  - S6-ALL-002
+
+nicht_abgedeckt:
+  - regeln: [S2-ALL-001, S2-ALL-002, S2-ALL-003, S2-ALL-004, S2-ALL-005, S2-ALL-006,
+             S2-ALL-007, S2-ALL-008, S2-ALL-009, S2-ALL-010, S2-ALL-011, S2-ALL-012,
+             S2-ALL-013, S2-ALL-014]
+    grund: Nutzdaten liegen im Klartext vor, kein SECON-Umschlag.
+  - regeln: [S1-ALL-001, S1-ALL-002, S1-ALL-003, S1-ALL-009]
+    grund: Auftragssatz-Layout und Verfahrenskennung sind erfunden.
+  - regeln: [S0-ALL-005, S0-ALL-006]
+    grund: Werteliste der Verfahrenskennungen aus Anlage 4 GGT liegt nicht vor.
+  - regeln: [S1-ALL-006, S4-302-002, S4-302-003]
+    grund: Kostentraegerdatei und Positionsnummernverzeichnisse liegen nicht vor.
+
+pruefziffern:
+  ik:
+    verfahren: Modulo 10 ueber die Stellen 3-8, Gewichte 2-1-2-1-2-1 von links
+    quelle: knowledge-base/40-stammdaten/01-institutionskennzeichen.md
+    vertrauen: sekundaer
+    werte:
+      - {ik: "261099874", kern: "109987", pruefziffer: 4}
+      - {ik: "109999712", kern: "999971", pruefziffer: 2}
+      - {ik: "106999146", kern: "699914", pruefziffer: 6}
+  kvnr:
+    verfahren: >-
+      Buchstabe als zweistellige Zahl (A=01 ... Z=26), Modulo 10 mit Gewichtung
+      1-2-1-2 ueber alle zehn Ziffern
+    quelle: knowledge-base/40-stammdaten/02-krankenversichertennummer.md
+    vertrauen: offen
+    hinweis: >-
+      Der Umgang mit dem fuehrenden Buchstaben ist unbelegt. Aendert die
+      KVNR-Richtlinie V3.4.0 diese Annahme, sind beide KVNR neu zu rechnen.
+    werte:
+      - {kvnr: K741852967, kern: "1174185296", pruefziffer: 7}
+      - {kvnr: M305921844, kern: "1330592184", pruefziffer: 4}

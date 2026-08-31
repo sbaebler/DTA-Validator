@@ -26,6 +26,21 @@ Die vollständigen Anforderungen liegen unter **[`knowledge-base/`](knowledge-ba
 | [Projekt](knowledge-base/60-projekt/01-projekt-scope-und-architektur.md) | Scope, Architekturskizze, Roadmap, offene Punkte |
 | [Referenzdaten](knowledge-base/data/) | Maschinenlesbare YAML-Fassung |
 
+## Beispieldateien
+
+Unter **[`beispiele/`](beispiele/)** liegen synthetische DTA-Dateipärchen als Fixtures für
+Parser- und Regelentwicklung.
+
+| Beispiel | Verfahren | Inhalt |
+|---|---|---|
+| [Pflege](beispiele/pflege-105-sgbxi/) | § 105 SGB XI (PLGA/PLAA) | Monatsabrechnung eines ambulanten Pflegedienstes, 2 Abrechnungsfälle |
+
+Alle Daten sind erfunden. Der Transportrahmen (Dateinamen, Dateipärchen, EDIFACT-Rahmen,
+Prüfziffern) folgt den belegten Vorgaben der Wissensbibliothek; die fachliche Segment- und
+Feldstruktur ist mangels Technischer Anlage **erfunden** und in den jeweiligen READMEs
+feldweise als solche gekennzeichnet. Als Vorlage für die Erzeugung echter
+Abrechnungsdateien sind sie deshalb nicht geeignet.
+
 ## Warum
 
 § 303 SGB V verpflichtet die Krankenkassen, bei nicht maschinell verwertbarer Übermittlung
