@@ -19,6 +19,7 @@ Die vollständigen Anforderungen liegen unter **[`knowledge-base/`](knowledge-ba
 | [Rechtsgrundlagen](knowledge-base/10-rechtsgrundlagen/01-gesetzliche-grundlagen.md) | §§ 294–303 SGB V, § 105 SGB XI, § 95 SGB IV, Fristen |
 | [Verfahren](knowledge-base/20-verfahren/00-verfahrensuebersicht.md) | §§ 300, 301, 301a, 302 SGB V, § 105 SGB XI und weitere |
 | [Technik](knowledge-base/30-technik/01-ggt-und-anlagen.md) | GGT, KKS, Auftragsdatei, EDIFACT, Transportwege, SECON |
+| [Mindmap Technik](knowledge-base/30-technik/06-mindmap-technische-anforderungen.md) | Alle technischen Anforderungen an eine DTA-Datei auf einer Seite |
 | [Stammdaten](knowledge-base/40-stammdaten/01-institutionskennzeichen.md) | IK, KVNR, Kostenträgerdateien, Schlüsselverzeichnisse |
 | [Anforderungskatalog](knowledge-base/50-anforderungen/01-anforderungskatalog.md) | Nummerierte Requirements (REQ-*) |
 | [Validierungsregeln](knowledge-base/50-anforderungen/02-validierungsregeln.md) | 7-stufiges Prüfmodell mit Regelkatalog |
