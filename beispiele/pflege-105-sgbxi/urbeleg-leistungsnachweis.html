@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leistungsnachweis Juli 2026 – Beispiel</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin:0; background:#e9e9ea; color:#111;
+         font:11px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .beleg { background:#fff; width:277mm; min-height:190mm; box-sizing:border-box;
+           padding:12mm 12mm 10mm; margin:8mm auto; box-shadow:0 1px 4px rgba(0,0,0,.18); }
+  .band { background:#3a3a3c; color:#fff; text-align:center; letter-spacing:.14em;
+          font-size:9px; font-weight:700; padding:4px; margin:-12mm -12mm 8mm; }
+  header { display:flex; justify-content:space-between; align-items:flex-start;
+           border-bottom:2px solid #111; padding-bottom:6px; margin-bottom:10px; }
+  .le { font-size:10px; line-height:1.5; }
+  .titel { text-align:right; }
+  h1 { font-size:19px; margin:0; letter-spacing:.02em; }
+  .sub { font-size:10px; color:#555; }
+  .monat { margin-top:4px; font-size:11px; }
+  h2 { font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:#444;
+       margin:12px 0 4px; }
+  table { border-collapse:collapse; width:100%; }
+  .stamm th, .stamm td { border:1px solid #bbb; padding:3px 5px; text-align:left;
+                         font-size:10px; }
+  .stamm th { background:#f2f2f3; font-weight:600; width:15%; white-space:nowrap; }
+  .scroll { overflow-x:auto; }
+  .grid th, .grid td { border:1px solid #c4c4c6; text-align:center; font-size:8.5px;
+                       padding:2px 0; }
+  .grid th { background:#f2f2f3; font-weight:600; line-height:1.2; }
+  .grid td.lk, .grid th.lk { width:34px; font-weight:600; }
+  .grid td.bez, .grid th.bez { width:150px; text-align:left; padding-left:5px;
+                               white-space:nowrap; }
+  .grid td.anz, .grid th.anz { width:30px; font-weight:700; background:#f2f2f3; }
+  .grid .we { background:#ececed; }
+  .grid td.hz { font-weight:700; font-size:8px; }
+  .grid td.abw { color:#999; }
+  .legende { font-size:9px; color:#666; margin:4px 0 0; }
+  .zus th, .zus td { border:1px solid #bbb; padding:3px 6px; text-align:left;
+                     font-size:10px; }
+  .zus th { background:#f2f2f3; font-weight:600; }
+  .zus .r { text-align:right; }
+  .zus tfoot td { font-weight:700; background:#f2f2f3; }
+  .ust, .bem { font-size:9.5px; color:#555; margin:5px 0 0; }
+  .unterschriften { display:flex; gap:30px; margin-top:22px; font-size:9px; color:#555; }
+  .unterschriften > div { flex:1; }
+  .linie { border-top:1px solid #111; margin-bottom:3px; height:26px; }
+  footer { margin-top:12px; padding-top:5px; border-top:1px solid #ddd;
+           font-size:8.5px; color:#888; }
+  @media print {
+    body { background:#fff; }
+    .beleg { width:auto; margin:0; box-shadow:none; padding:0;
+             page-break-after:always; }
+    .beleg:last-of-type { page-break-after:auto; }
+    .band { margin:0 0 6mm; }
+    @page { size:A4 landscape; margin:12mm; }
+  }
+</style>
+</head>
+<body>
+
+<section class="beleg">
+  <div class="band">BEISPIEL — SYNTHETISCHE TESTDATEN — KEIN RECHTSDOKUMENT</div>
+
+  <header>
+    <div class="le">
+      <strong>Ambulanter Pflegedienst Sonnenhof GmbH</strong><br>
+      Lindenweg 14 · 12345 Musterstadt<br>
+      IK 261099874 · Tel. 01234 567-0
+    </div>
+    <div class="titel">
+      <h1>Leistungsnachweis</h1>
+      <div class="sub">Ambulante Pflege nach SGB XI</div>
+      <div class="monat">Abrechnungsmonat <strong>Juli 2026</strong></div>
+    </div>
+  </header>
+
+  <table class="stamm">
+    <tr>
+      <th>Pflegebedürftige/r</th><td>Kerzenmacher, Hanna</td>
+      <th>Geburtsdatum</th><td>12.03.1948</td>
+    </tr>
+    <tr>
+      <th>Anschrift</th><td>Rosenweg 3, 12345 Musterstadt</td>
+      <th>Pflegegrad</th><td><strong>3</strong></td>
+    </tr>
+    <tr>
+      <th>Pflegekasse</th><td>Pflegekasse bei der Muster BKK · IK 106999146</td>
+      <th>Versichertennummer</th><td>K741852967</td>
+    </tr>
+    <tr>
+      <th>Rechnung</th><td>Nr. 2026070001 vom 05.08.2026</td>
+      <th>Abrechnungsfall</th><td>lfd. Nr. 001</td>
+    </tr>
+  </table>
+
+  <h2>Einsatznachweis</h2>
+  <div class="scroll">
+  <table class="grid">
+    <thead><tr><th class="lk">LK</th><th class="bez">Leistungskomplex</th><th class="">Mi<br>1</th><th class="">Do<br>2</th><th class="">Fr<br>3</th><th class="we">Sa<br>4</th><th class="we">So<br>5</th><th class="">Mo<br>6</th><th class="">Di<br>7</th><th class="">Mi<br>8</th><th class="">Do<br>9</th><th class="">Fr<br>10</th><th class="we">Sa<br>11</th><th class="we">So<br>12</th><th class="">Mo<br>13</th><th class="">Di<br>14</th><th class="">Mi<br>15</th><th class="">Do<br>16</th><th class="">Fr<br>17</th><th class="we">Sa<br>18</th><th class="we">So<br>19</th><th class="">Mo<br>20</th><th class="">Di<br>21</th><th class="">Mi<br>22</th><th class="">Do<br>23</th><th class="">Fr<br>24</th><th class="we">Sa<br>25</th><th class="we">So<br>26</th><th class="">Mo<br>27</th><th class="">Di<br>28</th><th class="">Mi<br>29</th><th class="">Do<br>30</th><th class="">Fr<br>31</th>
+    <th class="anz">Anz.</th></tr></thead>
+    <tbody><tr><td class="lk">LK03</td><td class="bez">Große Morgentoilette</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="we"></td><td class="we"></td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="we"></td><td class="we"></td><td class="abw ">–</td><td class="abw ">–</td><td class="abw ">–</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="we"></td><td class="we"></td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="we"></td><td class="we"></td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="hz ">MB</td><td class="anz">20</td></tr><tr><td class="lk">LK15</td><td class="bez">Hauswirtschaftliche Versorgung</td><td class=""></td><td class=""></td><td class="hz ">TK</td><td class="we"></td><td class="we"></td><td class=""></td><td class="hz ">TK</td><td class=""></td><td class=""></td><td class="hz ">TK</td><td class="we"></td><td class="we"></td><td class="abw ">–</td><td class="abw ">–</td><td class="abw ">–</td><td class=""></td><td class="hz ">TK</td><td class="we"></td><td class="we"></td><td class=""></td><td class="hz ">TK</td><td class=""></td><td class=""></td><td class="hz ">TK</td><td class="we"></td><td class="we"></td><td class=""></td><td class="hz ">TK</td><td class=""></td><td class=""></td><td class="hz ">TK</td><td class="anz">8</td></tr></tbody>
+  </table>
+  </div>
+  <p class="legende">
+    Eintrag = Handzeichen der Pflegekraft (MB, TK) · „–" = keine Leistungserbringung ·
+    graue Spalten = Samstag/Sonntag
+  </p>
+
+  <h2>Zusammenstellung</h2>
+  <table class="zus">
+    <thead><tr><th>Pos.</th><th>Leistungskomplex</th><th class="r">Anzahl</th>
+    <th class="r">Einzelpreis</th><th class="r">Betrag</th></tr></thead>
+    <tbody><tr><td>LK03</td><td>Große Morgentoilette</td><td class="r">20</td><td class="r">24,50</td><td class="r">490,00</td></tr><tr><td>LK15</td><td>Hauswirtschaftliche Versorgung</td><td class="r">8</td><td class="r">18,20</td><td class="r">145,60</td></tr></tbody>
+    <tfoot><tr><td colspan="4">Summe Abrechnungsfall 001</td>
+    <td class="r">635,60 EUR</td></tr></tfoot>
+  </table>
+  <p class="ust">Umsatzsteuerfrei nach § 4 Nr. 16 UStG. Leistungen im Rahmen der
+  Pflegesachleistung nach § 36 SGB XI; ein Eigenanteil entsteht nicht, der monatliche
+  Sachleistungsbetrag des Pflegegrades 3 wird nicht überschritten.</p>
+
+  <h2>Bemerkungen</h2>
+  <p class="bem">13.07.–15.07.2026 stationärer Krankenhausaufenthalt, keine Leistungserbringung (3 Werktage).</p>
+
+  <div class="unterschriften">
+    <div><div class="linie"></div>Datum, Unterschrift Pflegebedürftige/r
+      oder Bevollmächtigte/r</div>
+    <div><div class="linie"></div>Datum, Unterschrift und Stempel Pflegedienst</div>
+  </div>
+
+  <footer>Leistungsnachweis zur elektronischen Abrechnung nach § 105 SGB XI ·
+  Datei TPLG0001 · Nachricht PLAA, Abrechnungsfall 001</footer>
+</section>
+<section class="beleg">
+  <div class="band">BEISPIEL — SYNTHETISCHE TESTDATEN — KEIN RECHTSDOKUMENT</div>
+
+  <header>
+    <div class="le">
+      <strong>Ambulanter Pflegedienst Sonnenhof GmbH</strong><br>
+      Lindenweg 14 · 12345 Musterstadt<br>
+      IK 261099874 · Tel. 01234 567-0
+    </div>
+    <div class="titel">
+      <h1>Leistungsnachweis</h1>
+      <div class="sub">Ambulante Pflege nach SGB XI</div>
+      <div class="monat">Abrechnungsmonat <strong>Juli 2026</strong></div>
+    </div>
+  </header>
+
+  <table class="stamm">
+    <tr>
+      <th>Pflegebedürftige/r</th><td>Brinkmeier, Otto</td>
+      <th>Geburtsdatum</th><td>27.11.1939</td>
+    </tr>
+    <tr>
+      <th>Anschrift</th><td>Ahornstraße 27, 12345 Musterstadt</td>
+      <th>Pflegegrad</th><td><strong>4</strong></td>
+    </tr>
+    <tr>
+      <th>Pflegekasse</th><td>Pflegekasse bei der Muster BKK · IK 106999146</td>
+      <th>Versichertennummer</th><td>M305921844</td>
+    </tr>
+    <tr>
+      <th>Rechnung</th><td>Nr. 2026070001 vom 05.08.2026</td>
+      <th>Abrechnungsfall</th><td>lfd. Nr. 002</td>
+    </tr>
+  </table>
+
+  <h2>Einsatznachweis</h2>
+  <div class="scroll">
+  <table class="grid">
+    <thead><tr><th class="lk">LK</th><th class="bez">Leistungskomplex</th><th class="">Mi<br>1</th><th class="">Do<br>2</th><th class="">Fr<br>3</th><th class="we">Sa<br>4</th><th class="we">So<br>5</th><th class="">Mo<br>6</th><th class="">Di<br>7</th><th class="">Mi<br>8</th><th class="">Do<br>9</th><th class="">Fr<br>10</th><th class="we">Sa<br>11</th><th class="we">So<br>12</th><th class="">Mo<br>13</th><th class="">Di<br>14</th><th class="">Mi<br>15</th><th class="">Do<br>16</th><th class="">Fr<br>17</th><th class="we">Sa<br>18</th><th class="we">So<br>19</th><th class="">Mo<br>20</th><th class="">Di<br>21</th><th class="">Mi<br>22</th><th class="">Do<br>23</th><th class="">Fr<br>24</th><th class="we">Sa<br>25</th><th class="we">So<br>26</th><th class="">Mo<br>27</th><th class="">Di<br>28</th><th class="">Mi<br>29</th><th class="">Do<br>30</th><th class="">Fr<br>31</th>
+    <th class="anz">Anz.</th></tr></thead>
+    <tbody><tr><td class="lk">LK04</td><td class="bez">Kleine Morgentoilette mit Lagern</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="anz">31</td></tr><tr><td class="lk">LK31</td><td class="bez">Wegepauschale</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz we">SR</td><td class="hz we">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="hz ">SR</td><td class="anz">31</td></tr></tbody>
+  </table>
+  </div>
+  <p class="legende">
+    Eintrag = Handzeichen der Pflegekraft (SR) · „–" = keine Leistungserbringung ·
+    graue Spalten = Samstag/Sonntag
+  </p>
+
+  <h2>Zusammenstellung</h2>
+  <table class="zus">
+    <thead><tr><th>Pos.</th><th>Leistungskomplex</th><th class="r">Anzahl</th>
+    <th class="r">Einzelpreis</th><th class="r">Betrag</th></tr></thead>
+    <tbody><tr><td>LK04</td><td>Kleine Morgentoilette mit Lagern</td><td class="r">31</td><td class="r">28,90</td><td class="r">895,90</td></tr><tr><td>LK31</td><td>Wegepauschale</td><td class="r">31</td><td class="r">4,50</td><td class="r">139,50</td></tr></tbody>
+    <tfoot><tr><td colspan="4">Summe Abrechnungsfall 002</td>
+    <td class="r">1.035,40 EUR</td></tr></tfoot>
+  </table>
+  <p class="ust">Umsatzsteuerfrei nach § 4 Nr. 16 UStG. Leistungen im Rahmen der
+  Pflegesachleistung nach § 36 SGB XI; ein Eigenanteil entsteht nicht, der monatliche
+  Sachleistungsbetrag des Pflegegrades 4 wird nicht überschritten.</p>
+
+  <h2>Bemerkungen</h2>
+  <p class="bem">Tägliche Versorgung einschließlich Wochenende und Feiertage.</p>
+
+  <div class="unterschriften">
+    <div><div class="linie"></div>Datum, Unterschrift Pflegebedürftige/r
+      oder Bevollmächtigte/r</div>
+    <div><div class="linie"></div>Datum, Unterschrift und Stempel Pflegedienst</div>
+  </div>
+
+  <footer>Leistungsnachweis zur elektronischen Abrechnung nach § 105 SGB XI ·
+  Datei TPLG0001 · Nachricht PLAA, Abrechnungsfall 002</footer>
+</section>
+</body>
+</html>
