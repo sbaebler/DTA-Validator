@@ -38,6 +38,7 @@ entwickeln, auch wenn die Feldsemantik noch geraten ist.
 | `<DATEINAME>.AUF` | Auftragsdatei |
 | `urbeleg-leistungsnachweis.html` | Urbeleg: der vom Versicherten unterschriebene Leistungsnachweis, druckbar |
 | `urbeleg-begleitzettel.html` | Deckblatt der Papiersendung an die Belegannahmestelle |
+| `urbeleg-*.pdf` | dieselben Belege als PDF, aus dem HTML gedruckt |
 | `beispiel-metadaten.yaml` | Erwartungswerte maschinenlesbar: Beteiligte, Summen, Zähler, erfüllte Regel-IDs |
 
 `beispiel-metadaten.yaml` folgt den Feldkonventionen aus
