@@ -1,0 +1,65 @@
+# Nachrichtentypen je Verfahren
+# vertrauen: belegt | sekundaer | offen
+
+schema_version: 1
+stand: 2026-08-31
+
+nachrichtentypen:
+
+  sgbv-302:
+    - kennung: SLGA
+      bezeichnung: Gesamtaufstellung der Abrechnung
+      richtung: le_to_kk
+      segmente_belegt: [FKT, REC, UST, SKO, GES, NAM]
+      vertrauen: sekundaer
+    - kennung: SLLA
+      bezeichnung: Abrechnungsdaten / Leistungsabrechnung
+      richtung: le_to_kk
+      segmente_genannt: [ESK, EHE, EHK, ERI, ERL, ERZ, ZUS]
+      vertrauen: offen
+      hinweis: >-
+        Segmentliste aus Suchtreffern zusammengetragen, nicht verifiziert.
+        Belegt ist nur ESK als Einsatzkopfsegment. Sub-Nachrichtentypen je
+        Leistungsbereich (Hilfsmittel, Heilmittel, HKP, Haushaltshilfe,
+        Krankentransport) sind nicht belegt.
+
+  sgbxi-105:
+    - kennung: PLGA
+      bezeichnung: Gesamtaufstellung der Abrechnung
+      richtung: le_to_pk
+      vertrauen: sekundaer
+    - kennung: PLAA
+      bezeichnung: Abrechnungsdaten
+      richtung: le_to_pk
+      vertrauen: sekundaer
+
+  sgbv-301:
+    - {kennung: AUFN, bezeichnung: Aufnahmeanzeige stationaere Behandlung, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: VERL, bezeichnung: Verlaengerungsanzeige stationaere Behandlung, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: MBEG, bezeichnung: Medizinische Begruendung, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: ENTL, bezeichnung: Entlassungsanzeige, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: RECH, bezeichnung: Rechnungssatz stationaer/teilstationaer, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: AMBO, bezeichnung: Rechnungssatz ambulantes Operieren, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: ZGUT, bezeichnung: Zuzahlungsgutschrift, richtung: kh_to_kk, vertrauen: sekundaer}
+    - {kennung: KOUB, bezeichnung: Kostenuebernahme, richtung: kk_to_kh, vertrauen: sekundaer}
+    - {kennung: ANFM, bezeichnung: Anforderung medizinische Begruendung, richtung: kk_to_kh, vertrauen: sekundaer}
+    - {kennung: ZAHL, bezeichnung: Zahlungssatz (Bestaetigung/Ablehnung RECH), richtung: kk_to_kh, vertrauen: sekundaer}
+    - {kennung: ZAAO, bezeichnung: Zahlungssatz ambulantes Operieren (zu AMBO), richtung: kk_to_kh, vertrauen: sekundaer}
+    - {kennung: SAMU, bezeichnung: Sammelrechnung/Sammelueberweisung, richtung: kk_to_kh, vertrauen: sekundaer}
+    - {kennung: FEHL, bezeichnung: Fehlernachricht, richtung: kk_to_kh, vertrauen: sekundaer}
+
+# Verfahrensuebergreifend genannte Standardsegmente (Quelle: SAP-Dokumentation)
+standardsegmente:
+  - {kennung: FKT, bezeichnung: Funktion, vertrauen: sekundaer}
+  - {kennung: INV, bezeichnung: Information des Versicherten, vertrauen: sekundaer}
+  - {kennung: NAD, bezeichnung: Name und Adresse, vertrauen: sekundaer}
+  - {kennung: CUX, bezeichnung: Waehrung, vertrauen: sekundaer}
+  - {kennung: DPV, bezeichnung: nicht belegt, vertrauen: offen}
+
+# EDIFACT-Servicesegmente
+servicesegmente:
+  - {kennung: UNA, bezeichnung: Service String Advice - sechs Trennzeichen, vertrauen: sekundaer}
+  - {kennung: UNB, bezeichnung: Kopfsegment der Nutzdatendatei, vertrauen: sekundaer}
+  - {kennung: UNH, bezeichnung: Nachrichtenkopf, vertrauen: offen}
+  - {kennung: UNT, bezeichnung: Nachrichtenende, vertrauen: offen}
+  - {kennung: UNZ, bezeichnung: Endesegment der Datei, vertrauen: sekundaer}
