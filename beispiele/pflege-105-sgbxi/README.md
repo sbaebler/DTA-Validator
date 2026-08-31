@@ -87,6 +87,8 @@ aus dem jeweiligen Landesrahmenvertrag nach § 75 SGB XI.
 | [`TPLG0001.AUF`](TPLG0001.AUF) | Auftragsdatei, Klartext, Festsatzformat | 128 Bytes |
 | [`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) | Urbeleg: Leistungsnachweise beider Abrechnungsfälle, druckbar | 2 Seiten |
 | [`urbeleg-begleitzettel.html`](urbeleg-begleitzettel.html) | Begleitzettel für die Urbelege an die Belegannahmestelle | 1 Seite |
+| [`urbeleg-leistungsnachweis.pdf`](urbeleg-leistungsnachweis.pdf) | dasselbe als PDF, A4 quer | 2 Seiten |
+| [`urbeleg-begleitzettel.pdf`](urbeleg-begleitzettel.pdf) | dasselbe als PDF, A4 hoch | 1 Seite |
 
 ### Dateiname
 
@@ -440,6 +442,25 @@ Anders als die übrigen Dateien ist der Begleitzettel **aus
 [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) generiert**, nicht von Hand
 geschrieben. Beteiligte, Rechnungsdaten, Fallliste und Summe stammen aus der YAML —
 damit kann er nicht von der DTA-Datei abweichen.
+
+### PDF-Fassung
+
+Beide Belege liegen zusätzlich als PDF bei — das Format, in dem ein Urbeleg tatsächlich
+archiviert, gescannt oder über KIM versendet wird. Der Text ist durchsuchbar, nicht
+gerastert.
+
+Die PDFs sind aus den HTML-Dateien erzeugt, mit Chromium als Druckertreiber:
+
+```bash
+chromium --headless --print-to-pdf=urbeleg-begleitzettel.pdf \
+         --no-pdf-header-footer urbeleg-begleitzettel.html
+```
+
+Maßgeblich ist die HTML-Datei; ändert sie sich, ist das PDF neu zu erzeugen. Die
+Seitengröße kommt aus dem `@page`-Block des Dokuments (`A4 landscape` für den
+Leistungsnachweis, `A4 portrait` für den Begleitzettel), Hintergrundfarben müssen dabei
+mitgedruckt werden — ohne sie fehlen Warnband, Tabellenköpfe und die Markierung der
+Wochenendspalten.
 
 ### Belastbarkeit
 
