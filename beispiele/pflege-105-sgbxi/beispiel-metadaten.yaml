@@ -46,6 +46,18 @@ dateien:
     satzlaenge_hinweis: >-
       128 ist ein Platzhalter. Die echte Satzlaenge steht in Anlage 2 GGT und ist
       nicht bekannt.
+  urbeleg_begleitzettel:
+    name: urbeleg-begleitzettel.html
+    art: Begleitzettel fuer Urbelege
+    seiten: 1
+    vertrauen: offen
+    hinweis: >-
+      Aufbau erfunden. Fuer § 302 SGB V definiert Anlage 4 den Begleitzettel
+      (Q36, beschafft: false); fuer § 105 SGB XI ist kein entsprechendes Dokument
+      erfasst. Erzeugt aus dieser YAML, damit die Werte nicht von der DTA-Datei
+      abweichen koennen.
+    adressat: belegannahmestelle
+    verknuepfungsmerkmale: [rechnungsnummer, dateiname, transfernummer]
   urbeleg:
     name: urbeleg-leistungsnachweis.html
     art: Leistungsnachweis ambulante Pflege
@@ -80,8 +92,16 @@ beteiligte:
     ort: Musterstadt
   datenannahmestelle:
     ik: "109999712"
+  belegannahmestelle:
+    bezeichnung: Belegannahmestelle
+    ik: "108999630"
+    anschrift: Postfach 11 22, 12345 Musterstadt
+    hinweis: >-
+      Nimmt die Urbelege mit Begleitzettel entgegen. Eigenes IK, nicht identisch
+      mit Datenannahmestelle oder Kostentraeger - alle drei stehen getrennt in der
+      Kostentraegerdatei.
   kostentraeger:
-    bezeichnung: Pflegekasse
+    bezeichnung: Pflegekasse bei der Muster BKK
     ik: "106999146"
 
 rechnung:
@@ -245,6 +265,7 @@ pruefziffern:
       - {ik: "261099874", kern: "109987", pruefziffer: 4}
       - {ik: "109999712", kern: "999971", pruefziffer: 2}
       - {ik: "106999146", kern: "699914", pruefziffer: 6}
+      - {ik: "108999630", kern: "899963", pruefziffer: 0}
   kvnr:
     verfahren: >-
       Buchstabe als zweistellige Zahl (A=01 ... Z=26), Modulo 10 mit Gewichtung

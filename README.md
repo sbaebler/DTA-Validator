@@ -33,7 +33,7 @@ Parser- und Regelentwicklung.
 
 | Beispiel | Verfahren | Inhalt |
 |---|---|---|
-| [Pflege](beispiele/pflege-105-sgbxi/) | § 105 SGB XI (PLGA/PLAA) | Monatsabrechnung eines ambulanten Pflegedienstes, 2 Abrechnungsfälle |
+| [Pflege](beispiele/pflege-105-sgbxi/) | § 105 SGB XI (PLGA/PLAA) | Monatsabrechnung eines ambulanten Pflegedienstes, 2 Abrechnungsfälle, mit Urbelegen |
 
 Alle Daten sind erfunden. Der Transportrahmen (Dateinamen, Dateipärchen, EDIFACT-Rahmen,
 Prüfziffern) folgt den belegten Vorgaben der Wissensbibliothek; die fachliche Segment- und

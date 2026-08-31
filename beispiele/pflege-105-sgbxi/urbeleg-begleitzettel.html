@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Begleitzettel für Urbelege – Beispiel</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin:0; background:#e9e9ea; color:#111;
+         font:11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .beleg { background:#fff; width:190mm; min-height:277mm; box-sizing:border-box;
+           padding:12mm 14mm 10mm; margin:8mm auto; box-shadow:0 1px 4px rgba(0,0,0,.18); }
+  .band { background:#3a3a3c; color:#fff; text-align:center; letter-spacing:.14em;
+          font-size:9px; font-weight:700; padding:4px; margin:-12mm -14mm 8mm; }
+  header { display:flex; justify-content:space-between; align-items:flex-start;
+           border-bottom:2px solid #111; padding-bottom:6px; margin-bottom:12px; }
+  .le { font-size:10px; line-height:1.5; }
+  .titel { text-align:right; }
+  h1 { font-size:19px; margin:0; letter-spacing:.02em; }
+  .sub { font-size:10px; color:#555; }
+  .sendung { margin-top:5px; font-size:10px; }
+  .sendung .nr { font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+                 font-size:12px; font-weight:700; letter-spacing:.06em; }
+  .empfaenger { border:1px solid #bbb; padding:7px 9px; margin-bottom:12px;
+                background:#fafafa; font-size:10.5px; line-height:1.6; }
+  .empfaenger .an { font-size:9px; text-transform:uppercase; letter-spacing:.09em;
+                    color:#666; margin-bottom:2px; }
+  h2 { font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:#444;
+       margin:14px 0 5px; }
+  h2 .n { display:inline-block; width:15px; color:#888; }
+  table { border-collapse:collapse; width:100%; }
+  th, td { border:1px solid #bbb; padding:3.5px 6px; text-align:left; font-size:10px;
+           vertical-align:top; }
+  th { background:#f2f2f3; font-weight:600; }
+  .paare th { width:26%; white-space:nowrap; }
+  .c { text-align:center; } .r { text-align:right; }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .inhalt tfoot td { font-weight:700; background:#f2f2f3; }
+  .erklaerung { border:1px solid #bbb; padding:8px 10px; margin-top:6px;
+                font-size:10px; line-height:1.55; background:#fafafa; }
+  .unterschriften { display:flex; gap:30px; margin-top:26px; font-size:9px; color:#555; }
+  .unterschriften > div { flex:1; }
+  .linie { border-top:1px solid #111; margin-bottom:3px; height:28px; }
+  .hinweis { font-size:9px; color:#666; margin-top:10px; line-height:1.5; }
+  footer { margin-top:14px; padding-top:5px; border-top:1px solid #ddd;
+           font-size:8.5px; color:#888; }
+  @media print {
+    body { background:#fff; }
+    .beleg { width:auto; min-height:0; margin:0; box-shadow:none; padding:0; }
+    .band { margin:0 0 6mm; }
+    @page { size:A4 portrait; margin:14mm; }
+  }
+</style>
+</head>
+<body>
+<section class="beleg">
+  <div class="band">BEISPIEL — SYNTHETISCHE TESTDATEN — KEIN RECHTSDOKUMENT</div>
+
+  <header>
+    <div class="le">
+      <strong>Ambulanter Pflegedienst Sonnenhof GmbH</strong><br>
+      Lindenweg 14 · 12345 Musterstadt<br>
+      IK 261099874 · Tel. 01234 567-0
+    </div>
+    <div class="titel">
+      <h1>Begleitzettel für Urbelege</h1>
+      <div class="sub">Ambulante Pflege nach § 105 SGB XI</div>
+      <div class="sendung">Sendungsnummer <span class="nr">2026-07-0001</span></div>
+    </div>
+  </header>
+
+  <div class="empfaenger">
+    <div class="an">An die Belegannahmestelle</div>
+    <strong>Pflegekasse bei der Muster BKK</strong> · Belegannahmestelle<br>
+    IK 108999630 · Postfach 11 22, 12345 Musterstadt
+  </div>
+
+  <h2><span class="n">1</span> Bezug zur elektronischen Abrechnung</h2>
+  <table class="paare">
+    <tr><th>Rechnungsnummer</th><td class="mono">2026070001</td>
+        <th>Rechnungsdatum</th><td>05.08.2026</td></tr>
+    <tr><th>Abrechnungsmonat</th><td>Juli 2026</td>
+        <th>Leistungszeitraum</th>
+        <td>01.07.2026 – 31.07.2026</td></tr>
+    <tr><th>Nutzdatendatei</th><td class="mono">TPLG0001</td>
+        <th>Transfernummer</th><td class="mono">001</td></tr>
+    <tr><th>Datenannahmestelle</th><td>IK 109999712</td>
+        <th>Kostenträger</th><td>IK 106999146</td></tr>
+    <tr><th>Art der Übermittlung</th>
+        <td colspan="3">elektronisch nach § 105 SGB XI &nbsp;·&nbsp;
+        <strong>Testdaten</strong>
+        (Kennzeichen „T")</td></tr>
+    <tr><th>Rechnungsbetrag</th>
+        <td colspan="3"><strong>1.671,00 EUR</strong>
+        &nbsp;·&nbsp; umsatzsteuerfrei nach § 4 Nr. 16 UStG</td></tr>
+  </table>
+
+  <h2><span class="n">2</span> Inhalt dieser Sendung</h2>
+  <table class="inhalt">
+    <thead><tr>
+      <th class="c">Lfd.</th><th>Pflegebedürftige/r</th><th>Versichertennummer</th>
+      <th class="c">PG</th><th>Art des Urbelegs</th><th class="c">Blätter</th>
+      <th class="r">Betrag</th>
+    </tr></thead>
+    <tbody><tr>
+      <td class="c">001</td>
+      <td>Kerzenmacher, Hanna</td>
+      <td class="mono">K741852967</td>
+      <td class="c">3</td>
+      <td>Leistungsnachweis</td>
+      <td class="c">1</td>
+      <td class="r">635,60</td>
+    </tr><tr>
+      <td class="c">002</td>
+      <td>Brinkmeier, Otto</td>
+      <td class="mono">M305921844</td>
+      <td class="c">4</td>
+      <td>Leistungsnachweis</td>
+      <td class="c">1</td>
+      <td class="r">1.035,40</td>
+    </tr></tbody>
+    <tfoot><tr>
+      <td colspan="4">2 Abrechnungsfälle</td>
+      <td>Summe</td><td class="c">2</td>
+      <td class="r">1.671,00</td>
+    </tr></tfoot>
+  </table>
+
+  <h2><span class="n">3</span> Erklärung des Leistungserbringers</h2>
+  <div class="erklaerung">
+    Die vorstehend aufgeführten Urbelege sind dieser Sendung vollständig beigefügt.
+    Die abgerechneten Leistungen wurden erbracht und durch die Unterschrift der
+    Pflegebedürftigen bzw. ihrer Bevollmächtigten auf den Leistungsnachweisen
+    bestätigt. Die Angaben stimmen mit der elektronisch übermittelten Abrechnung
+    zur oben genannten Rechnungsnummer überein.
+  </div>
+
+  <div class="unterschriften">
+    <div><div class="linie"></div>Ort, Datum</div>
+    <div><div class="linie"></div>Unterschrift und Stempel Leistungserbringer</div>
+  </div>
+
+  <p class="hinweis">
+    <strong>Getrennte Wege:</strong> Die Abrechnungsdaten gehen verschlüsselt als
+    Dateipärchen an die <em>Datenannahmestelle</em> (IK 109999712), die Urbelege
+    mit diesem Begleitzettel an die <em>Belegannahmestelle</em> (IK 108999630). Beide Adressen
+    stehen in der Kostenträgerdatei und sind nicht zwingend identisch. Rechnungsnummer
+    und Dateiname sind die Merkmale, über die die Kasse Papier und Datei wieder
+    zusammenführt.
+  </p>
+
+  <footer>Begleitzettel zur elektronischen Abrechnung nach § 105 SGB XI ·
+  Datei TPLG0001 · Rechnung 2026070001 ·
+  2 Urbelege, 2 Blätter</footer>
+</section>
+</body>
+</html>

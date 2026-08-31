@@ -37,6 +37,7 @@ sind. IK sind neunstellige Zahlen aus einem endlichen Wertebereich — eine zuf�
 | **Leistungserbringer** | Ambulanter Pflegedienst Sonnenhof GmbH, Lindenweg 14, 12345 Musterstadt |
 | **IK Leistungserbringer** | `261099874` |
 | **Empfänger (Datenannahmestelle)** | `109999712` |
+| **Belegannahmestelle** | `108999630` |
 | **Kostenträger (Pflegekasse)** | `106999146` |
 | **Abrechnungszeitraum** | 01.07.2026 – 31.07.2026 |
 | **Rechnungsnummer / -datum** | `2026070001` / 05.08.2026 |
@@ -85,6 +86,7 @@ aus dem jeweiligen Landesrahmenvertrag nach § 75 SGB XI.
 | [`TPLG0001`](TPLG0001) | Nutzdaten (PLGA/PLAA), **Klartext** | 1002 Bytes |
 | [`TPLG0001.AUF`](TPLG0001.AUF) | Auftragsdatei, Klartext, Festsatzformat | 128 Bytes |
 | [`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) | Urbeleg: Leistungsnachweise beider Abrechnungsfälle, druckbar | 2 Seiten |
+| [`urbeleg-begleitzettel.html`](urbeleg-begleitzettel.html) | Begleitzettel für die Urbelege an die Belegannahmestelle | 1 Seite |
 
 ### Dateiname
 
@@ -381,6 +383,74 @@ Kodierungsbeschränkung, in der EDIFACT-Datei ist der zulässige Zeichensatz fü
 § 105 SGB XI unbelegt. Ein Validator darf einen Feldvergleich zwischen beiden Welten
 deshalb nicht zeichenweise führen, ohne die Transliteration zu berücksichtigen.
 
+## 5.7 Urbeleg — der Begleitzettel
+
+[`urbeleg-begleitzettel.html`](urbeleg-begleitzettel.html) ist das Deckblatt der
+Papiersendung: eine Seite A4 hoch, die den Stapel Leistungsnachweise an die
+Belegannahmestelle begleitet.
+
+### Wofür er da ist
+
+Die Abrechnung läuft über **zwei getrennte Wege**, die erst beim Kostenträger wieder
+zusammenfinden:
+
+```
+                          verschlüsseltes Dateipärchen
+  Pflegedienst  ─────────────────────────────────────►  Datenannahmestelle  109999712
+   261099874                TPLG0001 + .AUF                       │
+        │                                                         │
+        │             Urbelege + Begleitzettel                    ▼
+        └──────────────────────────────────────────►  Belegannahmestelle   108999630
+                          Papier, Briefpost                       │
+                                                                  ▼
+                                                       Kostenträger 106999146
+                                                       führt beides zusammen
+```
+
+Der Begleitzettel ist die **Klammer** zwischen beiden Wegen. Er trägt genau die
+Merkmale, über die sich Papier und Datei verbinden lassen: Rechnungsnummer, Dateiname
+und Transfernummer. Fehlt er, liegt ein Stapel unsortierter Belege bei der Kasse, dem
+niemand eine Rechnung zuordnen kann.
+
+Drei Rollen, drei verschiedene IK — Datenannahmestelle, Belegannahmestelle und
+Kostenträger sind in der Kostenträgerdatei getrennt geführt und **nicht zwingend
+dieselbe Stelle**. Das Beispiel besetzt sie deshalb mit drei unterschiedlichen,
+prüfziffernkorrekten IK, damit eine Implementierung die Rollen nicht versehentlich
+gleichsetzt.
+
+### Zwei Deckblätter, gegensätzliche Datenschutzregeln
+
+Der interessanteste Kontrast im ganzen Beispiel:
+
+| | Auftragsdatei `TPLG0001.AUF` | Begleitzettel |
+|---|---|---|
+| begleitet | die elektronische Datei | den Papierstapel |
+| geht an | Datenannahmestelle | Belegannahmestelle |
+| Sozialdaten | **verboten** (`S1-ALL-008`) | **enthalten** — Namen, KVNR, Pflegegrad |
+
+Beides sind Deckblätter, und die Regel ist genau umgekehrt. Der Grund liegt im
+Transportweg: Die Auftragsdatei wird **unverschlüsselt** übertragen, damit die
+Datenannahmestelle vor der Entschlüsselung routen kann — deshalb das Trennungsgebot.
+Der Begleitzettel liegt im verschlossenen Umschlag bei Belegen, die die Sozialdaten
+ohnehin enthalten.
+
+### Erzeugt aus den Metadaten
+
+Anders als die übrigen Dateien ist der Begleitzettel **aus
+[`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) generiert**, nicht von Hand
+geschrieben. Beteiligte, Rechnungsdaten, Fallliste und Summe stammen aus der YAML —
+damit kann er nicht von der DTA-Datei abweichen.
+
+### Belastbarkeit
+
+**Der Aufbau ist erfunden.** Die Wissensbibliothek führt für § 302 SGB V *Anlage 4 —
+Begleitzettel für Urbelege* mit Quelle und URL ✅ [Q36], aber mit `beschafft: false`;
+für § 105 SGB XI ist kein entsprechendes Dokument erfasst. Ein Beschaffungsversuch
+während der Erstellung scheiterte an der Netzwerk-Policy der Arbeitsumgebung — die
+URL steht im [Dokumentenregister](../../knowledge-base/data/dokumentenregister.yaml)
+und ist weiterhin abzurufen. Felder, Reihenfolge und Sendungsnummer sind an der Praxis
+orientiert, nicht an Anlage 4.
+
 ## 6. Was dieses Beispiel prüfbar macht
 
 Regel-IDs nach
@@ -417,6 +487,19 @@ für eine Implementierung.
 | `S6-ALL-001` | Leistungsdatum ≤ Rechnungsdatum | 31.07. ≤ 05.08. |
 | `S6-ALL-002` | Rechnungsdatum ≤ Erstellungsdatum | 05.08. = 05.08. |
 
+### Eine Falle, in die dieses Beispiel tappen lässt
+
+`S1-ALL-008` (keine Sozialdaten im Auftragssatz) verführt zu einer Umsetzung als
+Mustersuche über den ganzen Satz. Das schlägt fehl: Ein `^[A-Z][0-9]{9}$`-Muster findet
+im Auftragssatz zwei Treffer — `T261099874` (Stelle 25 Test-/Echt-Kennzeichen plus
+Stellen 26–34 Absender-IK) und `G000120260` (Ende des Dateinamens plus Anfang des
+Erstellungsdatums). Beides sind **Feldgrenzen**, keine Versichertennummern; echte
+Sozialdaten enthält der Satz nicht.
+
+Die Regel ist deshalb erst **nach dem Parsen** feldweise auszuwerten, nie als Regex über
+den Rohsatz. Bei einem positionsbasierten Festsatzformat ohne Trennzeichen erzeugt jede
+Feldgrenze Zeichenfolgen, die es als Wert nie gibt.
+
 Zusätzlich prüfbar, weil im Beispiel dreifach redundant kodiert: das
 **Test-/Echt-Kennzeichen** — Dateiname Stelle 1 (`T`), Auftragssatz Position 25 (`T`),
 UNB-Element 0035 (`1`). Die Wissensbibliothek führt diese Konsistenzprüfung als
@@ -433,6 +516,7 @@ Positionsnummernverzeichnis voraussetzen (`S1-ALL-006`, `S4-302-002/003`).
 | IK `261099874` | Stellen 3–8 = `109987` | `4` |
 | IK `109999712` | Stellen 3–8 = `999971` | `2` |
 | IK `106999146` | Stellen 3–8 = `699914` | `6` |
+| IK `108999630` | Stellen 3–8 = `899963` | `0` |
 | KVNR `K741852967` | `11` + `74185296` | `7` |
 | KVNR `M305921844` | `13` + `30592184` | `4` |
 
@@ -467,8 +551,9 @@ Reihenfolge der Korrekturen an diesem Beispiel, nach Hebelwirkung sortiert:
 6. **Auftragssatz-Layout** aus Anlage 2 GGT ersetzen (ersetzt Abschnitt 4 vollständig,
    inklusive der Satzlänge).
 7. **Verarbeitungskennzeichen** aus dem Schlüsselverzeichnis bestätigen (`01`).
-8. **Urbeleg** gegen die Vorgaben zum Leistungsnachweis nach § 105 SGB XI prüfen und
-   den Begleitzettel für Urbelege ergänzen.
+8. **Urbelege** — Leistungsnachweis und Begleitzettel — gegen die Vorgaben für
+   § 105 SGB XI prüfen; als nächstliegende Referenz Anlage 4 zu § 302 SGB V beschaffen
+   ([Q36], im Dokumentenregister als `beschafft: false` geführt).
 9. `vertrauen`-Felder in [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) anheben.
 
 Beschaffungsstand siehe
