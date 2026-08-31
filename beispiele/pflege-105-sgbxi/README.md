@@ -84,6 +84,7 @@ aus dem jeweiligen Landesrahmenvertrag nach § 75 SGB XI.
 |---|---|---|
 | [`TPLG0001`](TPLG0001) | Nutzdaten (PLGA/PLAA), **Klartext** | 1002 Bytes |
 | [`TPLG0001.AUF`](TPLG0001.AUF) | Auftragsdatei, Klartext, Festsatzformat | 128 Bytes |
+| [`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) | Urbeleg: Leistungsnachweise beider Abrechnungsfälle, druckbar | 2 Seiten |
 
 ### Dateiname
 
@@ -318,6 +319,68 @@ Uhrzeit je Hausbesuch) — dafür spricht schon der Name „Einsatzkopfsegment".
 TA 1 vorliegt, ist das der wahrscheinlichste Punkt, an dem dieses Beispiel strukturell
 umgebaut werden muss.
 
+## 5.6 Urbeleg — der Leistungsnachweis
+
+[`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) enthält den
+**Papierbeleg** zur elektronischen Abrechnung: je Abrechnungsfall einen
+Leistungsnachweis mit Tagesraster, Handzeichen der Pflegekraft, Zusammenstellung und
+Unterschriftenfeldern. Im Browser öffnen und drucken (A4 quer, Seitenumbruch je Fall).
+
+Fachlich ist das der **Urbeleg**: Der Pflegebedürftige bestätigt mit seiner Unterschrift
+die erbrachten Einsätze. Er geht nicht an die Datenannahmestelle, sondern an die
+**Belegannahmestelle** laut Kostenträgerdatei — ein zweiter, vom Dateipärchen getrennter
+Weg. Die Kasse hält bei Prüfung den Beleg gegen die elektronische Abrechnung.
+
+### Deckungsgleichheit mit der DTA-Datei
+
+Der Beleg ist so erzeugt, dass er auf jeder Ebene zur Nutzdatendatei passt:
+
+| Prüfung | Beleg | `TPLG0001` |
+|---|---|---|
+| Handzeichen im Tagesraster | 20 / 8 / 31 / 31 | Mengen in den `EPL`-Segmenten |
+| Zusammenstellung je Fall | 635,60 / 1.035,40 | `GES` der beiden PLAA |
+| Summe beider Fälle | 1.671,00 | `GES` der PLGA |
+| Versichertennummern | `K741852967`, `M305921844` | `INV`-Segmente |
+| Rechnungsbezug | Nr. 2026070001 vom 05.08.2026 | `REC` |
+
+Damit lässt sich der Abgleich Urbeleg ↔ Abrechnung als Testfall abbilden — die Prüfung,
+die eine Kasse bei Stichprobe oder Absetzung tatsächlich vornimmt.
+
+### Der Einsatzkalender erzählt den Fall
+
+Die Einsatztage sind kein Zufall, sondern erklären die abgerechneten Mengen:
+
+- **Fall 001:** Juli 2026 hat 23 Werktage, abgerechnet sind aber nur 20 Einsätze. Die
+  Differenz steht als Bemerkung auf dem Beleg — 13.–15.07. stationärer
+  Krankenhausaufenthalt, in dieser Zeit ruht die häusliche Pflege. Die hauswirtschaftliche
+  Versorgung läuft zweimal wöchentlich (Di/Fr), abzüglich des Dienstags im
+  Krankenhauszeitraum: 8 statt 9.
+- **Fall 002:** tägliche Versorgung, 31 Tage, dazu 31 Wegepauschalen — eine je Anfahrt.
+
+Eine Abrechnung, deren Menge größer ist als die Zahl der Einsätze auf dem Beleg, ist
+genau der Fall, den eine Kasse absetzt.
+
+### Belastbarkeit
+
+**Der Aufbau des Belegs ist erfunden.** Für § 302 SGB V definieren Anlage 4 den
+Begleitzettel und Anlage 5 den Inhalt der Urbelege; für § 105 SGB XI ist in der
+Wissensbibliothek **kein** Dokument zum Urbeleg-Inhalt erfasst. Form, Felder und
+Tagesraster orientieren sich an der Praxis ambulanter Pflegedienste, nicht an einem
+Regelwerk. Die Leistungskomplexnummern stammen wie in der DTA-Datei aus keinem realen
+Landesrahmenvertrag.
+
+Nicht enthalten ist der **Begleitzettel für Urbelege**, mit dem ein Stapel Belege der
+Belegannahmestelle zugeordnet wird — für § 105 SGB XI ist auch dessen Aufbau nicht belegt.
+
+### Eine bewusste Abweichung zwischen Beleg und Datei
+
+Der Beleg schreibt **Große Morgentoilette** und **Ahornstraße**, die Nutzdatendatei
+**Grosse Morgentoilette** und **Ahornstrasse**. Das ist kein Fehler, sondern die
+Zeichensatzfrage aus Abschnitt 5.1 in ihrer praktischen Form: Auf Papier gibt es keine
+Kodierungsbeschränkung, in der EDIFACT-Datei ist der zulässige Zeichensatz für
+§ 105 SGB XI unbelegt. Ein Validator darf einen Feldvergleich zwischen beiden Welten
+deshalb nicht zeichenweise führen, ohne die Transliteration zu berücksichtigen.
+
 ## 6. Was dieses Beispiel prüfbar macht
 
 Regel-IDs nach
@@ -404,7 +467,9 @@ Reihenfolge der Korrekturen an diesem Beispiel, nach Hebelwirkung sortiert:
 6. **Auftragssatz-Layout** aus Anlage 2 GGT ersetzen (ersetzt Abschnitt 4 vollständig,
    inklusive der Satzlänge).
 7. **Verarbeitungskennzeichen** aus dem Schlüsselverzeichnis bestätigen (`01`).
-8. `vertrauen`-Felder in [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) anheben.
+8. **Urbeleg** gegen die Vorgaben zum Leistungsnachweis nach § 105 SGB XI prüfen und
+   den Begleitzettel für Urbelege ergänzen.
+9. `vertrauen`-Felder in [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) anheben.
 
 Beschaffungsstand siehe
 [`knowledge-base/60-projekt/02-roadmap-und-offene-punkte.md`](../../knowledge-base/60-projekt/02-roadmap-und-offene-punkte.md).

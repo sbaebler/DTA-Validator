@@ -46,6 +46,21 @@ dateien:
     satzlaenge_hinweis: >-
       128 ist ein Platzhalter. Die echte Satzlaenge steht in Anlage 2 GGT und ist
       nicht bekannt.
+  urbeleg:
+    name: urbeleg-leistungsnachweis.html
+    art: Leistungsnachweis ambulante Pflege
+    seiten: 2
+    vertrauen: offen
+    hinweis: >-
+      Aufbau erfunden. Fuer § 302 SGB V definieren Anlage 4 (Begleitzettel) und
+      Anlage 5 (Inhalt der Urbelege) die Vorgaben; fuer § 105 SGB XI ist in der
+      Wissensbibliothek kein Dokument zum Urbeleg-Inhalt erfasst.
+    weg: Belegannahmestelle laut Kostentraegerdatei, nicht Datenannahmestelle
+    zeichensatz: utf-8
+    zeichensatz_hinweis: >-
+      Der Papierbeleg traegt korrekte deutsche Rechtschreibung mit Umlauten, die
+      Nutzdatendatei transliteriert. Ein Feldvergleich zwischen beiden Welten darf
+      nicht zeichenweise erfolgen.
 
 dateiname:
   wert: TPLG0001
@@ -109,6 +124,31 @@ abrechnungsfaelle:
       - {position: LK04, bezeichnung: Kleine Morgentoilette mit Lagern, menge: 31, einzelpreis: 28.90, betrag: 895.90}
       - {position: LK31, bezeichnung: Wegepauschale, menge: 31, einzelpreis: 4.50, betrag: 139.50}
     summe: 1035.40
+
+# Einsatzkalender des Urbelegs. Die Anzahl der Handzeichen je Leistungskomplex
+# muss der abgerechneten Menge im zugehoerigen EPL-Segment entsprechen.
+einsatzkalender:
+  monat: 2026-07
+  werktage_im_monat: 23
+  faelle:
+    - lfd_nr: "001"
+      abwesenheit:
+        von: 2026-07-13
+        bis: 2026-07-15
+        grund: stationaerer Krankenhausaufenthalt
+        betroffene_werktage: 3
+      regeln:
+        LK03: Werktage Mo-Fr abzueglich Abwesenheit
+        LK15: Dienstag und Freitag abzueglich Abwesenheit
+      einsaetze: {LK03: 20, LK15: 8}
+      handzeichen: MB (LK03), TK (LK15)
+    - lfd_nr: "002"
+      abwesenheit: null
+      regeln:
+        LK04: alle Kalendertage
+        LK31: eine Wegepauschale je Einsatz
+      einsaetze: {LK04: 31, LK31: 31}
+      handzeichen: SR
 
 # Erwartungswerte fuer die Syntaxpruefung (Stufe 3)
 struktur:

@@ -36,6 +36,7 @@ entwickeln, auch wenn die Feldsemantik noch geraten ist.
 | `README.md` | Fallbeschreibung, Feldtabellen mit Herkunftsangabe, Regelabdeckung, Korrekturliste |
 | `<DATEINAME>` | Nutzdatendatei (Klartext) |
 | `<DATEINAME>.AUF` | Auftragsdatei |
+| `urbeleg-*.html` | Urbeleg (Papierbeleg) zur Abrechnung, druckbar — sofern für das Verfahren sinnvoll |
 | `beispiel-metadaten.yaml` | Erwartungswerte maschinenlesbar: Beteiligte, Summen, Zähler, erfüllte Regel-IDs |
 
 `beispiel-metadaten.yaml` folgt den Feldkonventionen aus
