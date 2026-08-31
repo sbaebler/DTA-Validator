@@ -1,0 +1,264 @@
+# Dokumentenregister: Regelwerke mit Version, Stand, Gueltigkeit und Bezugsquelle.
+# Beim Erscheinen neuer Fassungen hier nachfuehren.
+# beschafft: true = Primaerdokument liegt im Projekt vor und wurde ausgewertet.
+
+schema_version: 1
+stand: 2026-08-31
+hinweis: >-
+  Alle Eintraege wurden per Websuche ermittelt; der direkte PDF-Abruf war durch die
+  Netzwerk-Egress-Policy blockiert. Versionsangaben stammen aus Dokumenttiteln und
+  Suchtreffern und sind vor Verwendung gegen das Portal zu pruefen.
+
+ggt:
+  titel: Gemeinsame Grundsaetze Technik nach § 95 SGB IV
+  url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/gg_technik/GGT.pdf
+  gueltig_ab: 2026-09-01
+  vertrauen: sekundaer
+  beschafft: false
+
+  anlagen:
+    - nr: 1
+      titel: Krankenkassenkommunikationssystem (KKS)
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_1_-_Krankenkassenkommunikationssystem.pdf
+      gueltig_ab: 2020-01-01
+      stand: 2019-10-23
+      seiten: 4
+      vertrauen: belegt
+      beschafft: false
+    - nr: 2
+      titel: Auftragsdatei (Auftragssatz)
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_2_-_Auftragsdatei.pdf
+      vertrauen: belegt
+      beschafft: false
+      prioritaet_beschaffung: 1
+    - nr: 3
+      titel: null
+      vertrauen: offen
+      beschafft: false
+    - nr: 4
+      titel: Verfahrenskennungen
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_4_-_Verfahrenskennungen.pdf
+      gueltig_ab: 2026-01-01
+      stand: 2025-11-06
+      seiten: 47
+      vertrauen: belegt
+      beschafft: false
+      prioritaet_beschaffung: 1
+    - nr: 5
+      titel: Datenaustausch mit der Rentenversicherung
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_5_-_Datenaustausch_mit_der_Rentenversicherung.pdf
+      gueltig_ab: 2025-01-01
+      stand: 2024-08-06
+      seiten: 13
+      vertrauen: belegt
+      beschafft: false
+    - nr: 6
+      titel: Besonderheiten des GKV-internen Datenaustauschs und des Datenaustauschs der GKV mit Leistungserbringern
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_6_-_Besonderheiten_des_GKVinternen_Datenaustauschs_und_des_Datenaustauschs_der_GKV_mit_Leistungserbringern.pdf
+      vertrauen: belegt
+      beschafft: false
+      prioritaet_beschaffung: 3
+    - nr: 7
+      titel: E-Mail
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_7_-_E-Mail.pdf
+      gueltig_ab: 2016-07-01
+      stand: 2016-06-23
+      seiten: 17
+      vertrauen: belegt
+      beschafft: false
+    - nr: 8
+      titel: HTTP / HTTPS
+      vertrauen: sekundaer
+      beschafft: false
+    - nr: 9
+      titel: File Transfer Protocol (FTP / SFTP / FTPS)
+      vertrauen: sekundaer
+      beschafft: false
+    - nr: 13
+      titel: GKV-Kommunikationsserver
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_13_-_GKV-Kommunikationsserver.pdf
+      vertrauen: belegt
+      beschafft: false
+    - nr: 14
+      titel: Datentraeger
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_14_-_Datentraeger.pdf
+      vertrauen: belegt
+      beschafft: false
+    - nr: 16
+      titel: Security-Schnittstelle (SECON)
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_16_-_Security_Schnittstelle.pdf
+      gueltig_ab: 2026-01-01
+      stand: 2025-09-02
+      seiten: 94
+      vertrauen: belegt
+      beschafft: false
+      prioritaet_beschaffung: 2
+    - nr: 17
+      titel: Kommunikationsserver der Deutschen Rentenversicherung
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_17_-_KomServer_RV.pdf
+      vertrauen: belegt
+      beschafft: false
+    - nr: 20
+      titel: KIM (KOM-LE) innerhalb der Telematikinfrastruktur
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_20_KIM-KOM-LE.pdf
+      gueltig_ab: 2023-01-01
+      stand: 2022-11-17
+      seiten: 4
+      vertrauen: belegt
+      beschafft: false
+    # Anlagen 10, 11, 12, 15, 18, 19: nicht belegt - Portalseite auswerten
+
+  zusatzdokumente:
+    - titel: Best Practice zur Security-Schnittstelle
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Best_Practice_Security.pdf
+      vertrauen: belegt
+      beschafft: false
+
+sektorregelwerke:
+
+  sgbv-302:
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/sonstige_leistungserbringer/sonstige_leistungserbringer.jsp
+    richtlinientext: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/Richtlinien-Text_061120.pdf
+    anlagen:
+      - nr: 1
+        titel: Technische Anlage fuer die maschinelle Abrechnung (elektronische Datenuebermittlung)
+        vertrauen: sekundaer
+        beschafft: false
+        prioritaet_beschaffung: 1
+      - nr: 3
+        titel: Schluesselverzeichnisse zu den Datensaetzen
+        version: "22"
+        stand: 2026-05-21
+        anzuwenden_ab: 2027-02-01
+        vorversion: "21"
+        vorversion_gueltig_bis: 2027-04-30
+        uebergangsfrist_monate: 3
+        vertrauen: sekundaer
+        beschafft: false
+        prioritaet_beschaffung: 1
+      - nr: 4
+        titel: Begleitzettel fuer Urbelege
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anlage_4_061101.pdf
+        vertrauen: belegt
+        beschafft: false
+      - nr: 5
+        titel: Inhalt der Urbelege
+        stand: 2018-09-27
+        vertrauen: sekundaer
+        beschafft: false
+    zusatzdokumente:
+      - titel: Gemeinsame Umsetzungsempfehlungen zum Korrekturverfahren Heilmittel
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Gemeinsame_Umsetzungsempfehlungen_zum_Korrekturverfahren_Heilmittel_20250213.pdf
+        stand: 2025-02-13
+        vertrauen: belegt
+        beschafft: false
+
+  sgbv-301:
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/krankenhaeuser/krankenhaeuser.jsp
+    gesamtdokument:
+      url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/krankenhaeuser/gesamtdokument/_301_Gesamtdokument_01.11.2025.pdf
+      gueltig_ab: 2025-11-01
+      vertrauen: belegt
+      beschafft: false
+    anlagen:
+      - {nr: 1, titel: Datensaetze fuer die Datenuebermittlung, vertrauen: offen, beschafft: false}
+      - {nr: 2, titel: Schluesselverzeichnis, vertrauen: offen, beschafft: false}
+      - {nr: 3, titel: Formulare, vertrauen: sekundaer, beschafft: false}
+      - {nr: 4, titel: Technische Anlage, vertrauen: sekundaer, beschafft: false}
+      - {nr: 5, titel: Durchfuehrungshinweise, vertrauen: sekundaer, beschafft: false}
+    hinweis: >-
+      Widerspruechliche Angaben zur Zuordnung Anlage 1 / Anlage 2 (Datensaetze vs.
+      Schluesselverzeichnis). Portalseite auswerten.
+
+  sgbv-300:
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/apotheken/apotheken.jsp
+    vereinbarung:
+      titel: Arzneimittelabrechnungsvereinbarung gemaess § 300 Abs. 3 SGB V
+      url: https://www.gkv-spitzenverband.de/media/dokumente/krankenversicherung_1/arzneimittel/rahmenvertraege/apotheken/2023-07-01_Arzneimittelabrechnungsvereinbarung_barrierefrei.pdf
+      stand: 2023-07-01
+      vertrauen: belegt
+    technische_anlagen:
+      - nr: 1
+        titel: Datensatzbeschreibung Abrechnungsdaten
+        version: "039"
+        stand: 2025-03-31
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/apotheken/technische_anlagen_aktuell/TA1_039_20250331.pdf
+        vertrauen: belegt
+        beschafft: false
+        anhaenge:
+          - {nr: 1, titel: National vereinbarte Sonderkennzeichen, stand: 2026-05-05, anzuwenden_ab: Abrechnungsmonat 07/2026, vertrauen: sekundaer}
+          - {nr: 2, titel: Zwischen Krankenkassen und Apotheken vereinbarte Kennzeichen, vertrauen: sekundaer}
+          - {nr: 4, titel: null, version: "006", stand: 2026-01-23, vertrauen: sekundaer}
+      - {nr: 2, titel: null, vertrauen: offen, beschafft: false}
+      - {nr: 3, titel: Datenuebermittlung, vertrauen: sekundaer, beschafft: false}
+      - {nr: 6, titel: FAQ-Liste, version: "004", vertrauen: sekundaer, beschafft: false}
+      - nr: 7
+        titel: E-Rezept-bezogene Festlegungen
+        anhang1_url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/apotheken/technische_anlagen_aktuell/TA7_Anhang1_005_20240122_Mapping.pdf
+        anhang1_stand: 2024-01-22
+        vertrauen: belegt
+        beschafft: false
+
+  sgbxi-105:
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/pflege/pflege.jsp
+    vereinbarung:
+      titel: Vereinbarung nach § 105 Abs. 2 Satz 2 SGB XI
+      url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2023_10_05_Vereinbarung__105_Abs.2_Satz_2_SGBXI_final.pdf
+      stand: 2023-10-05
+      vertrauen: belegt
+    technische_anlagen:
+      - nr: 1
+        titel: Technische Anlage zur Regelung der Datenuebermittlung nach § 105 Abs. 2 SGB XI
+        version: 6.4.0
+        stand: 2025-07-07
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_6.4.0_20250707_oA.pdf
+        vertrauen: belegt
+        beschafft: false
+        anhaenge:
+          - {nr: 1, titel: Struktur Auftragsdatei, stand: 2007-01-25, vertrauen: sekundaer}
+          - {nr: 3, titel: Datenuebermittlungsarten, stand: 2017-09-07, vertrauen: sekundaer}
+
+  sgbv-295-1b:
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/direktabrechner/vertraege_73b_73c_140a_sgb_v/vertraege_nach_73b_73c_140a_sgb_v.jsp
+    technische_anlage:
+      version: "10.0"
+      stand: 2025-04-02
+      anzuwenden_ab: Datenlieferung Quartal 4/2025
+      url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/direktabrechner/hzv_iv/technische_anlagen_aktuell_6/20250402_TA_295_1b_SGB_V_V_10.0.pdf
+      vertrauen: belegt
+      beschafft: false
+
+stammdaten:
+  - id: kvnr-richtlinie
+    titel: Richtlinie zum Aufbau und zur Vergabe einer Krankenversichertennummer (§ 290 SGB V)
+    version: 3.4.0
+    stand: 2024-08-22
+    url: https://www.gkv-datenaustausch.de/media/dokumente/kvnr/Richtlinie_20240822_Gesamtsystem-KVNR_290_SGBV_3.4.0_fin.pdf
+    vertrauen: belegt
+    beschafft: false
+    prioritaet_beschaffung: 2
+  - id: arge-ik-rundschreiben
+    titel: Gemeinsames Rundschreiben Institutionskennzeichen (IK)
+    portalseite: https://www.dguv.de/arge-ik/index.jsp
+    vertrauen: sekundaer
+    beschafft: false
+    prioritaet_beschaffung: 2
+  - id: kostentraegerdatei-sle
+    titel: Kostentraegerdatei Sonstige Leistungserbringer
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/sonstige_leistungserbringer/kostentraegerdateien_sle/kostentraegerdateien.jsp
+    dateiendungen: [KE0, KE1]
+    vertrauen: sekundaer
+    beschafft: false
+    prioritaet_beschaffung: 2
+  - id: positionsnummernverzeichnisse
+    titel: Positionsnummernverzeichnisse Sonstige Leistungserbringer
+    portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/sonstige_leistungserbringer/positionsnummernverzeichnisse/positionsnummernverzeichnisse.jsp
+    vertrauen: sekundaer
+    beschafft: false
+    prioritaet_beschaffung: 3
+  - id: hilfsmittelverzeichnis
+    titel: GKV-Hilfsmittelverzeichnis
+    portalseite: https://www.rehadat-gkv.de/
+    vertrauen: sekundaer
+    beschafft: false
+    prioritaet_beschaffung: 3

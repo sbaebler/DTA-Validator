@@ -1,0 +1,114 @@
+# Verfahren des DTA im deutschen GKV-Markt
+# Vertrauens-Marker: belegt | sekundaer | offen
+# Siehe knowledge-base/README.md fuer die Bedeutung.
+
+schema_version: 1
+stand: 2026-08-31
+
+verfahren:
+  - id: sgbv-302
+    bezeichnung: Sonstige Leistungserbringer
+    rechtsgrundlage: § 302 SGB V
+    ergaenzende_normen: [§ 301a SGB V]
+    leistungsbereiche:
+      - Heilmittel
+      - Hilfsmittel
+      - Haeusliche Krankenpflege
+      - Haushaltshilfe
+      - Krankentransport und Fahrkosten
+      - Digitale Gesundheitsanwendungen (DiGA)
+      - Hebammen und Entbindungspfleger
+    nachrichtentypen: [SLGA, SLLA]
+    format: edifact
+    regelwerk: Richtlinien nach § 302 Abs. 2 SGB V nebst Technischen Anlagen
+    vertrauen: sekundaer
+    prioritaet_validator: 1
+
+  - id: sgbxi-105
+    bezeichnung: Pflege
+    rechtsgrundlage: § 105 SGB XI
+    leistungsbereiche: [Pflegeleistungen nach SGB XI]
+    nachrichtentypen: [PLGA, PLAA]
+    format: edifact
+    regelwerk: Technische Anlage 1 zur Regelung der Datenuebermittlung nach § 105 Abs. 2 SGB XI
+    aktuelle_version: 6.4.0
+    stand: 2025-07-07
+    vertrauen: belegt
+    prioritaet_validator: 2
+    hinweis: "Literatur nennt gelegentlich PLLA; belegt ist PLAA. Zu verifizieren."
+
+  - id: sgbv-301
+    bezeichnung: Krankenhaeuser
+    rechtsgrundlage: § 301 Abs. 3 SGB V
+    vertragspartner: [GKV-Spitzenverband, Deutsche Krankenhausgesellschaft]
+    nachrichtentypen: [AUFN, KOUB, VERL, ANFM, MBEG, ENTL, RECH, ZAHL, AMBO, ZAAO, SAMU, FEHL, ZGUT]
+    format: edifact
+    regelwerk: § 301-Vereinbarung mit Anlagen 1-5
+    gesamtdokument_gueltig_ab: 2025-11-01
+    zeichensaetze: ["DIN 66303:2000-06", "DIN 66003 DRV"]
+    vertrauen: sekundaer
+    prioritaet_validator: 4
+
+  - id: sgbv-300
+    bezeichnung: Apotheken und weitere Stellen
+    rechtsgrundlage: § 300 SGB V
+    regelwerk: Arzneimittelabrechnungsvereinbarung gemaess § 300 Abs. 3 SGB V, Technische Anlagen 1-7
+    besonderheit: Abwicklung ueberwiegend ueber Apothekenrechenzentren
+    vertrauen: sekundaer
+    prioritaet_validator: 5
+
+  - id: sgbv-295-1b
+    bezeichnung: Direktabrechner / Selektivvertraege
+    rechtsgrundlage: § 295 Abs. 1b SGB V
+    erfasste_vertraege: [§ 64d SGB V, § 73b SGB V, § 132e SGB V, § 132f SGB V, § 140a SGB V]
+    regelwerk: Technische Anlage Datenaustausch nach § 295 Abs. 1b SGB V
+    aktuelle_version: "10.0"
+    stand: 2025-04-02
+    anzuwenden_ab: Datenlieferung Quartal 4/2025
+    vertrauen: belegt
+    prioritaet_validator: 6
+
+  - id: sgbv-301-4
+    bezeichnung: Reha-Einrichtungen
+    rechtsgrundlage: § 301 Abs. 4, 4a SGB V
+    regelwerk: Anlage 1 zur Vereinbarung nach § 301 Abs. (4, 4a) SGB V
+    stand: 2024-03-14
+    vertrauen: belegt
+    prioritaet_validator: 7
+
+  - id: sgbv-115f
+    bezeichnung: Hybrid-DRG
+    rechtsgrundlage: § 115f SGB V
+    regelwerk: Technische Anlage Hybrid-DRG-AV
+    aktuelle_version: "1.2"
+    stand: 2025-08-12
+    vertrauen: belegt
+    prioritaet_validator: 8
+
+  - id: krebsregister
+    bezeichnung: Klinische Krebsregister
+    regelwerk: Technische Anlage zur elektronischen Abrechnung der Klinischen Krebsregister
+    aktuelle_version: "1.6"
+    stand: 2024-03-15
+    vertrauen: belegt
+    prioritaet_validator: 9
+
+  - id: zahnaerzte
+    bezeichnung: Zahnaerzte
+    rechtsgrundlage: § 295 SGB V
+    regelwerk: Technische Anlage zum Vertrag ueber den Datenaustausch; Anhang 1 zur TA TP2
+    anhang1_version: "3.7"
+    anhang1_stand: 2025-09-19
+    ergaenzend: EBZ - elektronisches Beantragungs- und Genehmigungsverfahren
+    vertrauen: sekundaer
+    prioritaet_validator: 10
+
+  - id: arbeitgeber
+    bezeichnung: Arbeitgeber- und Zahlstellenverfahren
+    rechtsgrundlage: §§ 28a ff. SGB IV, DEUEV
+    teilverfahren: [DEUEV-Meldungen, Beitragsnachweise, GKV-Monatsmeldung, AAG, EEL, eAU, Zahlstellenverfahren]
+    format: xml-extra
+    transport: GKV-Kommunikationsserver (Anlage 13 GGT)
+    vertrauen: sekundaer
+    prioritaet_validator: null
+    scope: out-of-scope
