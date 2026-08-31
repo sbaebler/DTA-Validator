@@ -55,8 +55,9 @@ Stand der Recherche: **31.08.2026**
 1. [Domänenüberblick](00-ueberblick/01-domaenenueberblick.md) — wer tauscht was mit wem aus
 2. [Verfahrensübersicht](20-verfahren/00-verfahrensuebersicht.md) — die Sektoren im Vergleich
 3. [KKS, Auftragsdatei, Dateinamen](30-technik/02-kks-auftragsdatei-dateinamen.md) — der gemeinsame Transportrahmen
-4. [Anforderungskatalog](50-anforderungen/01-anforderungskatalog.md) — nummerierte Requirements
-5. [Projekt-Scope](60-projekt/01-projekt-scope-und-architektur.md) — was der Validator können soll
+4. [Mindmap: Technische Anforderungen an eine DTA-Datei](30-technik/06-mindmap-technische-anforderungen.md) — alle technischen Vorgaben auf einer Seite
+5. [Anforderungskatalog](50-anforderungen/01-anforderungskatalog.md) — nummerierte Requirements
+6. [Projekt-Scope](60-projekt/01-projekt-scope-und-architektur.md) — was der Validator können soll
 
 ## Pflege dieser Bibliothek
 
