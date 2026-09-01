@@ -7,6 +7,16 @@ deutschen GKV-Markt — Prüfung von Abrechnungsdaten gegen die geltenden Regelw
 > **Status: Vorprojekt.** Es existiert noch kein Code. Aktueller Stand ist die
 > Wissensbibliothek mit den recherchierten fachlichen und technischen Anforderungen.
 
+## Wiki-Seite
+
+Eine **selbsttragende Übersichtsseite** fasst Domäne, Verfahrensfamilie, Transportrahmen,
+das siebenstufige Prüfmodell und das Beispiel-Dateipärchen auf einer Seite zusammen:
+**[`docs/index.html`](docs/index.html)**.
+
+Sie setzt keinen Repository-Zugang voraus — Auftragssatz und Nutzdatendatei stehen
+vollständig und byte-genau in der Seite. Zum Veröffentlichen über GitHub Pages siehe
+[`docs/README.md`](docs/README.md).
+
 ## Wissensbibliothek
 
 Die vollständigen Anforderungen liegen unter **[`knowledge-base/`](knowledge-base/)**:
