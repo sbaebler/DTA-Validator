@@ -9,7 +9,7 @@
 # schwere: FEHLER | WARNUNG | HINWEIS
 
 schema_version: 1
-stand: 2026-08-31
+stand: 2026-09-01
 
 stufen:
   - {nr: 0, name: Dateipaerchen und Namenskonvention, fehlerklasse: transport}
@@ -28,25 +28,47 @@ regeln:
 
   # --- Stufe 0 ---
   - {id: S0-ALL-001, stufe: 0, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Zu jeder Nutzdatendatei existiert genau eine Auftragsdatei", quelle: "Anlage 1 GGT (KKS)"}
-  - {id: S0-ALL-002, stufe: 0, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Auftragsdatei endet auf .AUF", quelle: "Anlage 2 GGT"}
-  - {id: S0-ALL-003, stufe: 0, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Erste 8 Stellen des Dateinamens bei Nutzdaten- und Auftragsdatei identisch", quelle: "Anlage 2 GGT"}
-  - {id: S0-ALL-004, stufe: 0, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Stelle 1 des Dateinamens ist T (Test) oder E (Echt)", quelle: "Anlage 2 GGT"}
-  - {id: S0-ALL-005, stufe: 0, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "Stellen 2-4 bilden eine bekannte Verfahrenskennung", quelle: "Anlage 4 GGT", blocker: "Werteliste fehlt"}
-  - {id: S0-ALL-006, stufe: 0, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "Stelle 5 ist eine gueltige Verfahrensversion", quelle: "Anlage 4 GGT", blocker: "Werteliste fehlt"}
-  - {id: S0-ALL-007, stufe: 0, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Stellen 6-8 sind numerisch (Transfernummer)", quelle: "Anlage 2 GGT"}
-  - {id: S0-ALL-008, stufe: 0, verfahren: ALL, schwere: WARNUNG, status: experimental, beschreibung: "Transfernummer fuer diesen Absender noch nicht verwendet"}
+  - {id: S0-ALL-002, stufe: 0, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Auftragsdatei traegt den Transferdateinamen der Nutzdatendatei plus Endung .AUF", quelle: "TA 1 Pflege, Anhang 3, Abschnitt 2.2.2"}
+  - {id: S0-ALL-003, stufe: 0, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Transferdateiname bei Nutzdaten- und Auftragsdatei identisch (8 Stellen bei § 105 SGB XI)", quelle: "TA 1 Pflege, Anhang 3, Abschnitt 2.2.2"}
+  - {id: S0-ALL-004, stufe: 0, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Stelle 1 des Transferdateinamens ist T (Test/Erprobung) oder E (Echtdaten)", quelle: "Anlage 4 GGT, Kapitel 1.3 bis 1.6"}
+  - {id: S0-ALL-005, stufe: 0, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Stellen 2-4 bilden eine bekannte Verfahrenskennung des jeweiligen Bereichs", quelle: "Anlage 4 GGT, Kapitel 1 und 3", werteliste: verfahrenskennungen.yaml}
+  - {id: S0-ALL-006, stufe: 0, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Stelle 5 ist eine Ziffer (Version des Verfahrens, beginnend mit 0)", quelle: "Anlage 4 GGT, Kapitel 1.3 bis 1.6"}
+  - {id: S0-ALL-007, stufe: 0, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Stellen 6-8 sind numerisch (Transfernummer)", quelle: "Anlage 2 GGT, Feld TRANSFER_NUMMER"}
+  - id: S0-ALL-008
+    stufe: 0
+    verfahren: ALL
+    schwere: HINWEIS
+    status: spezifiziert
+    beschreibung: >-
+      Wiederkehrende Transfernummer eines Absenders melden - aber NICHT als Fehler.
+      Anlage 2 GGT schreibt ausdruecklich vor, dass die TRANSFER_NUMMER bei fehlerhafter
+      Uebertragung erhalten bleibt und bei der Wiederholung wiederverwendet wird. Der
+      Empfaenger muss das Dateipaar unter einem neuen systemeindeutigen Namen ablegen.
+    quelle: "Anlage 2 GGT, Feld TRANSFER_NUMMER"
+    korrektur_am: 2026-09-01
+    korrektur_grund: >-
+      Vorher als WARNUNG "Transfernummer noch nicht verwendet" gefuehrt. Das war falsch:
+      Wiederholungen sind regelkonform.
   - {id: S0-ALL-009, stufe: 0, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Datentraegerversand: alle Dateien im Wurzelverzeichnis, ISO-9660-Level-1-konforme Namen", quelle: "Anlage 14 GGT"}
 
   # --- Stufe 1 ---
-  - {id: S1-ALL-001, stufe: 1, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "Auftragssatz hat die vorgeschriebene Gesamtlaenge", quelle: "Anlage 2 GGT", blocker: "Laenge unbekannt"}
-  - {id: S1-ALL-002, stufe: 1, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "VERFAHREN_KENNUNG (Position 20-24) ist gueltig", quelle: "Anlage 2 + Anlage 4 GGT"}
-  - {id: S1-ALL-003, stufe: 1, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "VERFAHREN_KENNUNG stimmt mit Stellen 2-5 des Dateinamens ueberein", blocker: "Mapping verifizieren"}
-  - {id: S1-ALL-004, stufe: 1, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "ABSENDER_EIGNER ist ein gueltiges IK", quelle: "Anlage 2 GGT"}
-  - {id: S1-ALL-005, stufe: 1, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "EMPFAENGER ist ein gueltiges IK", quelle: "Anlage 2 GGT"}
+  - {id: S1-ALL-001, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Auftragssatz ist genau 348 Byte lang und LAENGE_AUFTRAG traegt die Konstante 00000348", quelle: "Anlage 2 GGT, Felder LAENGE_AUFTRAG und VERSION"}
+  - {id: S1-ALL-002, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "VERFAHREN_KENNUNG (Stellen 20-24) ist gueltig", quelle: "Anlage 2 GGT + Anlage 4 GGT", werteliste: verfahrenskennungen.yaml}
+  - {id: S1-ALL-003, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "VERFAHREN_KENNUNG (Stellen 20-24) ist identisch mit den Stellen 1-5 des Transferdateinamens", quelle: "Anlage 2 GGT (Transferdateiname aus VERFAHREN_KENNUNG + TRANSFER_NUMMER); TA 1 Pflege, Anhang 3, Abschnitt 2.2.2"}
+  - {id: S1-ALL-004, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "ABSENDER_EIGNER (Stellen 33-47) enthaelt eine gueltige Identifikation (IK 9-stellig, Absendernummer 8, KV-Identifikation 4 oder KZV-Nummer 5), linksbuendig mit Leerzeichen aufgefuellt", quelle: "Anlage 2 GGT, Feld ABSENDER_EIGNER"}
+  - {id: S1-ALL-005, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "EMPFAENGER_NUTZER (63-77) und EMPFAENGER_PHYSIKALISCH (78-92) tragen eine Identifikation desselben Typs wie ABSENDER_EIGNER", quelle: "Anlage 2 GGT"}
   - {id: S1-ALL-006, stufe: 1, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "EMPFAENGER ist laut Kostentraegerdatei zustaendige Datenannahmestelle"}
-  - {id: S1-ALL-007, stufe: 1, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "TRANSFER_NUMMER stimmt mit Stellen 6-8 des Dateinamens ueberein"}
+  - {id: S1-ALL-007, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "TRANSFER_NUMMER (Stellen 25-27) ist identisch mit den Stellen 6-8 des Transferdateinamens", quelle: "Anlage 2 GGT; TA 1 Pflege, Anhang 3, Abschnitt 2.2.2"}
   - {id: S1-ALL-008, stufe: 1, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Auftragssatz enthaelt keine Sozialdaten (Trennungsgebot)"}
-  - {id: S1-ALL-009, stufe: 1, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "Alle Pflichtfelder des Auftragssatzes gefuellt", blocker: "Feldkatalog fehlt"}
+  - {id: S1-ALL-009, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Alle Muss-Felder (M) des Auftragssatzes gefuellt; Kann-Felder (K) mit dem Default-Wert des Feldtyps belegt (N mit 0, A/AN mit Leerzeichen) - kein Nullbyte, keine Verkuerzung", quelle: "Anlage 2 GGT, Feldkatalog", werteliste: auftragssatz.yaml}
+  - {id: S1-ALL-010, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "VERSCHLUESSELUNGSART (207-208) und ELEKTRONISCHE_UNTERSCHRIFT (209-210) tragen denselben Wert; zulaessig sind nur 00+00 und 03+03", quelle: "Anlage 2 GGT, Kombinationstabelle Kapitel 2.1"}
+  - {id: S1-ALL-011, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "ZEICHENSATZ (203-204) aus der Werteliste I1/I5/I7/I8/EB/P8/U8/BI; im Datenaustausch nach § 294 ff. SGB V ist EB (EBCDIC) unzulaessig", quelle: "Anlage 2 GGT, Feld ZEICHENSATZ"}
+  - {id: S1-ALL-012, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "DATEIGROESSE_NUTZDATEN (179-190) entspricht der tatsaechlichen Groesse der unverschluesselten, unkomprimierten Nutzdaten; DATEIGROESSE_UEBERTRAGUNG (191-202) der uebertragenen Groesse", quelle: "Anlage 2 GGT"}
+  - {id: S1-ALL-013, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Konstantenfelder korrekt: IDENTIFIKATOR = 500000, DATEIVERSION = 000000, KORREKTUR = 0", quelle: "Anlage 2 GGT"}
+  - {id: S1-ALL-014, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "KOMPRIMIERUNG (205-206) aus der Werteliste 00/02/03/07/13/23; 01, 04, 05 und 06 sind ausdruecklich nicht belegt", quelle: "Anlage 2 GGT, Feld KOMPRIMIERUNG"}
+  - {id: S1-ALL-015, stufe: 1, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Bei DFUE tragen SATZFORMAT Leerzeichen, SATZLAENGE 00000 und BLOCKLAENGE 00000000; bei Bandverarbeitung sind alle drei Felder belegt", quelle: "Anlage 2 GGT, Kapitel 2.2"}
+  - {id: S1-XI-001, stufe: 1, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "DATEINAME (105-115) entspricht dem logischen Dateinamen PL + MMJ + Art der Lieferung + lfd. Nr. + S|A + Kassenartenkennung", quelle: "TA 1 Pflege, Anhang 3, Abschnitt 2.2.1"}
+  - {id: S1-XI-002, stufe: 1, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "DATEI_BEZEICHNUNG Stellen 319-320 tragen die Art der abgegebenen Leistung (Schluessel 2.4 der TA 3)", quelle: "TA 1 Pflege, Anhang 1, Abschnitt 4.1"}
 
   # --- Stufe 2 ---
   - {id: S2-ALL-001, stufe: 2, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Nutzdatendatei ist wohlgeformtes PKCS#7/CMS", quelle: "Anlage 16 GGT"}
@@ -65,20 +87,26 @@ regeln:
   - {id: S2-ALL-014, stufe: 2, verfahren: ALL, schwere: WARNUNG, status: entwurf, beschreibung: "Zertifikat laeuft in weniger als 60 Tagen ab"}
 
   # --- Stufe 3 ---
-  - {id: S3-ALL-001, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "UNA enthaelt genau sechs Trennzeichen"}
+  - {id: S3-ALL-001, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "UNA enthaelt genau sechs Trennzeichen - nur in Verfahren, die ein UNA-Segment vorsehen", gilt_nicht_fuer: [sgbxi-105]}
   - {id: S3-ALL-002, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Datei beginnt mit UNB und endet mit UNZ"}
   - {id: S3-ALL-003, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Nachrichtenzaehler in UNZ = tatsaechliche Anzahl Nachrichten"}
   - {id: S3-ALL-004, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Segmentzaehler in UNT = tatsaechliche Segmentanzahl je Nachricht"}
   - {id: S3-ALL-005, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Referenznummern UNB/UNZ und UNH/UNT stimmen paarweise ueberein"}
-  - {id: S3-ALL-006, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Alle Zeichen liegen im zulaessigen Zeichensatz", quelle: "DIN 66003 DRV / DIN 66303:2000-06"}
+  - {id: S3-ALL-006, stufe: 3, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "Alle Zeichen liegen im Zeichensatz, den der Auftragssatz im Feld ZEICHENSATZ deklariert", quelle: "Anlage 2 GGT, Feld ZEICHENSATZ; Anlage 15 GGT (Zeichensaetze, nicht ausgewertet)"}
   - {id: S3-ALL-007, stufe: 3, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Freigabezeichen korrekt verwendet"}
   - {id: S3-302-001, stufe: 3, verfahren: sgbv-302, schwere: FEHLER, status: entwurf, beschreibung: "Datei enthaelt ausschliesslich SLGA und SLLA"}
   - {id: S3-302-002, stufe: 3, verfahren: sgbv-302, schwere: FEHLER, status: experimental, beschreibung: "Segmentreihenfolge entspricht der Grammatik", blocker: "Grammatik aus § 302 Anlage 1 fehlt"}
   - {id: S3-302-003, stufe: 3, verfahren: sgbv-302, schwere: FEHLER, status: experimental, beschreibung: "Segmentkardinalitaeten eingehalten", blocker: "Grammatik aus § 302 Anlage 1 fehlt"}
-  - {id: S3-XI-001, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: entwurf, beschreibung: "Datei enthaelt ausschliesslich PLGA und PLAA"}
+  - {id: S3-XI-001, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Datei enthaelt ausschliesslich die Nachrichtentypen PLGA und PLAA", quelle: "TA 1 Pflege, Abschnitt 4.4"}
+  - {id: S3-XI-002, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Kein UNA-Segment; Trennzeichen sind fest : + , ? und Apostroph, Dezimalzeichen ist das Komma", quelle: "TA 1 Pflege, Abschnitt 4.1 Absatz 10"}
+  - {id: S3-XI-003, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "PLGA enthaelt die Segmente FKT REC SRD UST GES NAM in dieser Reihenfolge, jedes genau einmal; UST entfaellt in der Sammelrechnungs-PLGA", quelle: "TA 1 Pflege, Abschnitt 4.4.1"}
+  - {id: S3-XI-004, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "PLAA folgt der Grammatik FKT REC (INV NAD IMG? MAN (ESK (ELS ZUS* HIL?)+)+ IAF)+ mit den Kardinalitaeten der TA 1", quelle: "TA 1 Pflege, Abschnitt 4.4.2"}
+  - {id: S3-XI-005, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Auf eine PLGA folgt eine PLAA, ausser die PLGA ist als Sammelrechnung gekennzeichnet; auf eine Sammelrechnungs-PLGA folgt nur einmal eine PLGA", quelle: "TA 1 Pflege, Abschnitt 4.2 Absatz 6"}
+  - {id: S3-XI-006, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "ESK-Segmente sind je Abrechnungsfall aufsteigend nach Kennzeichen der Leistungserbringung und Uhrzeit sortiert", quelle: "TA 1 Pflege, Abschnitt 4.4.2"}
+  - {id: S3-XI-007, stufe: 3, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Nachrichtentypversion in UNH ist die zum Leistungsdatum gueltige (aktuell 6); PLGA und PLAA duerfen unterschiedliche Versionen tragen", quelle: "TA 1 Pflege, Abschnitte 4.4 und 4.5.1"}
 
   # --- Stufe 4 ---
-  - {id: S4-ALL-001, stufe: 4, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "IK 9-stellig, numerisch, korrekte Modulo-10-Pruefziffer ueber Stellen 3-8", blocker: "Gewichtungsrichtung verifizieren"}
+  - {id: S4-ALL-001, stufe: 4, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "IK 9-stellig numerisch; Pruefziffer Modulo 10 ueber die Stellen 3-8, Gewichtung von rechts 1-2-1-2-1-2, Quersumme der Produkte", quelle: "Gemeinsames Rundschreiben Institutionskennzeichen 02/2026, Nummer 1.2.5", testvektor: "260326822"}
   - {id: S4-ALL-002, stufe: 4, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "KVNR entspricht ^[A-Z][0-9]{9}$ mit korrekter Pruefziffer", blocker: "Buchstabenbehandlung im Algorithmus unklar"}
   - {id: S4-ALL-003, stufe: 4, verfahren: ALL, schwere: FEHLER, status: entwurf, beschreibung: "Datumsfelder sind formal gueltige Kalenderdaten"}
   - {id: S4-ALL-004, stufe: 4, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "Betragsfelder entsprechen dem vorgegebenen Format", blocker: "Formatvorgabe fehlt"}
@@ -89,9 +117,27 @@ regeln:
   - {id: S4-302-004, stufe: 4, verfahren: sgbv-302, schwere: FEHLER, status: entwurf, beschreibung: "Verwendeter Schluesselwert ist zum Leistungsdatum gueltig"}
   - {id: S4-301-001, stufe: 4, verfahren: sgbv-301, schwere: FEHLER, status: experimental, beschreibung: "Schluessel entsprechen § 301 Anlage 2 in stichtagsgueltiger Version"}
   - {id: S4-300-001, stufe: 4, verfahren: sgbv-300, schwere: FEHLER, status: experimental, beschreibung: "PZN gueltig oder zulaessiges Sonderkennzeichen"}
+  - {id: S4-XI-001, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Alle Schluesselausprägungen entsprechen der Technischen Anlage 3 in der stichtagsgueltigen Version", quelle: "TA 3 Pflege V 6.4.0"}
+  - {id: S4-XI-002, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "IK der Pflegekasse in PLGA.FKT und PLAA.FKT beginnt mit 18", quelle: "TA 1 Pflege, Abschnitt 4.5.2.1"}
+  - {id: S4-XI-003, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Rechnungsnummer enthaelt keine Sonderzeichen ausser - und / als Gliederungszeichen, keine aufeinanderfolgenden Gliederungszeichen, beginnt und endet nicht mit einem Gliederungszeichen", quelle: "TA 1 Pflege, Abschnitt 4.5.2.1"}
+  - {id: S4-XI-004, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Eindeutige Belegnummer enthaelt nur Buchstaben, Ziffern, / und -", quelle: "TA 1 Pflege, Abschnitt 4.5.2.2"}
+  - {id: S4-XI-005, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "MAN traegt entweder Pflegestufe oder Pflegegrad: Abrechnungszeitraum vor 01.01.2017 Pflegestufe, danach Pflegegrad; Pflegeklasse nur teil-/vollstationaer und nur bis 31.12.2016", quelle: "TA 1 Pflege, Abschnitt 4.5.2.2"}
+  - {id: S4-XI-006, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Das Datenelement Leistung in ELS wird ueber die Verguetungsart aufgeloest (01 zu 2.7.1, 02 zu 2.7.2, 03/04 zu 2.7.3, 05 zu 2.7.4, 06 zu 2.7.5, 07 zu 2.7.6, 08 zu 2.7.7, 99 zu 2.7.8)", quelle: "TA 3 Pflege, Schluessel 2.7"}
+  - {id: S4-XI-007, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "ESK.Kennzeichen der Leistungserbringung ist ein Kalendertag 01-31 oder 99 (nur bei fixen Monatspauschalen)", quelle: "TA 1 Pflege, Abschnitt 4.5.2.2"}
+  - {id: S4-XI-008, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Bei ambulanten Pflege-/Betreuungsdiensten und Einzelpflegekraeften nach § 77 SGB XI ist die Beschaeftigtennummer belegt - echte Nummer oder Ersatzwert 999999996/7/8", quelle: "TA 1 Pflege, Abschnitt 4.5.2.2; TA 3, Schluessel 2.17"}
+  - {id: S4-XI-009, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "ZUS.Wert wird mit allen 5 Nachkommastellen gemeldet", quelle: "TA 1 Pflege, Abschnitt 4.5.2.2"}
+  - {id: S4-XI-010, stufe: 4, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "INV.Versicherten-Nummer enthaelt keine Fuellzeichen; fehlt sie (Ersatzverfahren), ist im NAD die Anschrift zu uebermitteln", quelle: "TA 1 Pflege, Abschnitte 4.4.2 und 4.5.2.2"}
 
   # --- Stufe 5 ---
-  - {id: S5-ALL-001, stufe: 5, verfahren: ALL, schwere: FEHLER, status: experimental, beschreibung: "Absender-IK im Auftragssatz = Absender-IK in den Nutzdaten", blocker: "Feldzuordnung verifizieren"}
+  - {id: S5-ALL-001, stufe: 5, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "ABSENDER_EIGNER im Auftragssatz = Absenderbezeichnung im UNB-Segment der Nutzdaten", quelle: "Anlage 2 GGT; TA 1 Pflege, Abschnitt 4.5.1"}
+  - {id: S5-ALL-002, stufe: 5, verfahren: ALL, schwere: FEHLER, status: spezifiziert, beschreibung: "DATEINAME im Auftragssatz = Anwendungsreferenz im UNB-Segment (logischer Dateiname)", quelle: "TA 1 Pflege, Anhang 3, Abschnitt 2.2.1"}
+  - {id: S5-XI-001, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "PLGA.FKT und PLAA.FKT stimmen in Verarbeitungskennzeichen, IK des Leistungserbringers, IK des Kostentraegers und IK der Pflegekasse ueberein", quelle: "TA 1 Pflege, Abschnitt 4.5.2"}
+  - {id: S5-XI-002, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "PLGA.REC und PLAA.REC stimmen in Rechnungsdatum, Rechnungsart und Waehrungskennzeichen ueberein; die Rechnungsnummer ausser bei Sammelrechnungen", quelle: "TA 1 Pflege, Abschnitt 4.5.2"}
+  - {id: S5-XI-003, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "PLGA.GES.Gesamtrechnungsbetrag = Summe der PLAA.IAF.Rechnungsbetraege", quelle: "TA 1 Pflege, Abschnitt 4.5.2.1"}
+  - {id: S5-XI-004, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "IAF.Rechnungsbetrag = Gesamtbruttobetrag abzueglich Zuzahlung/Eigenanteil und Beihilfebetrag", quelle: "TA 1 Pflege, Abschnitt 4.5.2.2"}
+  - {id: S5-XI-005, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Das Waehrungskennzeichen ist in allen PLGA- und PLAA-Nachrichten einer Nutzdatendatei identisch", quelle: "TA 1 Pflege, Abschnitt 4.5.2.1"}
+  - {id: S5-XI-006, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Innerhalb einer PLGA werden nur PLAA derselben Leistungsart (SRD) abgerechnet; je Datei nur eine Rechnungsart", quelle: "TA 1 Pflege, Abschnitte 4.2 und 4.4"}
+  - {id: S5-XI-007, stufe: 5, verfahren: sgbxi-105, schwere: FEHLER, status: spezifiziert, beschreibung: "Bei Uebermittlung ueber KIM enthaelt die Nutzdatendatei nur eine Pflegekasse und nur eine Leistungsart", quelle: "TA 1 Pflege, Abschnitte 4.3 und 4.6.1"}
   - {id: S5-302-001, stufe: 5, verfahren: sgbv-302, schwere: FEHLER, status: entwurf, beschreibung: "Zu jeder SLGA existiert mindestens eine zugehoerige SLLA"}
   - {id: S5-302-002, stufe: 5, verfahren: sgbv-302, schwere: FEHLER, status: entwurf, beschreibung: "Rechnungsbezug zwischen SLGA und SLLA ist aufloesbar"}
   - {id: S5-302-003, stufe: 5, verfahren: sgbv-302, schwere: FEHLER, status: entwurf, beschreibung: "Gesamtbetrag im GES-Segment = Summe der Positionsbetraege"}

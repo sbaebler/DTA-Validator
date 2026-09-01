@@ -88,8 +88,15 @@ Die **Systemuntersuchung der ITSG** prüft Abrechnungsprogramme für Entgelt- un
 Zahlstellenabrechnung; erfolgreiche Prüfung führt zum **GKV-Zertifikat**.
 
 > ❓ Ob und in welcher Form eine vergleichbare Zertifizierungspflicht für
-> **§ 302-Abrechnungssoftware** besteht, ist nicht belegt und muss geklärt werden —
-> relevant für die Positionierung des DTA-Validators als Produkt.
+> **§ 302-Abrechnungssoftware** besteht, ist nicht belegt und muss geklärt werden (❓-16a).
+> Für **§ 105 SGB XI** ist die Frage beantwortet: Abschnitt 4.2.1 der Vereinbarung nach
+> § 105 Abs. 2 SGB XI lässt nur Software zu, die die technischen Anforderungen erfüllt;
+> der Nachweis erfolgt über eine **Softwareprüfung nach Anhang 4 der TA 1** (Prüfkatalog
+> und Selbsterklärung), nicht über eine ITSG-Systemuntersuchung. ✅ [Q22]
+>
+> Beides ist für die Positionierung des DTA-Validators als Produkt relevant: Wo eine
+> Prüfpflicht besteht, ist ein vorgelagerter Validator kein Ersatz, sondern die
+> Vorstufe zum Prüfkatalog.
 
 ## 5. Kryptografie-Roadmap: BSI TR-02102 und PQC
 

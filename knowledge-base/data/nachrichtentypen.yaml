@@ -2,7 +2,7 @@
 # vertrauen: belegt | sekundaer | offen
 
 schema_version: 1
-stand: 2026-08-31
+stand: 2026-09-01
 
 nachrichtentypen:
 
@@ -23,15 +23,64 @@ nachrichtentypen:
         Leistungsbereich (Hilfsmittel, Heilmittel, HKP, Haushaltshilfe,
         Krankentransport) sind nicht belegt.
 
+  # Quelle: TA 1 (Pflege) V 6.4.0, Abschnitte 4.3 bis 4.5. Ausgewertet am 2026-09-01.
   sgbxi-105:
     - kennung: PLGA
-      bezeichnung: Gesamtaufstellung der Abrechnung
+      bezeichnung: Gesamtaufstellung der Abrechnung (Rechnung)
       richtung: le_to_pk
-      vertrauen: sekundaer
+      version_aktuell: "6"
+      version_gueltig_ab: 2024-09-01
+      vertrauen: belegt
+      segmente:
+        - {kennung: FKT, art: M, max: 1, inhalt: "Verarbeitungskennzeichen, Sammelrechnung, IK Rechnungssteller/LE, IK Kostentraeger, IK Pflegekasse, IK Absender der Datei"}
+        - {kennung: REC, art: M, max: 1, inhalt: "Rechnungsnummer (Sammel:Einzel), Rechnungsdatum, Rechnungsart, Waehrungskennzeichen"}
+        - {kennung: SRD, art: M, max: 1, inhalt: "Leistungserbringergruppe (Abrechnungscode:Tarifkennzeichen), Leistungsart"}
+        - {kennung: UST, art: K, max: 1, inhalt: "Ordnungsnummer, Kennung USt-Befreiung, Grund der Befreiung; entfaellt in der Sammelrechnungs-PLGA"}
+        - {kennung: GES, art: M, max: 1, inhalt: "Summe Gesamtbrutto, Summe Zuzahlungen/Eigenanteile, Summe Beihilfe, Gesamtrechnungsbetrag, MwSt-Betrag"}
+        - {kennung: NAM, art: M, max: 1, inhalt: "Name 1 bis Name 4 des Rechnungsstellers, je ..30 Stellen"}
     - kennung: PLAA
-      bezeichnung: Abrechnungsdaten
+      bezeichnung: Abrechnungsdaten je Abrechnungsfall
       richtung: le_to_pk
-      vertrauen: sekundaer
+      version_aktuell: "6"
+      version_gueltig_ab: 2024-09-01
+      vertrauen: belegt
+      abrechnungsfall: >-
+        Ein Abrechnungsfall umfasst die Daten eines Versicherten in einem Kalendermonat mit
+        derselben Pflegestufe/Pflegeklasse oder demselben Pflegegrad. Bei Wechsel innerhalb
+        des Monats ist ein neuer Abrechnungsfall mit neuer Rechnungsnummer zu bilden.
+      grammatik: "FKT REC ( INV NAD IMG? MAN ( ESK ( ELS ZUS* HIL? )+ )+ IAF )+"
+      segmente:
+        - {kennung: FKT, art: M, kardinalitaet: "1 je Nachricht", inhalt: "Verarbeitungskennzeichen, IK LE, IK Kostentraeger, IK Pflegekasse, IK Rechnungssteller"}
+        - {kennung: REC, art: M, kardinalitaet: "1 je Nachricht", inhalt: "identisch mit PLGA.REC"}
+        - {kennung: INV, art: M, kardinalitaet: "1-n je Nachricht", inhalt: "Versicherten-Nummer, eindeutige Belegnummer; Beginn des Abrechnungsfalls"}
+        - {kennung: NAD, art: M, kardinalitaet: "1 je INV", inhalt: "Nachname, Vorname, Geburtsdatum, optional Anschrift"}
+        - {kennung: IMG, art: K, kardinalitaet: "0-n je INV", inhalt: "Leistungsnachweis-ID (UUID); nur bei vollelektronischer Abrechnung", entfaellt_ab_ta1: 6.5.0}
+        - {kennung: MAN, art: M, kardinalitaet: "1 je INV", inhalt: "Monat der Leistungserbringung, Pflegestufe, Pflegeklasse, Pflegegrad"}
+        - {kennung: ESK, art: M, kardinalitaet: "1-n je MAN", inhalt: "Kennzeichen der Leistungserbringung (Kalendertag oder 99), Uhrzeit Beginn; aufsteigend zu sortieren"}
+        - {kennung: ELS, art: M, kardinalitaet: "1-n je ESK", inhalt: "Leistungsziffer (Leistungsart:Verguetungsart:Qualifikation:Leistung), Einzelpreis, Punktwert, Punktzahl, Dauer/km, Anzahl, bis zu 2 Beschaeftigtennummern"}
+        - {kennung: ZUS, art: K, kardinalitaet: "0-n je ELS", inhalt: "Zuschlaege und Abzuege je Leistung"}
+        - {kennung: HIL, art: K, kardinalitaet: "0-1 je ELS", inhalt: "technische und zum Verbrauch bestimmte Pflegehilfsmittel"}
+        - {kennung: IAF, art: M, kardinalitaet: "1 je INV", inhalt: "Gesamtbrutto, Zuzahlung/Eigenanteil, Beihilfe, Rechnungsbetrag; Ende des Abrechnungsfalls"}
+      dateiaufbau:
+        regel: >-
+          Auf eine PLGA folgt immer eine PLAA - ausser die PLGA ist als Sammelrechnung
+          gekennzeichnet; auf eine Sammelrechnungs-PLGA folgt nur einmal eine PLGA.
+        rechnungsarten:
+          "1": Abrechnung von Leistungserbringer, Zahlung an IK Leistungserbringer
+          "2": Abrechnung ueber Abrechnungsstelle ohne Inkassovollmacht, Zahlung an IK Leistungserbringer
+          "3": Abrechnung ueber Abrechnungsstelle mit Inkassovollmacht, Zahlung an IK Abrechnungsstelle
+      historie:
+        - {typ: PLGA, version: 1, gueltig_ab: 2003-01-31, gueltig_bis: 2003-07-28}
+        - {typ: PLAA, version: 1, gueltig_ab: 2003-01-31, gueltig_bis: 2003-07-28}
+        - {typ: PLGA, version: 2, gueltig_ab: 2003-07-29, gueltig_bis: 2022-12-31}
+        - {typ: PLAA, version: 2, gueltig_ab: 2003-07-29, gueltig_bis: 2016-12-31}
+        - {typ: PLAA, version: 3, gueltig_ab: 2017-01-01, gueltig_bis: 2022-12-31}
+        - {typ: PLAA, version: 4, gueltig_ab: 2023-01-01, gueltig_bis: 2023-10-31}
+        - {typ: PLGA, version: 4, gueltig_ab: 2023-01-01, gueltig_bis: 2023-10-31}
+        - {typ: PLAA, version: 5, gueltig_ab: 2023-07-01, gueltig_bis: 2024-08-31}
+        - {typ: PLGA, version: 5, gueltig_ab: 2023-07-01, gueltig_bis: 2024-08-31}
+        - {typ: PLAA, version: 6, gueltig_ab: 2024-09-01, gueltig_bis: null}
+        - {typ: PLGA, version: 6, gueltig_ab: 2024-09-01, gueltig_bis: null}
 
   sgbv-301:
     - {kennung: AUFN, bezeichnung: Aufnahmeanzeige stationaere Behandlung, richtung: kh_to_kk, vertrauen: sekundaer}
@@ -56,10 +105,41 @@ standardsegmente:
   - {kennung: CUX, bezeichnung: Waehrung, vertrauen: sekundaer}
   - {kennung: DPV, bezeichnung: nicht belegt, vertrauen: offen}
 
-# EDIFACT-Servicesegmente
+# EDIFACT-Servicesegmente. Felder belegt fuer § 105 SGB XI (TA 1 Abschnitt 4.5.1).
 servicesegmente:
-  - {kennung: UNA, bezeichnung: Service String Advice - sechs Trennzeichen, vertrauen: sekundaer}
-  - {kennung: UNB, bezeichnung: Kopfsegment der Nutzdatendatei, vertrauen: sekundaer}
-  - {kennung: UNH, bezeichnung: Nachrichtenkopf, vertrauen: offen}
-  - {kennung: UNT, bezeichnung: Nachrichtenende, vertrauen: offen}
-  - {kennung: UNZ, bezeichnung: Endesegment der Datei, vertrauen: sekundaer}
+  - kennung: UNA
+    bezeichnung: Service String Advice - sechs Trennzeichen
+    vertrauen: sekundaer
+    hinweis: >-
+      Fuer § 105 SGB XI NICHT vorgesehen - die TA 1 legt die Trennzeichen fest
+      (Doppelpunkt, Plus, Komma, Fragezeichen, Apostroph). Ein UNA in einer
+      § 105-Datei ist selbst ein Befund.
+  - kennung: UNB
+    bezeichnung: Kopfsegment der Nutzdatendatei
+    vertrauen: belegt
+    felder_sgbxi_105:
+      - {de: S001, name: Syntax, inhalt: "UNOC:3"}
+      - {de: "0004", name: Absenderbezeichnung, laenge: 9, typ: n, art: M, inhalt: IK der absendenden Stelle}
+      - {de: "0010", name: Empfaengerbezeichnung, laenge: 9, typ: n, art: M, inhalt: IK der Datenannahmestelle mit Entschluesselungsbefugnis}
+      - {de: S004, name: Datum/Uhrzeit, format: "JJJJMMTT:hhmm", art: M}
+      - {de: "0020", name: Datenaustauschreferenz, laenge: "..5", typ: n, art: M, inhalt: fortlaufend, beginnend mit 1}
+      - {de: "0026", name: Anwendungsreferenz, laenge: 11, typ: an, art: M, inhalt: logischer Dateiname}
+      - {de: "0035", name: Dateiindikator, laenge: 1, typ: n, art: M, werte: {"0": Testdatei, "1": Erprobungsdatei, "2": Echtdatei}}
+  - kennung: UNH
+    bezeichnung: Nachrichtentypkopfsegment
+    vertrauen: belegt
+    felder_sgbxi_105:
+      - {de: "0062", name: Nachrichtenreferenznummer, laenge: "..5", typ: n, art: M}
+      - {de: S009, name: Nachrichtenkennung, inhalt: "PLGA:6 oder PLAA:6"}
+  - kennung: UNT
+    bezeichnung: Nachrichtentypendesegment
+    vertrauen: belegt
+    felder_sgbxi_105:
+      - {de: "0074", name: Anzahl Einheiten, laenge: "..6", typ: n, art: M, inhalt: Segmente der Nachricht einschliesslich UNH und UNT}
+      - {de: "0062", name: Nachrichtenreferenznummer, laenge: "..5", typ: n, art: M, inhalt: wie im UNH}
+  - kennung: UNZ
+    bezeichnung: Endesegment der Nutzdatendatei
+    vertrauen: belegt
+    felder_sgbxi_105:
+      - {de: "0036", name: Anzahl der Nachrichten, laenge: "..6", typ: n, art: M, inhalt: Anzahl UNH in der Datei}
+      - {de: "0020", name: Datenaustauschreferenz, laenge: "..5", typ: n, art: M, inhalt: wie im UNB}

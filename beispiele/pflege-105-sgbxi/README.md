@@ -1,329 +1,337 @@
-# Beispiel: § 105 SGB XI (Pflege) — Dateipärchen `TPLG0001` / `TPLG0001.AUF`
+# Beispiel: § 105 SGB XI (Pflege) — Dateipärchen `TPFL0001` / `TPFL0001.AUF`
 
 Synthetisches Abrechnungsbeispiel eines ambulanten Pflegedienstes gegenüber einer
-Pflegekasse. Gedacht als **Fixture** für Parser- und Regelentwicklung, solange die
-Technische Anlage 1 zu § 105 Abs. 2 SGB XI noch nicht beschafft ist.
+Pflegekasse. Gedacht als **Fixture** für Parser- und Regelentwicklung.
 
-> ## ⚠️ Wie belastbar ist dieses Beispiel?
+> ## Wie belastbar ist dieses Beispiel?
 >
-> **Der Transportrahmen ist an den belegten Vorgaben der Wissensbibliothek ausgerichtet.
-> Die fachliche Segment- und Feldstruktur von PLGA/PLAA ist erfunden.**
+> **Struktur und Feldbelegung sind gegen die Primärdokumente gebaut.** Am 01.09.2026
+> wurden ausgewertet: Anlage 2 GGT (Auftragssatz V 1.0), Anlage 4 GGT
+> (Verfahrenskennungen), § 105 SGB XI Technische Anlage 1 V 6.4.0, Technische Anlage 3
+> V 6.4.0 (Schlüsselverzeichnisse), TA 1 Anhang 1 (Struktur Auftragsdatei) und Anhang 3
+> (Datenübermittlungsarten) sowie das Gemeinsame Rundschreiben Institutionskennzeichen
+> 02/2026.
 >
-> Die Wissensbibliothek belegt für § 105 SGB XI nur, **dass** es die Nachrichtentypen
-> PLGA und PLAA gibt und dass sie das strukturelle Gegenstück zu SLGA/SLLA aus § 302
-> SGB V sind — **nicht**, aus welchen Segmenten sie bestehen oder welche Felder diese
-> Segmente führen. Siehe
-> [`../../knowledge-base/20-verfahren/05-para105-sgbxi-pflege.md`](../../knowledge-base/20-verfahren/05-para105-sgbxi-pflege.md).
+> **Erfunden sind nur die Stammdaten** — Namen, Anschriften, IK, KVNR, Preise,
+> Leistungskomplexnummern und der Sachverhalt selbst.
 >
-> Dieses Beispiel darf deshalb **nicht** als Referenz für die Erzeugung echter
-> Abrechnungsdateien verwendet werden. Es ist eine Struktur-Attrappe mit korrekt
-> gerechneten Prüfziffern und in sich konsistenten Zählern und Summen — geeignet, um
-> Parser, Zählerlogik und Summenregeln zu entwickeln, bevor die TA 1 vorliegt.
->
-> Spalte **Herkunft** in allen Tabellen unten sagt für jedes Feld, woran man ist.
+> Das Beispiel ist ein **Positivfall**: eine korrekte Implementierung meldet darauf
+> keinen Befund. Was es *nicht* leistet, steht in Abschnitt 8.
+
+### Was sich gegenüber der Vorfassung geändert hat
+
+Die frühere Fassung (`TPLG0001`, erstellt ohne Primärdokumente) war strukturell falsch.
+Die Unterschiede sind lehrreich genug, um sie festzuhalten:
+
+| Vorher | Jetzt | Warum |
+|---|---|---|
+| Dateiname `TPLG0001`, Verfahrenskennung `PLG` | `TPFL0001`, Kennung `TPFL0` | Anlage 4 GGT Kapitel 1.5: `PFL` für den Datenaustausch nach § 105 SGB XI |
+| Auftragssatz 128 Byte, Layout geraten | **348 Byte**, 37 Felder nach Katalog | Anlage 2 GGT: `LÄNGE_AUFTRAG` = Konstante `00000348` |
+| `UNA:+.? '` mit Dezimalpunkt | **kein `UNA`**, Dezimalzeichen `,` | TA 1 Abschnitt 4.1 Abs. 10 legt die Trennzeichen fest und sieht kein `UNA` vor |
+| 1 PLGA + 2 PLAA | 1 PLGA + **1** PLAA mit zwei `INV`-Blöcken | „Auf eine PLGA hat immer eine PLAA zu folgen" — beide Fälle betreffen dieselbe Pflegekasse |
+| Segmente `SKO`, `EPL`, `GES` in PLAA | `SRD`, `MAN`, `ELS`, `IAF` | `SKO` und `EPL` existieren in § 105 SGB XI nicht; `GES` gehört in die PLGA, das Fall-Ende ist `IAF` |
+| Monatsmengen (`20`, `31`) in einer Zeile | **ein `ESK` je Einsatz**, darunter die `ELS` | `ESK` ist je Leistungseinsatz vorzugeben, aufsteigend nach Tag und Uhrzeit |
+| `UNH+…+PLGA:06:04:00` | `UNH+…+PLGA:6` | `S009` besteht aus Nachrichtentyp-Kennung und **Versionsnummer** (aktuell `6`) |
+| IK des Pflegedienstes `261099874` (Klassifikation 26 = Krankenhaus) | `461100877` (Klassifikation 46) | Klassifikationstabelle des Gemeinsamen Rundschreibens IK |
+| Kostenträger-IK als Pflegekasse geführt | getrennte IK für Kostenträger (`10…`) und Pflegekasse (`18…`) | TA 1: `IK der Pflegekasse` beginnt immer mit `18` |
+| Firmenname 38 Zeichen | auf 27 gekürzt | `PLGA.NAM.Name 1` ist `..30` Stellen lang |
 
 ## 1. Datenschutz
 
 Alle Daten sind frei erfunden (REQ-DSGVO-03). Personennamen, Anschriften, KVNR, IK,
-Rechnungs- und Beträge sind synthetisch; Prüfziffern wurden nach den in der
+Rechnungsnummern und Beträge sind synthetisch; Prüfziffern wurden nach den in der
 Wissensbibliothek dokumentierten Algorithmen gerechnet, damit die Werte formal gültig
 sind. IK sind neunstellige Zahlen aus einem endlichen Wertebereich — eine zufällige
 Übereinstimmung mit einem real vergebenen IK ist nicht ausschließbar und ohne Bedeutung.
+
+Als **Beschäftigtennummern** nach § 293 Abs. 8 Satz 2 SGB V verwendet das Beispiel
+ausschließlich die in Schlüssel 2.17 der TA 3 definierten **Ersatzwerte**
+(`999999998` neu, `999999996` Auszubildende). Vergabe und Prüfverfahren echter
+Beschäftigtennummern sind in dieser Wissensbibliothek nicht erfasst — eine erfundene
+neunstellige Nummer würde eine Formatzusage machen, die nicht belegt ist.
 
 ## 2. Der abgebildete Fall
 
 | | |
 |---|---|
-| **Leistungserbringer** | Ambulanter Pflegedienst Sonnenhof GmbH, Lindenweg 14, 12345 Musterstadt |
-| **IK Leistungserbringer** | `261099874` |
-| **Empfänger (Datenannahmestelle)** | `109999712` |
-| **Belegannahmestelle** | `108999630` |
-| **Kostenträger (Pflegekasse)** | `106999146` |
+| **Leistungserbringer** | Pflegedienst Sonnenhof GmbH, Lindenweg 14, 12345 Musterstadt |
+| **IK Leistungserbringer** | `461100877` (Klassifikation 46, Regionalbereich 11 Berlin) |
+| **Datenannahmestelle** | `661100423` (Klassifikation 66, Rechenzentrum) |
+| **Belegannahmestelle** | `661100559` |
+| **Kostenträger** | `109524616` — Muster BKK (Klassifikation 10) |
+| **Pflegekasse** | `189524616` — Pflegekasse bei der Muster BKK (Klassifikation 18) |
+| **Abrechnungscode / Tarifkennzeichen** | `36` (privat gewerblicher Anbieter) / `23000` (Berlin, ohne Sondertarif) |
+| **Leistungsart** | `01` — ambulante Pflege |
+| **Rechnungsart** | `1` — Abrechnung von Leistungserbringer, Zahlung an IK Leistungserbringer |
 | **Abrechnungszeitraum** | 01.07.2026 – 31.07.2026 |
-| **Rechnungsnummer / -datum** | `2026070001` / 05.08.2026 |
+| **Rechnungsnummer / -datum** | `2026070001:0` / 05.08.2026 |
 | **Dateierstellung** | 05.08.2026, 11:47 |
 | **Abrechnungsfälle** | 2 Pflegebedürftige |
 | **Rechnungsbetrag** | 1.671,00 EUR |
-| **Umsatzsteuer** | steuerfrei (Pflegeleistungen nach SGB XI, § 4 Nr. 16 UStG) |
+| **Umsatzsteuer** | befreit, Grund `01` (§ 4 Nr. 16 UStG) |
 
-### Abrechnungsfall 001
+> Kostenträger und Pflegekasse teilen Regionalbereich und Seriennummer und unterscheiden
+> sich nur in der Klassifikation. Weil die Prüfziffer **nur aus den Stellen 3–8** gebildet
+> wird, ist sie bei beiden IK dieselbe (`6`). Das ist kein Zufall des Beispiels, sondern
+> eine Eigenschaft des Verfahrens — und eine gute Testfalle für eine Implementierung, die
+> die Klassifikation versehentlich in die Rechnung einbezieht.
+
+### Abrechnungsfall `2607001`
 
 | | |
 |---|---|
 | Versicherte | Hanna Kerzenmacher, geb. 12.03.1948 |
 | KVNR | `K741852967` |
 | Pflegegrad | 3 |
+| Einsätze | 20 (je 07:15 Uhr) |
 
-| Position | Bezeichnung | Menge | Einzelpreis | Betrag |
+| Leistungsziffer | Bezeichnung | Einsätze | Einzelpreis | Betrag |
 |---|---|---:|---:|---:|
-| `LK03` | Grosse Morgentoilette | 20 | 24,50 | 490,00 |
-| `LK15` | Hauswirtschaftliche Versorgung | 8 | 18,20 | 145,60 |
-| | **Summe Fall 001** | | | **635,60** |
+| `01:01:1:003` | Große Morgentoilette (Pflegefachkraft) | 20 | 24,50 | 490,00 |
+| `01:01:2:015` | Hauswirtschaftliche Versorgung (hausw. Fachkraft) | 8 | 18,20 | 145,60 |
+| | **Summe** | | | **635,60** |
 
-### Abrechnungsfall 002
+### Abrechnungsfall `2607002`
 
 | | |
 |---|---|
 | Versicherter | Otto Brinkmeier, geb. 27.11.1939 |
 | KVNR | `M305921844` |
 | Pflegegrad | 4 |
+| Einsätze | 31 (je 07:45 Uhr) |
 
-| Position | Bezeichnung | Menge | Einzelpreis | Betrag |
+| Leistungsziffer | Bezeichnung | Einsätze | Einzelpreis | Betrag |
 |---|---|---:|---:|---:|
-| `LK04` | Kleine Morgentoilette mit Lagern | 31 | 28,90 | 895,90 |
-| `LK31` | Wegepauschale | 31 | 4,50 | 139,50 |
-| | **Summe Fall 002** | | | **1.035,40** |
+| `01:01:1:004` | Kleine Morgentoilette mit Lagern | 31 | 28,90 | 895,90 |
+| `01:06:0:03` | Wegepauschale (Einsatz-/Fahrtkostenpauschale) | 31 | 4,50 | 139,50 |
+| | **Summe** | | | **1.035,40** |
 
-Beide Beträge liegen unter dem jeweiligen monatlichen Sachleistungsbetrag des
-Pflegegrades; ein Eigenanteil entsteht daher nicht und wird in diesem Beispiel auch
-nicht modelliert. Leistungskomplexnummern (`LK…`) sind erfunden — real ergeben sie sich
-aus dem jeweiligen Landesrahmenvertrag nach § 75 SGB XI.
+Beide Beträge liegen unter dem monatlichen Sachleistungsbetrag des jeweiligen
+Pflegegrades; ein Eigenanteil entsteht daher nicht und wird nicht modelliert.
+
+**Die Leistungsziffer ist zusammengesetzt** aus Art der abgegebenen Leistung (2.4),
+Vergütungsart (2.5), qualifikationsabhängiger Vergütung (2.6) und Leistung (2.7.n) —
+getrennt durch Doppelpunkte. Welcher Abschnitt für „Leistung" gilt, entscheidet die
+Vergütungsart: `01` → 2.7.1 (Leistungskomplexe, 3 Stellen), `06` → 2.7.5
+(Wegegebühren-Art, 2 Stellen). Die Leistungskomplexnummern `003`, `004` und `015` sind
+**erfunden** — sie ergeben sich real aus der jeweiligen Vergütungsvereinbarung.
 
 ## 3. Das Dateipärchen
 
 | Datei | Inhalt | Größe |
 |---|---|---|
-| [`TPLG0001`](TPLG0001) | Nutzdaten (PLGA/PLAA), **Klartext** | 1002 Bytes |
-| [`TPLG0001.AUF`](TPLG0001.AUF) | Auftragsdatei, Klartext, Festsatzformat | 128 Bytes |
-| [`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) | Urbeleg: Leistungsnachweise beider Abrechnungsfälle, druckbar | 2 Seiten |
+| [`TPFL0001`](TPFL0001) | Nutzdaten (PLGA/PLAA), EDIFACT, **Klartext** | 4924 Bytes, 163 Segmente |
+| [`TPFL0001.AUF`](TPFL0001.AUF) | Auftragsdatei, Klartext, Festsatzformat | 348 Bytes |
+| [`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) | Urbeleg: Leistungsnachweise beider Abrechnungsfälle | 2 Seiten |
 | [`urbeleg-begleitzettel.html`](urbeleg-begleitzettel.html) | Begleitzettel für die Urbelege an die Belegannahmestelle | 1 Seite |
 | [`urbeleg-leistungsnachweis.pdf`](urbeleg-leistungsnachweis.pdf) | dasselbe als PDF, A4 quer | 2 Seiten |
 | [`urbeleg-begleitzettel.pdf`](urbeleg-begleitzettel.pdf) | dasselbe als PDF, A4 hoch | 1 Seite |
+| [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) | Erwartungswerte für Tests | — |
 
-### Dateiname
+### Zwei Dateinamen, zwei Systematiken
+
+Der **physikalische** (Transfer-)Dateiname nach Anhang 3 Abschnitt 2.2.2:
 
 ```
-  T   P L G   0    0 0 1
+  T   P F L   0    0 0 1
   │   └─┬─┘   │    └─┬─┘
-  │     │     │      └──── Stellen 6–8: Transfernummer  "001"
-  │     │     └─────────── Stelle 5:    Verfahrensversion  "0"
-  │     └───────────────── Stellen 2–4: Verfahrenskennung  "PLG"   ❓ erfunden
-  └─────────────────────── Stelle 1:    "T" = Testdaten
+  │     │     │      └──── Stellen 6–8: Transfernummer        "001"
+  │     │     └─────────── Stelle 5:    Verfahrensversion     "0"
+  │     └───────────────── Stellen 2–4: Verfahren             "PFL"
+  └─────────────────────── Stelle 1:    "T" = Test/Erprobung
 ```
 
-Aufbau nach [`knowledge-base/30-technik/02-kks-auftragsdatei-dateinamen.md`](../../knowledge-base/30-technik/02-kks-auftragsdatei-dateinamen.md).
-Die Verfahrenskennung `PLG` ist **erfunden**: Die Werteliste steht in Anlage 4 GGT, die
-noch nicht vorliegt — die Wissensbibliothek führt sie als „wichtigste einzelne
-Referenzdatei" und als offene Lücke.
+Der **logische** Dateiname nach Anhang 3 Abschnitt 2.2.1 — er steht im Feld `DATEINAME`
+des Auftragssatzes (Stellen 105–115) **und** in der `UNB`-Anwendungsreferenz:
+
+```
+  P L  0 7 6  0  0 1  S  B K
+  └┬┘  └─┬─┘  │  └┬┘  │  └┬┘
+   │     │    │   │   │   └── Stellen 10–11: Kassenart "BK" = Betriebskrankenkassen
+   │     │    │   │   └────── Stelle 9:      "S" = Selbstabrechner
+   │     │    │   └────────── Stellen 7–8:   lfd. Nummer je Kalenderjahr  "01"
+   │     │    └────────────── Stelle 6:      "0" = Regeldaten
+   │     └─────────────────── Stellen 3–5:   Abrechnungszeitraum "MMJ" = Juli 2026
+   └───────────────────────── Stellen 1–2:   "PL" = Pflege-Leistungserbringer
+```
+
+Nur der physikalische Name trägt das Test-/Echt-Kennzeichen. Die beiden Namen dürfen
+nicht verwechselt werden — und `DATEINAME` im Auftragssatz ist der **logische**.
 
 ### Zwei bewusste Abweichungen von der Realität
 
 | Abweichung | Grund |
 |---|---|
-| Die Nutzdatendatei ist **unverschlüsselt** | Real wäre `TPLG0001` der SECON-Umschlag (`EnvelopedData` über `SignedData`, Anlage 16 GGT). Hier liegt der **entschlüsselte Inhalt** unter dem Dateinamen, damit die Fixture ohne Schlüsselmaterial nutzbar ist. Prüfstufe 2 ist mit diesem Beispiel folglich **nicht** testbar. |
-| Test-, nicht Echtdaten (`T`) | Beispieldaten gehören nie in den Echtdatenpfad. |
+| Die Nutzdatendatei ist **unverschlüsselt** | Real wäre `TPFL0001` der SECON-Umschlag (`EnvelopedData` über `SignedData`, Anlage 16 GGT). Hier liegt der Klartext unter dem Dateinamen, damit die Fixture ohne Schlüsselmaterial nutzbar ist. Prüfstufe 2 ist damit **nicht** testbar. Der Auftragssatz weist das konsistent aus: `VERSCHLÜSSELUNGSART` und `ELEKTRONISCHE_UNTERSCHRIFT` stehen beide auf `00` — eine der zwei zulässigen Kombinationen. |
+| Test-, nicht Echtdaten (`T` / Dateiindikator `0`) | Beispieldaten gehören nie in den Echtdatenpfad. |
 
-## 4. Auftragsdatei `TPLG0001.AUF`
+## 4. Auftragsdatei `TPFL0001.AUF`
 
-Positionsbasiertes Festsatzformat, 128 Zeichen, keine Trennzeichen, keine Zeilenumbrüche,
-rechts mit Leerzeichen aufgefüllt.
+Positionsbasiertes Festsatzformat, **348 Byte**, ISO 8859-1, keine Trennzeichen, keine
+Zeilenumbrüche. Feldkatalog:
+[`../../knowledge-base/data/auftragssatz.yaml`](../../knowledge-base/data/auftragssatz.yaml).
 
-> ❗ **Das Satzlayout unten ist bis auf eine Zeile erfunden.** Belegt ist allein die
-> Position der Verfahrenskennung (Stellen 20–24). Die vollständige Feldliste steht in
-> **Anlage 2 GGT**, die nicht vorliegt; die Wissensbibliothek nennt Stufe 1 deshalb ohne
-> dieses Dokument als „nicht implementierbar". Die Gesamtlänge 128 ist ein **Platzhalter**
-> und entspricht mit hoher Wahrscheinlichkeit nicht der echten Satzlänge.
+`␣` steht für ein Leerzeichen.
 
-| Position | Länge | Feld | Wert | Herkunft |
-|---|---:|---|---|---|
-| 1–3 | 3 | `SATZART` | `AUF` | erfunden |
-| 4–11 | 8 | `DATEINAME_NUTZDATEN` | `TPLG0001` | erfunden (Kopplung selbst belegt) |
-| 12–19 | 8 | `ERSTELLUNGSDATUM` (JJJJMMTT) | `20260805` | erfunden |
-| **20–24** | **5** | **`VERFAHREN_KENNUNG`** | `PLG0` + Blank | **Position belegt** ⚠️ [Q20] |
-| 25 | 1 | `TEST_ECHT_KENNZEICHEN` | `T` | erfunden |
-| 26–34 | 9 | `ABSENDER_EIGNER` (IK) | `261099874` | Feld belegt, Position erfunden ⚠️ [Q7] |
-| 35–43 | 9 | `EMPFAENGER` (IK) | `109999712` | Feld belegt, Position erfunden ⚠️ [Q7] |
-| 44–46 | 3 | `TRANSFER_NUMMER` | `001` | Feld belegt, Position erfunden ⚠️ [Q7] |
-| 47–52 | 6 | `ERSTELLUNGSZEIT` (HHMMSS) | `114700` | erfunden |
-| 53–60 | 8 | `NUTZDATEN_LAENGE` (Bytes) | `00001002` | erfunden |
-| 61–64 | 4 | `ANZAHL_NACHRICHTEN` | `0003` | erfunden |
-| 65–72 | 8 | `VERSION_REGELWERK` | `6.4.0` | erfunden (Version selbst belegt ✅ [Q22]) |
-| 73–81 | 9 | `ABSENDER_PHYSIKALISCH` (IK) | `261099874` | erfunden |
-| 82–128 | 47 | `RESERVE` | Leerzeichen | erfunden |
+| Feld | Stellen | Länge | Wert |
+|---|---|---|---|
+| `IDENTIFIKATOR` | 1–6 | 6 | `500000` |
+| `VERSION` | 7–8 | 2 | `01` |
+| `LAENGE_AUFTRAG` | 9–16 | 8 | `00000348` |
+| `SEQUENZ_NR` | 17–19 | 3 | `000` |
+| `VERFAHREN_KENNUNG` | 20–24 | 5 | `TPFL0` |
+| `TRANSFER_NUMMER` | 25–27 | 3 | `001` |
+| `VERFAHREN_KENNUNG_SPEZIFIKATION` | 28–32 | 5 | `␣␣␣␣␣` |
+| `ABSENDER_EIGNER` | 33–47 | 15 | `461100877␣␣␣␣␣␣` |
+| `ABSENDER_PHYSIKALISCH` | 48–62 | 15 | `461100877␣␣␣␣␣␣` |
+| `EMPFAENGER_NUTZER` | 63–77 | 15 | `661100423␣␣␣␣␣␣` |
+| `EMPFAENGER_PHYSIKALISCH` | 78–92 | 15 | `661100423␣␣␣␣␣␣` |
+| `FEHLER_NUMMER` | 93–98 | 6 | `000000` |
+| `FEHLER_MASSNAHME` | 99–104 | 6 | `000000` |
+| `DATEINAME` | 105–115 | 11 | `PL076001SBK` |
+| `DATUM_ERSTELLUNG` | 116–129 | 14 | `20260805114700` |
+| `DATUM_UEBERTRAGUNG_GESENDET` | 130–143 | 14 | `20260805114730` |
+| `DATUM_UEBERTRAGUNG_EMPFANGEN_START` | 144–157 | 14 | `00000000000000` |
+| `DATUM_UEBERTRAGUNG_EMPFANGEN_ENDE` | 158–171 | 14 | `00000000000000` |
+| `DATEIVERSION` | 172–177 | 6 | `000000` |
+| `KORREKTUR` | 178–178 | 1 | `0` |
+| `DATEIGROESSE_NUTZDATEN` | 179–190 | 12 | `000000004924` |
+| `DATEIGROESSE_UEBERTRAGUNG` | 191–202 | 12 | `000000004924` |
+| `ZEICHENSATZ` | 203–204 | 2 | `I1` |
+| `KOMPRIMIERUNG` | 205–206 | 2 | `00` |
+| `VERSCHLUESSELUNGSART` | 207–208 | 2 | `00` |
+| `ELEKTRONISCHE_UNTERSCHRIFT` | 209–210 | 2 | `00` |
+| `SATZFORMAT` | 211–213 | 3 | `␣␣␣` |
+| `SATZLAENGE` | 214–218 | 5 | `00000` |
+| `BLOCKLAENGE` | 219–226 | 8 | `00000000` |
+| `STATUS` | 227–227 | 1 | `␣` |
+| `WIEDERHOLUNG` | 228–229 | 2 | `00` |
+| `UEBERTRAGUNGSWEG` | 230–230 | 1 | `5` |
+| `VERZOEGERTER_VERSAND` | 231–240 | 10 | `0000000000` |
+| `INFO_UND_FEHLERFELDER` | 241–246 | 6 | `000000` |
+| `VARIABLES_INFO_FELD` | 247–274 | 28 | `␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣` |
+| `E-MAIL-ADRESSE_ABSENDER` | 275–318 | 44 | `␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣…` |
+| `DATEI_BEZEICHNUNG` | 319–348 | 30 | `01␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣␣01` |
 
-`ABSENDER_PHYSIKALISCH` trennt den physikalischen Absender vom Eigner der Nutzdaten —
-bei Versand über ein Abrechnungszentrum fallen die beiden auseinander. Hier sind sie
-identisch, der Pflegedienst versendet selbst.
+Bemerkenswert an dieser Belegung:
 
-### Belegter Widerspruch, den dieses Beispiel sichtbar macht
+- **`VERFAHREN_KENNUNG_SPEZIFIKATION` bleibt leer.** Anlage 4 GGT legt die Werte je
+  Verfahren fest und schreibt die Beispiellisten nicht fort; für § 105 SGB XI ist keine
+  Belegung vorgesehen.
+- **`DATEI_BEZEICHNUNG` trägt zwei Dinge.** Stellen 319–320 die Art der abgegebenen
+  Leistung (`01`) — das ist eine Zusatzbelegung aus Anhang 1 der TA 1, die die Anlage 2
+  GGT nicht kennt. Stellen 347–348 die Anzahl der Gesamtpakete (`01`) nach Anlage 2 GGT.
+  Dazwischen 26 Leerzeichen.
+- **`E-MAIL-ADRESSE ABSENDER` bleibt leer.** Das Feld ist optional; für § 105 SGB XI
+  belegt Anhang 1 die Stellen 275–318 zudem abweichend als `DATEINAME_PHYSIKALISCH`.
+  Solange dieser Widerspruch offen ist (❓-18), macht das Beispiel keine Aussage.
+- **Kann-Felder sind nicht leer.** `DATUM_ÜBERTRAGUNG_EMPFANGEN_START` und `…_ENDE` sind
+  numerische Kann-Felder und deshalb mit Nullen gefüllt, nicht mit Leerzeichen.
 
-`VERFAHREN_KENNUNG` belegt **fünf** Stellen (20–24), Regel `S1-ALL-003` verlangt aber
-Übereinstimmung mit den Stellen **2–5 des Dateinamens** — das sind nur **vier** Zeichen
-(`PLG` + Version `0`). Das Beispiel füllt die fünfte Stelle mit einem Leerzeichen und
-markiert die Frage damit, statt sie zu verstecken. Zu klären mit Anlage 2 und Anlage 4 GGT:
-ob das Feld ein weiteres Zeichen führt, ob die Kennung fünfstellig ist, oder ob die
-Positionsangabe in der Sekundärquelle ungenau ist.
+## 5. Nutzdatendatei `TPFL0001`
 
-## 5. Nutzdatendatei `TPLG0001`
+### 5.1 Trennzeichen und Zeichensatz
 
-Die Datei enthält **keine Zeilenumbrüche** — Segmente werden ausschließlich durch das
-Segmentendezeichen `'` getrennt. Ein Parser darf sich nicht auf Zeilenstruktur verlassen
-(manche Sender fügen zusätzlich CR LF ein; beides muss verarbeitbar sein). Zur besseren
-Lesbarkeit hier umbrochen:
+Die TA 1 legt die Trennzeichen **fest** und sieht **kein `UNA`-Segment** vor:
 
-```
-UNA:+.? '
-UNB+UNOC:3+261099874+109999712+260805:1147+00001++PLGA++++1'
-UNH+00001+PLGA:06:04:00'
-FKT+01+261099874+109999712+106999146'
-REC+2026070001:20260805+01'
-UST+DE999999999+0.00+1'
-SKO+0.00+0+30'
-GES+1671.00+0.00+0.00+1671.00+EUR'
-NAM+Ambulanter Pflegedienst Sonnenhof GmbH+Lindenweg 14+12345+Musterstadt'
-UNT+8+00001'
-UNH+00002+PLAA:06:04:00'
-FKT+01+261099874+109999712+106999146'
-REC+2026070001:20260805+01'
-INV+K741852967+3+19480312'
-NAD+Kerzenmacher:Hanna+Rosenweg 3+12345+Musterstadt'
-ESK+001+20260701:20260731'
-EPL+LK03+Grosse Morgentoilette+20+24.50+490.00'
-EPL+LK15+Hauswirtschaftliche Versorgung+8+18.20+145.60'
-GES+635.60+0.00+0.00+635.60+EUR'
-UNT+10+00002'
-UNH+00003+PLAA:06:04:00'
-FKT+01+261099874+109999712+106999146'
-REC+2026070001:20260805+01'
-INV+M305921844+4+19391127'
-NAD+Brinkmeier:Otto+Ahornstrasse 27+12345+Musterstadt'
-ESK+002+20260701:20260731'
-EPL+LK04+Kleine Morgentoilette mit Lagern+31+28.90+895.90'
-EPL+LK31+Wegepauschale+31+4.50+139.50'
-GES+1035.40+0.00+0.00+1035.40+EUR'
-UNT+10+00003'
-UNZ+3+00001'
-```
-
-### 5.1 Zeichensatz
-
-Reines ASCII. **Umlaute und ß sind durchgängig transliteriert** (`Grosse` statt `Große`,
-`Ahornstrasse` statt `Ahornstraße`) — bewusst, weil der zulässige Zeichensatz für
-§ 105 SGB XI nicht belegt ist. Die Wissensbibliothek warnt ausdrücklich davor, die
-§ 301-Vorgabe (DIN 66003 DRV 7-Bit / DIN 66303 8-Bit) auf andere Verfahren zu übertragen,
-und weist darauf hin, dass DIN 66003 die Zeichen `[ \ ] { | } ~` durch `Ä Ö Ü ä ö ü ß`
-ersetzt. Ein ASCII-only-Beispiel ist unter allen in Frage kommenden Kodierungen
-byte-identisch und damit als Fixture unempfindlich gegen diese offene Frage.
-
-Sobald der Zeichensatz geklärt ist, sollte **zusätzlich** eine Variante mit echten
-Umlauten hinzukommen — die Kodierungsfalle ist genau der Fehler, den ein Validator
-finden muss.
-
-### 5.2 Trennzeichen (UNA)
-
-| Zeichen | Funktion |
+| Funktion | Zeichen |
 |---|---|
-| `:` | Komponententrenner |
-| `+` | Datenelementtrenner |
-| `.` | Dezimalzeichen |
-| `?` | Freigabezeichen |
-| ` ` | reserviert |
-| `'` | Segmentendezeichen |
+| innerhalb zusammengesetzter Datenelemente | `:` |
+| Datenelementtrenner | `+` |
+| **Dezimalzeichen** | **`,`** |
+| Aufhebungszeichen | `?` |
+| Segmentendezeichen | `'` |
 
-Das sind die **EDIFACT-Defaults**, übernommen aus dem § 302-Beispiel der
-Wissensbibliothek. Diese warnt jedoch explizit: ob die GKV-Verfahren die Defaults
-verwenden oder abweichende Zeichen vorschreiben, ist **aus der jeweiligen Technischen
-Anlage zu verifizieren und darf nicht angenommen werden**. Insbesondere das
-Dezimalzeichen ist ein Kandidat für eine Abweichung (`,` statt `.`). Ein Parser muss die
-Trennzeichen ohnehin **zur Laufzeit aus UNA lesen**, nicht hartkodieren — dann ist diese
-Unsicherheit für ihn folgenlos.
+Beträge stehen also als `1671,00`, nicht `1671.00`. Ein Parser, der die
+EDIFACT-Defaults annimmt, liest sie falsch.
 
-### 5.3 Servicesegmente
+Zulässig sind ISO 8859-1, ISO 7-Bit (DIN 66003 DRV 7) und ISO 8-Bit (DIN 66303 DRV 8);
+der Auftragssatz deklariert `I1` = ISO 8859-1. Die Datei enthält nur Zeichen, die in
+allen drei Kodierungen byte-identisch sind — deshalb steht dort „Große Morgentoilette"
+nicht als Klartext, sondern gar nicht: Leistungsbezeichnungen werden im EDIFACT nicht
+übertragen, nur die Leistungsziffer.
 
-| Segment | Element | Wert | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| `UNB` | S001 | `UNOC:3` | Syntax-Kennung und -Version | erfunden |
-| | S002 | `261099874` | Absenderkennung (IK) | Feld belegt ⚠️ [Q1] |
-| | S003 | `109999712` | Empfängerkennung (IK) | Feld belegt ⚠️ [Q1] |
-| | S004 | `260805:1147` | Datum:Zeit der Erstellung (JJMMTT:HHMM) | erfunden |
-| | 0020 | `00001` | Datenaustauschreferenz | erfunden |
-| | 0026 | `PLGA` | Anwendungsreferenz / Nachrichtentyp-Kennung | Feld belegt ⚠️ [Q1][Q30] |
-| | 0035 | `1` | Testkennzeichen | erfunden |
-| `UNH` | 0062 | `00001` … | Nachrichtenreferenznummer | EDIFACT-Standard |
-| | S009 | `PLGA:06:04:00` | Typ : Version : Release : Organisation | Mapping erfunden |
-| `UNT` | 0074 | `8` / `10` | Segmentanzahl inkl. UNH und UNT | EDIFACT-Standard |
-| | 0062 | `00001` … | Referenz, identisch zum UNH | EDIFACT-Standard |
-| `UNZ` | 0036 | `3` | Anzahl Nachrichten in der Datei | Segment belegt ⚠️ [Q1] |
-| | 0020 | `00001` | Referenz, identisch zur UNB-Datenaustauschreferenz | erfunden |
+Die Datei enthält **keine Zeilenumbrüche**. Die Beispiele unten sind zur Lesbarkeit
+umbrochen.
 
-Die Abbildung der TA-Version **6.4.0** auf `S009` als `06:04:00` ist eine Konstruktion —
-die Patch-Stelle des SemVer-Schemas hat in `S009` keinen offensichtlichen Platz. Wie die
-TA-Version tatsächlich in `UNH` kodiert wird, ist der TA 1 zu entnehmen. Das Testkennzeichen
-`0035 = 1` ist redundant zu Stelle 1 des Dateinamens (`T`) und zu Position 25 der
-Auftragsdatei — genau diese Redundanz macht eine verfahrensübergreifende Konsistenzprüfung
-möglich (siehe Abschnitt 6).
+### 5.2 Dateirahmen und PLGA
 
-### 5.4 Nachrichtentyp PLGA — Gesamtaufstellung
+```
+UNH+1+PLGA:6'
+FKT+01++461100877+109524616+189524616+461100877'
+REC+2026070001:0+20260805+1+EUR'
+SRD+36:23000+01'
+UST+DE999999999+J+01'
+GES+1671,00+++1671,00'
+NAM+Pflegedienst Sonnenhof GmbH+Abrechnung 030 5550123'
+UNT+8+1'
+```
 
-Segmentfolge `FKT`, `REC`, `UST`, `SKO`, `GES`, `NAM`. Diese sechs Kennungen sind für
-**SLGA** (§ 302) belegt ⚠️ [Q1] und hier **analog** auf PLGA übertragen — die
-Wissensbibliothek bezeichnet PLGA/PLAA als strukturelles Gegenstück zu SLGA/SLLA. Ob die
-Kennungen in § 105 SGB XI identisch sind, ist **nicht belegt**. Die Feldbelegung
-innerhalb der Segmente ist vollständig erfunden.
+- `UNB`: Syntax `UNOC:3`, Absender-IK, Empfänger-IK, `JJJJMMTT:hhmm`,
+  Datenaustauschreferenz `1`, Anwendungsreferenz (logischer Dateiname), Dateiindikator
+  `0` = Testdatei.
+- `FKT`: Das zweite Datenelement (Sammelrechnung) ist leer — es wird nur in der
+  Sammelrechnungs-PLGA mit `J` belegt. Anstelle eines leeren Kann-Datenelements steht
+  das Trennkennzeichen, daher `01++461100877`.
+- `REC`: Rechnungsnummer als Datenelementgruppe `Sammel:Einzel`. Bei einem einzelnen
+  Leistungserbringer wird die Einzel-Rechnungsnummer auf `0` gesetzt.
+- `SRD`: Leistungserbringergruppe `Abrechnungscode:Tarifkennzeichen`, dann die
+  Leistungsart.
+- `GES`: `1671,00+++1671,00` — Zuzahlung, Beihilfe und Mehrwertsteuer sind leere
+  Kann-Felder. **Nicht** `0,00`: die TA 1 verlangt an dieser Stelle das Trennkennzeichen.
+- `UNT`: `8` Segmente einschließlich `UNH` und `UNT`.
 
-| Segment | Feld | Wert | Bedeutung |
-|---|---:|---|---|
-| `FKT` | 1 | `01` | Verarbeitungskennzeichen — hier: Erstabrechnung ❓ Werteliste unbelegt |
-| | 2 | `261099874` | Absender-IK (Leistungserbringer) |
-| | 3 | `109999712` | Empfänger-IK (Datenannahmestelle) |
-| | 4 | `106999146` | Kostenträger-IK (Pflegekasse) |
-| `REC` | 1.1 | `2026070001` | Rechnungsnummer |
-| | 1.2 | `20260805` | Rechnungsdatum |
-| | 2 | `01` | Rechnungsart |
-| `UST` | 1 | `DE999999999` | USt-IdNr. des Leistungserbringers |
-| | 2 | `0.00` | Steuersatz in Prozent |
-| | 3 | `1` | Steuerbefreiungskennzeichen |
-| `SKO` | 1 | `0.00` | Skontosatz |
-| | 2 | `0` | Skontofrist in Tagen |
-| | 3 | `30` | Zahlungsziel in Tagen |
-| `GES` | 1 | `1671.00` | Rechnungsbetrag gesamt |
-| | 2 | `0.00` | Zuzahlung |
-| | 3 | `0.00` | Eigenanteil |
-| | 4 | `1671.00` | Zahlbetrag an den Leistungserbringer |
-| | 5 | `EUR` | Währung |
-| `NAM` | 1–4 | | Name, Straße, PLZ, Ort des Leistungserbringers |
+### 5.3 PLAA — Kopf und erster Abrechnungsfall
 
-`VKZ = 01` für die Erstabrechnung ist eine **Annahme**. Belegt sind für § 302 nur `02`
-(Nachforderung) und `4` (Wiedereinreichung nach Absetzung); die Wissensbibliothek merkt
-zusätzlich an, dass die Notation in den Quellen uneinheitlich ist (`02` vs. `2`) und
-Feldlänge wie Wertemenge zwingend aus dem Regelwerk zu übernehmen sind.
+```
+UNH+2+PLAA:6'
+FKT+01+461100877+109524616+189524616+461100877'
+REC+2026070001:0+20260805+1+EUR'
+INV+K741852967+2607001'
+NAD+Kerzenmacher+Hanna+19480312+Rosenweg+3+12345+Musterstadt'
+MAN+202607+++3'
+ESK+01+0715'
+ELS+01:01:1:003+24,50+++00+1,00+999999998'
+…
+```
 
-### 5.5 Nachrichtentyp PLAA — Abrechnungsdaten
+- `FKT` in der PLAA hat **kein** Sammelrechnungs-Feld, dafür zusätzlich das IK des
+  Rechnungsstellers — die Segmentnamen sind gleich, die Feldfolge ist es nicht.
+- `INV` eröffnet den Abrechnungsfall: Versicherten-Nummer und eindeutige Belegnummer.
+- `NAD` im ersten Fall mit Anschrift, im zweiten ohne — dort endet das Segment nach dem
+  Geburtsdatum, weil am Segmentende stehende leere Kann-Felder wegfallen dürfen.
+- `MAN+202607+++3`: Der Abrechnungszeitraum liegt nach dem 31.12.2016, deshalb ist der
+  **Pflegegrad** zu melden und Pflegestufe wie Pflegeklasse bleiben leer.
+- `ESK+01+0715`: ein Einsatzkopfsegment **je Einsatz**, Kennzeichen = Kalendertag.
+- `ELS`: Leistungsziffer, Einzelpreis, leerer Punktwert, leere Punktzahl,
+  `00` im Feld „Dauer/gefahrene Kilometer", Anzahl `1,00`, Beschäftigtennummer.
 
-Segmentfolge `FKT`, `REC`, `INV`, `NAD`, `ESK`, `EPL`*, `GES`. Herkunft der Kennungen:
+### 5.4 Abschluss
 
-| Segment | Kennung stammt aus | Feldbelegung |
-|---|---|---|
-| `FKT`, `REC`, `GES` | analog PLGA / SLGA ⚠️ | erfunden |
-| `INV` | verfahrensübergreifendes Standardsegment ⚠️ [Q30] | erfunden |
-| `NAD` | verfahrensübergreifendes Standardsegment ⚠️ [Q30] | erfunden |
-| `ESK` | § 302 SLLA, „Einsatzkopfsegment" ⚠️ [Q1] | erfunden |
-| `EPL` | **frei erfunden** ❓ | erfunden |
+```
+ELS+01:06:0:03+4,50+++00+1,00+999999998'
+IAF+1035,40+++1035,40'
+UNT+153+2'
+UNZ+2+1'
+```
 
-| Segment | Feld | Beispielwert | Bedeutung |
-|---|---:|---|---|
-| `REC` | 1 | `2026070001:20260805` | Bezug auf die Rechnung der PLGA |
-| `INV` | 1 | `K741852967` | KVNR (unveränderbarer Teil, 10 Zeichen) |
-| | 2 | `3` | Pflegegrad |
-| | 3 | `19480312` | Geburtsdatum |
-| `NAD` | 1 | `Kerzenmacher:Hanna` | Nachname : Vorname |
-| | 2–4 | | Straße, PLZ, Ort |
-| `ESK` | 1 | `001` | laufende Nummer des Abrechnungsfalls in der Datei |
-| | 2 | `20260701:20260731` | Leistungszeitraum von : bis |
-| `EPL` | 1 | `LK03` | Leistungskomplex- / Positionsnummer |
-| | 2 | `Grosse Morgentoilette` | Klartextbezeichnung |
-| | 3 | `20` | Menge |
-| | 4 | `24.50` | Einzelpreis |
-| | 5 | `490.00` | Gesamtpreis der Position |
-| `GES` | 1–5 | | Summen des Abrechnungsfalls, Aufbau wie in PLGA |
+`IAF` schließt den Abrechnungsfall ab: Gesamtbrutto, leere Zuzahlung, leere Beihilfe,
+Rechnungsbetrag. `UNZ` nennt die Zahl der `UNH` und wiederholt die
+Datenaustauschreferenz aus dem `UNB`.
 
-**Bewusste Vereinfachung:** Die Leistungen sind je Leistungskomplex zu einer Monatsmenge
-aggregiert. Real dürfte die TA 1 einen einsatzbezogenen Nachweis verlangen (Datum und
-Uhrzeit je Hausbesuch) — dafür spricht schon der Name „Einsatzkopfsegment". Sobald die
-TA 1 vorliegt, ist das der wahrscheinlichste Punkt, an dem dieses Beispiel strukturell
-umgebaut werden muss.
+### 5.5 Warum die Datei so viel größer ist als die Vorfassung
 
-## 5.6 Urbeleg — der Leistungsnachweis
+4924 statt 1002 Byte — nicht weil mehr abgerechnet würde, sondern weil die
+Vorfassung einen ganzen Monat in eine Zeile gepresst hat. Die TA 1 verlangt **ein `ESK`
+je Leistungseinsatz** und darunter die einzelnen `ELS`. Aus „20 × Große Morgentoilette"
+werden 20 Einsatzkopfsegmente mit je einem `ELS`. Das ist der wesentliche
+Strukturunterschied zwischen einer geratenen und einer spezifikationskonformen Datei —
+und der Grund, warum ein Validator die Menge nicht aus einem Mengenfeld, sondern aus der
+**Zahl der Segmente** ableitet.
+
+## 6. Urbelege
+
+### 6.1 Der Leistungsnachweis
 
 [`urbeleg-leistungsnachweis.html`](urbeleg-leistungsnachweis.html) enthält den
 **Papierbeleg** zur elektronischen Abrechnung: je Abrechnungsfall einen
@@ -335,247 +343,191 @@ die erbrachten Einsätze. Er geht nicht an die Datenannahmestelle, sondern an di
 **Belegannahmestelle** laut Kostenträgerdatei — ein zweiter, vom Dateipärchen getrennter
 Weg. Die Kasse hält bei Prüfung den Beleg gegen die elektronische Abrechnung.
 
-### Deckungsgleichheit mit der DTA-Datei
-
-Der Beleg ist so erzeugt, dass er auf jeder Ebene zur Nutzdatendatei passt:
-
-| Prüfung | Beleg | `TPLG0001` |
+| Prüfung | Beleg | `TPFL0001` |
 |---|---|---|
-| Handzeichen im Tagesraster | 20 / 8 / 31 / 31 | Mengen in den `EPL`-Segmenten |
-| Zusammenstellung je Fall | 635,60 / 1.035,40 | `GES` der beiden PLAA |
+| Handzeichen im Tagesraster | 20 / 8 / 31 / 31 | **Anzahl der `ELS`-Segmente** je Leistungsziffer |
+| Zusammenstellung je Fall | 635,60 / 1.035,40 | `IAF` der beiden Abrechnungsfälle |
 | Summe beider Fälle | 1.671,00 | `GES` der PLGA |
-| Versichertennummern | `K741852967`, `M305921844` | `INV`-Segmente |
+| Versichertennummern | `K741852967`, `M305921844` | `INV` |
+| Belegnummern | `2607001`, `2607002` | `INV`, zweites Datenelement |
 | Rechnungsbezug | Nr. 2026070001 vom 05.08.2026 | `REC` |
 
-Damit lässt sich der Abgleich Urbeleg ↔ Abrechnung als Testfall abbilden — die Prüfung,
-die eine Kasse bei Stichprobe oder Absetzung tatsächlich vornimmt.
+Die TA 1 verlangt ausdrücklich, dass die Belegnummer aus dem `INV`-Segment **auf den
+Urbeleg zu übertragen** ist und die Rechnungsnummer vollständig und unverändert auf den
+Urbelegen erscheint. Der Beleg trägt beide.
 
-### Der Einsatzkalender erzählt den Fall
+**Der Einsatzkalender erzählt den Fall.** Die Einsatztage sind kein Zufall:
 
-Die Einsatztage sind kein Zufall, sondern erklären die abgerechneten Mengen:
-
-- **Fall 001:** Juli 2026 hat 23 Werktage, abgerechnet sind aber nur 20 Einsätze. Die
+- **Fall `2607001`:** Juli 2026 hat 23 Werktage, abgerechnet sind 20 Einsätze. Die
   Differenz steht als Bemerkung auf dem Beleg — 13.–15.07. stationärer
-  Krankenhausaufenthalt, in dieser Zeit ruht die häusliche Pflege. Die hauswirtschaftliche
-  Versorgung läuft zweimal wöchentlich (Di/Fr), abzüglich des Dienstags im
-  Krankenhauszeitraum: 8 statt 9.
-- **Fall 002:** tägliche Versorgung, 31 Tage, dazu 31 Wegepauschalen — eine je Anfahrt.
+  Krankenhausaufenthalt. Die hauswirtschaftliche Versorgung läuft dienstags und freitags,
+  abzüglich des Dienstags im Krankenhauszeitraum: 8 statt 9.
+- **Fall `2607002`:** tägliche Versorgung, 31 Tage, dazu 31 Wegepauschalen.
 
-Eine Abrechnung, deren Menge größer ist als die Zahl der Einsätze auf dem Beleg, ist
-genau der Fall, den eine Kasse absetzt.
+Eine Abrechnung mit mehr Einsätzen als Handzeichen auf dem Beleg ist genau der Fall, den
+eine Kasse absetzt.
 
-### Belastbarkeit
+**Belastbarkeit:** Der Aufbau des Papierbelegs ist **erfunden**. Für den *elektronischen*
+Leistungsnachweis ist die Struktur in TA 1 Abschnitt 4.6.2 belegt (Schema
+`PFL_LNW_2.2.0.xsd`); für den papiergebundenen Beleg ist kein Dokument ausgewertet.
+Anlage 4 zur TA 1 („Begleitzettel für Urbelege", V 1.0 vom 31.01.2003) existiert und
+steht im [Dokumentenregister](../../knowledge-base/data/dokumentenregister.yaml), ist
+aber noch nicht beschafft.
 
-**Der Aufbau des Belegs ist erfunden.** Für § 302 SGB V definieren Anlage 4 den
-Begleitzettel und Anlage 5 den Inhalt der Urbelege; für § 105 SGB XI ist in der
-Wissensbibliothek **kein** Dokument zum Urbeleg-Inhalt erfasst. Form, Felder und
-Tagesraster orientieren sich an der Praxis ambulanter Pflegedienste, nicht an einem
-Regelwerk. Die Leistungskomplexnummern stammen wie in der DTA-Datei aus keinem realen
-Landesrahmenvertrag.
+**Eine bewusste Abweichung zwischen Beleg und Datei:** Der Beleg schreibt „Große
+Morgentoilette", die Datei überträgt Leistungsbezeichnungen gar nicht — nur die
+Leistungsziffer `003`. Ein Feldvergleich zwischen Papier und Datei ist also kein
+Textvergleich, sondern ein Auflösen der Ziffer über die Vergütungsvereinbarung.
 
-Nicht enthalten ist der **Begleitzettel für Urbelege**, mit dem ein Stapel Belege der
-Belegannahmestelle zugeordnet wird — für § 105 SGB XI ist auch dessen Aufbau nicht belegt.
-
-### Eine bewusste Abweichung zwischen Beleg und Datei
-
-Der Beleg schreibt **Große Morgentoilette** und **Ahornstraße**, die Nutzdatendatei
-**Grosse Morgentoilette** und **Ahornstrasse**. Das ist kein Fehler, sondern die
-Zeichensatzfrage aus Abschnitt 5.1 in ihrer praktischen Form: Auf Papier gibt es keine
-Kodierungsbeschränkung, in der EDIFACT-Datei ist der zulässige Zeichensatz für
-§ 105 SGB XI unbelegt. Ein Validator darf einen Feldvergleich zwischen beiden Welten
-deshalb nicht zeichenweise führen, ohne die Transliteration zu berücksichtigen.
-
-## 5.7 Urbeleg — der Begleitzettel
+### 6.2 Der Begleitzettel
 
 [`urbeleg-begleitzettel.html`](urbeleg-begleitzettel.html) ist das Deckblatt der
-Papiersendung: eine Seite A4 hoch, die den Stapel Leistungsnachweise an die
-Belegannahmestelle begleitet.
-
-### Wofür er da ist
-
-Die Abrechnung läuft über **zwei getrennte Wege**, die erst beim Kostenträger wieder
-zusammenfinden:
+Papiersendung. Die Abrechnung läuft über **zwei getrennte Wege**, die erst beim
+Kostenträger wieder zusammenfinden:
 
 ```
                           verschlüsseltes Dateipärchen
-  Pflegedienst  ─────────────────────────────────────►  Datenannahmestelle  109999712
-   261099874                TPLG0001 + .AUF                       │
+  Pflegedienst  ─────────────────────────────────────►  Datenannahmestelle  661100423
+   461100877               TPFL0001 + .AUF                        │
         │                                                         │
         │             Urbelege + Begleitzettel                    ▼
-        └──────────────────────────────────────────►  Belegannahmestelle   108999630
+        └──────────────────────────────────────────►  Belegannahmestelle   661100559
                           Papier, Briefpost                       │
                                                                   ▼
-                                                       Kostenträger 106999146
-                                                       führt beides zusammen
+                                                        Kostenträger 109524616
+                                                        führt beides zusammen
 ```
 
 Der Begleitzettel ist die **Klammer** zwischen beiden Wegen. Er trägt genau die
 Merkmale, über die sich Papier und Datei verbinden lassen: Rechnungsnummer, Dateiname
-und Transfernummer. Fehlt er, liegt ein Stapel unsortierter Belege bei der Kasse, dem
-niemand eine Rechnung zuordnen kann.
+und Transfernummer.
 
-Drei Rollen, drei verschiedene IK — Datenannahmestelle, Belegannahmestelle und
-Kostenträger sind in der Kostenträgerdatei getrennt geführt und **nicht zwingend
-dieselbe Stelle**. Das Beispiel besetzt sie deshalb mit drei unterschiedlichen,
-prüfziffernkorrekten IK, damit eine Implementierung die Rollen nicht versehentlich
-gleichsetzt.
+Datenannahmestelle, Belegannahmestelle und Kostenträger sind in der Kostenträgerdatei
+getrennt geführt und **nicht zwingend dieselbe Stelle**. Das Beispiel besetzt sie mit
+drei unterschiedlichen, prüfziffernkorrekten IK, damit eine Implementierung die Rollen
+nicht gleichsetzt.
 
-### Zwei Deckblätter, gegensätzliche Datenschutzregeln
+**Zwei Deckblätter, gegensätzliche Datenschutzregeln:**
 
-Der interessanteste Kontrast im ganzen Beispiel:
-
-| | Auftragsdatei `TPLG0001.AUF` | Begleitzettel |
+| | Auftragsdatei `TPFL0001.AUF` | Begleitzettel |
 |---|---|---|
 | begleitet | die elektronische Datei | den Papierstapel |
 | geht an | Datenannahmestelle | Belegannahmestelle |
 | Sozialdaten | **verboten** (`S1-ALL-008`) | **enthalten** — Namen, KVNR, Pflegegrad |
 
-Beides sind Deckblätter, und die Regel ist genau umgekehrt. Der Grund liegt im
-Transportweg: Die Auftragsdatei wird **unverschlüsselt** übertragen, damit die
-Datenannahmestelle vor der Entschlüsselung routen kann — deshalb das Trennungsgebot.
-Der Begleitzettel liegt im verschlossenen Umschlag bei Belegen, die die Sozialdaten
-ohnehin enthalten.
+Der Grund liegt im Transportweg: Die Auftragsdatei wird **unverschlüsselt** übertragen,
+damit die Datenannahmestelle vor der Entschlüsselung routen kann. Der Begleitzettel
+liegt im verschlossenen Umschlag bei Belegen, die die Sozialdaten ohnehin enthalten.
 
-### Erzeugt aus den Metadaten
+### 6.3 PDF-Fassung
 
-Anders als die übrigen Dateien ist der Begleitzettel **aus
-[`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) generiert**, nicht von Hand
-geschrieben. Beteiligte, Rechnungsdaten, Fallliste und Summe stammen aus der YAML —
-damit kann er nicht von der DTA-Datei abweichen.
-
-### PDF-Fassung
-
-Beide Belege liegen zusätzlich als PDF bei — das Format, in dem ein Urbeleg tatsächlich
-archiviert, gescannt oder über KIM versendet wird. Der Text ist durchsuchbar, nicht
-gerastert.
-
-Die PDFs sind aus den HTML-Dateien erzeugt, mit Chromium als Druckertreiber:
+Beide Belege liegen zusätzlich als PDF bei. Erzeugt mit Chromium als Druckertreiber:
 
 ```bash
-chromium --headless --print-to-pdf=urbeleg-begleitzettel.pdf \
-         --no-pdf-header-footer urbeleg-begleitzettel.html
+chromium --headless --no-pdf-header-footer \
+         --print-to-pdf=urbeleg-begleitzettel.pdf urbeleg-begleitzettel.html
 ```
 
 Maßgeblich ist die HTML-Datei; ändert sie sich, ist das PDF neu zu erzeugen. Die
-Seitengröße kommt aus dem `@page`-Block des Dokuments (`A4 landscape` für den
-Leistungsnachweis, `A4 portrait` für den Begleitzettel), Hintergrundfarben müssen dabei
-mitgedruckt werden — ohne sie fehlen Warnband, Tabellenköpfe und die Markierung der
-Wochenendspalten.
+Seitengröße kommt aus dem `@page`-Block (`A4 landscape` für den Leistungsnachweis,
+`A4 portrait` für den Begleitzettel).
 
-### Belastbarkeit
-
-**Der Aufbau ist erfunden.** Die Wissensbibliothek führt für § 302 SGB V *Anlage 4 —
-Begleitzettel für Urbelege* mit Quelle und URL ✅ [Q36], aber mit `beschafft: false`;
-für § 105 SGB XI ist kein entsprechendes Dokument erfasst. Ein Beschaffungsversuch
-während der Erstellung scheiterte an der Netzwerk-Policy der Arbeitsumgebung — die
-URL steht im [Dokumentenregister](../../knowledge-base/data/dokumentenregister.yaml)
-und ist weiterhin abzurufen. Felder, Reihenfolge und Sendungsnummer sind an der Praxis
-orientiert, nicht an Anlage 4.
-
-## 6. Was dieses Beispiel prüfbar macht
+## 7. Was dieses Beispiel prüfbar macht
 
 Regel-IDs nach
-[`knowledge-base/50-anforderungen/02-validierungsregeln.md`](../../knowledge-base/50-anforderungen/02-validierungsregeln.md).
-Das Beispiel ist so gebaut, dass es diese Regeln **erfüllt** — es taugt als Positivfall
-für eine Implementierung.
+[`../../knowledge-base/data/pruefregeln.yaml`](../../knowledge-base/data/pruefregeln.yaml).
+Die vollständige Liste steht maschinenlesbar in
+[`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) unter `erfuellte_regeln` — 57 Regeln.
+Die interessantesten:
 
 | Regel | Prüft | Im Beispiel |
 |---|---|---|
-| `S0-ALL-001` | Dateipärchen vollständig | beide Dateien vorhanden |
-| `S0-ALL-002` | Auftragsdatei endet auf `.AUF` | ✔ |
-| `S0-ALL-003` | erste 8 Stellen identisch | `TPLG0001` / `TPLG0001.AUF` |
-| `S0-ALL-004` | Stelle 1 ∈ {T, E} | `T` |
-| `S0-ALL-007` | Stellen 6–8 numerisch | `001` |
-| `S1-ALL-004/005` | Absender- und Empfänger-IK gültig | Prüfziffern korrekt |
-| `S1-ALL-007` | Transfernummer = Stellen 6–8 des Dateinamens | `001` = `001` |
-| `S1-ALL-008` | Auftragssatz ohne Sozialdaten | keine KVNR, keine Namen |
-| `S3-ALL-001` | UNA enthält genau sechs Trennzeichen | ✔ |
-| `S3-ALL-002` | Datei beginnt mit UNB, endet mit UNZ | ✔ |
-| `S3-ALL-003` | UNZ-Zähler = Anzahl Nachrichten | `3` = 3 |
-| `S3-ALL-004` | UNT-Zähler = Segmentanzahl | 8 / 10 / 10 |
-| `S3-ALL-005` | Referenzen UNB↔UNZ und UNH↔UNT paarweise gleich | ✔ |
-| `S3-ALL-006` | Zeichensatz | reines ASCII |
-| `S3-XI-001` | nur PLGA und PLAA in der Datei | ✔ |
-| `S4-ALL-001` | IK 9-stellig mit korrekter Prüfziffer | 3 IK, alle gültig |
-| `S4-ALL-002` | KVNR `^[A-Z][0-9]{9}$` mit Prüfziffer | 2 KVNR, beide gültig ❓ Algorithmus |
-| `S4-ALL-003` | Datumsfelder formal gültig | ✔ |
-| `S5-ALL-001` | Absender-IK Auftragssatz = Absender-IK Nutzdaten | `261099874` in beiden |
-| `S5-302-001` analog | zu jeder PLGA mindestens eine PLAA | 1 PLGA, 2 PLAA |
-| `S5-302-002` analog | Rechnungsbezug PLGA↔PLAA auflösbar | `REC` identisch in allen drei Nachrichten |
-| `S5-302-003` analog | Gesamtbetrag = Summe der Positionen | 635,60 + 1.035,40 = 1.671,00 |
-| `S5-302-004` analog | Positionsbetrag = Menge × Einzelpreis | alle 4 Positionen |
-| `S5-302-007` analog | keine doppelte Rechnungsnummer | eine Rechnung |
-| `S6-ALL-001` | Leistungsdatum ≤ Rechnungsdatum | 31.07. ≤ 05.08. |
-| `S6-ALL-002` | Rechnungsdatum ≤ Erstellungsdatum | 05.08. = 05.08. |
+| `S0-ALL-003` | Transferdateiname bei beiden Dateien identisch | `TPFL0001` / `TPFL0001.AUF` |
+| `S0-ALL-005` | Stellen 2–4 sind eine bekannte Verfahrenskennung | `PFL` aus Anlage 4 GGT |
+| `S1-ALL-001` | Auftragssatz 348 Byte, `LÄNGE_AUFTRAG` = `00000348` | ✔ |
+| `S1-ALL-009` | Muss-Felder gefüllt, Kann-Felder mit Default-Wert | ✔ |
+| `S1-ALL-010` | Krypto-Kombination zulässig | `00` + `00` |
+| `S1-ALL-012` | `DATEIGRÖßE_NUTZDATEN` = tatsächliche Größe | `000000004924` = 4924 Byte |
+| `S1-XI-001` | logischer Dateiname im Feld `DATEINAME` | `PL076001SBK` |
+| `S1-XI-002` | Stellen 319–320 = Art der abgegebenen Leistung | `01` |
+| `S3-XI-002` | kein `UNA`, Dezimalzeichen Komma | ✔ |
+| `S3-XI-003` | PLGA-Segmentfolge `FKT REC SRD UST GES NAM` | ✔ |
+| `S3-XI-004` | PLAA-Grammatik und Kardinalitäten | ✔ |
+| `S3-XI-005` | auf eine PLGA folgt eine PLAA | 1 PLGA, 1 PLAA |
+| `S3-XI-006` | `ESK` aufsteigend nach Tag sortiert | 01…31 |
+| `S3-ALL-004` | `UNT`-Zähler = Segmentanzahl | 8 / 153 |
+| `S4-ALL-001` | IK-Prüfziffer | 5 IK, alle gültig |
+| `S4-XI-002` | IK der Pflegekasse beginnt mit `18` | `189524616` |
+| `S4-XI-007` | `ESK`-Kennzeichen ist Kalendertag oder `99` | Kalendertage |
+| `S5-ALL-002` | `DATEINAME` = `UNB`-Anwendungsreferenz | `PL076001SBK` |
+| `S5-XI-001` | `PLGA.FKT` = `PLAA.FKT` in den IK | ✔ |
+| `S5-XI-003` | `GES` = Summe der `IAF` | 635,60 + 1.035,40 = 1.671,00 |
+| `S6-ALL-001/002` | Leistungs- ≤ Rechnungs- ≤ Erstellungsdatum | 31.07. ≤ 05.08. = 05.08. |
 
-### Eine Falle, in die dieses Beispiel tappen lässt
+### Drei Fallen, in die dieses Beispiel tappen lässt
 
-`S1-ALL-008` (keine Sozialdaten im Auftragssatz) verführt zu einer Umsetzung als
-Mustersuche über den ganzen Satz. Das schlägt fehl: Ein `^[A-Z][0-9]{9}$`-Muster findet
-im Auftragssatz zwei Treffer — `T261099874` (Stelle 25 Test-/Echt-Kennzeichen plus
-Stellen 26–34 Absender-IK) und `G000120260` (Ende des Dateinamens plus Anfang des
-Erstellungsdatums). Beides sind **Feldgrenzen**, keine Versichertennummern; echte
-Sozialdaten enthält der Satz nicht.
+**1. `S1-ALL-008` (keine Sozialdaten im Auftragssatz) als Regex.** Ein
+`^[A-Z][0-9]{9}$`-Muster über den Rohsatz findet Treffer, die keine sind: An jeder
+Feldgrenze eines positionsbasierten Formats entstehen Zeichenfolgen, die es als Wert
+nie gibt. Die Regel ist erst **nach dem Parsen** feldweise auszuwerten.
 
-Die Regel ist deshalb erst **nach dem Parsen** feldweise auszuwerten, nie als Regex über
-den Rohsatz. Bei einem positionsbasierten Festsatzformat ohne Trennzeichen erzeugt jede
-Feldgrenze Zeichenfolgen, die es als Wert nie gibt.
+**2. Das Test-/Echt-Kennzeichen ist keine Gleichheitsprüfung.** Es steht an drei Stellen:
+Dateiname Stelle 1 (`T`), `VERFAHREN_KENNUNG` Stelle 20 (`T`), `UNB`-Dateiindikator (`0`).
+Der Dateiname kennt aber nur `T` und `E`, der Dateiindikator **drei** Werte: `0` Test,
+`1` Erprobung, `2` Echt. Es gilt `T` ↔ {`0`,`1`} und `E` ↔ {`2`}.
 
-Zusätzlich prüfbar, weil im Beispiel dreifach redundant kodiert: das
-**Test-/Echt-Kennzeichen** — Dateiname Stelle 1 (`T`), Auftragssatz Position 25 (`T`),
-UNB-Element 0035 (`1`). Die Wissensbibliothek führt diese Konsistenzprüfung als
-Prüfregel-Kandidaten mit noch zu verifizierender Feldzuordnung.
+**3. Die IK-Prüfziffer ignoriert die Klassifikation.** `109524616` und `189524616`
+teilen sie sich. Eine Implementierung, die über die Stellen 1–8 rechnet statt über 3–8,
+weist beide zurück — und fällt bei diesem Beispiel garantiert auf.
 
-**Nicht** mit diesem Beispiel prüfbar: die gesamte **Stufe 2** (Kryptografie), weil die
-Nutzdaten im Klartext vorliegen, sowie alle Regeln, die eine Kostenträgerdatei oder ein
-Positionsnummernverzeichnis voraussetzen (`S1-ALL-006`, `S4-302-002/003`).
+## 8. Prüfziffern — Nachrechnen
 
-## 7. Prüfziffern — Nachrechnen
+| Wert | Kern (Stellen 3–8) | Prüfziffer |
+|---|---|---|
+| IK `461100877` | `110087` | `7` |
+| IK `661100423` | `110042` | `3` |
+| IK `661100559` | `110055` | `9` |
+| IK `109524616` | `952461` | `6` |
+| IK `189524616` | `952461` | `6` |
+
+Verfahren: Modulo 10 über die Stellen 3–8, Gewichtung von rechts `1-2-1-2-1-2`,
+Quersumme der Produkte, Rest modulo 10. **Verifiziert** gegen den Testvektor aus dem
+Gemeinsamen Rundschreiben Institutionskennzeichen 02/2026, Nummer 1.2.5:
+IK `260326822`, Kern `032682`, Prüfziffer `2`.
 
 | Wert | Kern | Prüfziffer |
 |---|---|---|
-| IK `261099874` | Stellen 3–8 = `109987` | `4` |
-| IK `109999712` | Stellen 3–8 = `999971` | `2` |
-| IK `106999146` | Stellen 3–8 = `699914` | `6` |
-| IK `108999630` | Stellen 3–8 = `899963` | `0` |
 | KVNR `K741852967` | `11` + `74185296` | `7` |
 | KVNR `M305921844` | `13` + `30592184` | `4` |
 
-Die **IK-Prüfziffern** folgen dem in
-[`knowledge-base/40-stammdaten/01-institutionskennzeichen.md`](../../knowledge-base/40-stammdaten/01-institutionskennzeichen.md)
-dokumentierten Modulo-10-Verfahren über die Stellen 3–8 (Gewichte 2·1·2·1·2·1 von links,
-Produkte > 9 minus 9). Die Wissensbibliothek verlangt, dieses Verfahren vor produktivem
-Einsatz gegen das Gemeinsame Rundschreiben der ARGE·IK zu verifizieren.
+Die **KVNR-Prüfziffern** verwenden weiterhin die als **Annahme** gekennzeichnete Variante
+aus
+[`../../knowledge-base/40-stammdaten/02-krankenversichertennummer.md`](../../knowledge-base/40-stammdaten/02-krankenversichertennummer.md):
+Buchstabe → zweistellige Zahl (A = 01 … Z = 26), Modulo 10 mit Gewichtung 1·2·1·2·…
+**Wie der führende Buchstabe tatsächlich eingeht, ist unbelegt** (❓-11). Ändert die
+KVNR-Richtlinie V3.4.0 diese Annahme, sind beide KVNR neu zu rechnen.
 
-Die **KVNR-Prüfziffern** verwenden die in
-[`knowledge-base/40-stammdaten/02-krankenversichertennummer.md`](../../knowledge-base/40-stammdaten/02-krankenversichertennummer.md)
-als **Annahme** gekennzeichnete Variante: Buchstabe → zweistellige Zahl (A = 01 … Z = 26),
-Modulo 10 mit Gewichtung 1·2·1·2·… über alle zehn Ziffern. **Wie der führende Buchstabe
-tatsächlich eingeht, ist unbelegt.** Ändert die KVNR-Richtlinie V3.4.0 diese Annahme,
-sind beide KVNR neu zu rechnen.
+## 9. Was mit diesem Beispiel nicht geprüft werden kann
 
-Beide Algorithmen sind als Pseudocode in den verlinkten Dokumenten hinterlegt.
+| Bereich | Grund |
+|---|---|
+| **Stufe 2 — Kryptografie** (`S2-ALL-001` … `S2-ALL-014`) | Nutzdaten liegen im Klartext vor, kein SECON-Umschlag |
+| `S1-ALL-006` — Datenannahmestelle zuständig | Kostenträgerdatei (TA 1 Anhang 5) liegt nicht vor |
+| `S4-ALL-002` — KVNR-Prüfziffer | Algorithmus unverifiziert (❓-11) |
+| `S5-XI-007` — Bündelung bei KIM | Beispiel nutzt den Weg außerhalb der TI |
+| `S0-ALL-009` — Datenträgerversand | kein Datenträger |
+| Sammelrechnungen, Rechnungsarten `2` und `3` | nur Rechnungsart `1` modelliert |
+| `ZUS`, `HIL`, `IMG` | keine Zuschläge, keine Pflegehilfsmittel, keine vollelektronische Abrechnung |
+| Negativfälle | das Beispiel ist ein Positivfall; eine Fehlerfixture fehlt noch |
 
-## 8. Wenn die TA 1 Version 6.4.0 vorliegt
+### Nächste sinnvolle Erweiterungen
 
-Reihenfolge der Korrekturen an diesem Beispiel, nach Hebelwirkung sortiert:
-
-1. **Segmentkennungen und -reihenfolge** von PLGA/PLAA gegen die TA 1 ersetzen —
-   insbesondere `EPL` (frei erfunden) und die Frage, ob PLAA einsatzbezogen statt
-   monatsaggregiert aufgebaut ist.
-2. **Feldbelegung** aller Segmente ersetzen; Feldlängen, Datentypen, Pflichtfeldstatus
-   und Betragsformat (Nachkommastellen, Vorzeichen, Dezimalzeichen) übernehmen.
-3. **Trennzeichen** aus der TA 1 bestätigen oder korrigieren — vor allem das Dezimalzeichen.
-4. **Zeichensatz** klären und eine Umlaut-Variante des Beispiels ergänzen.
-5. **Verfahrenskennung** aus Anlage 4 GGT einsetzen (ersetzt `PLG`, betrifft beide
-   Dateinamen und Position 20–24 der Auftragsdatei).
-6. **Auftragssatz-Layout** aus Anlage 2 GGT ersetzen (ersetzt Abschnitt 4 vollständig,
-   inklusive der Satzlänge).
-7. **Verarbeitungskennzeichen** aus dem Schlüsselverzeichnis bestätigen (`01`).
-8. **Urbelege** — Leistungsnachweis und Begleitzettel — gegen die Vorgaben für
-   § 105 SGB XI prüfen; als nächstliegende Referenz Anlage 4 zu § 302 SGB V beschaffen
-   ([Q36], im Dokumentenregister als `beschafft: false` geführt).
-9. `vertrauen`-Felder in [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) anheben.
-
-Beschaffungsstand siehe
-[`knowledge-base/60-projekt/02-roadmap-und-offene-punkte.md`](../../knowledge-base/60-projekt/02-roadmap-und-offene-punkte.md).
+1. **Negativfixtures** je Prüfstufe — falsche `UNT`-Zähler, `UNA` vorhanden,
+   Dezimalpunkt statt Komma, `ESK` unsortiert, Pflegegrad *und* Pflegestufe belegt.
+2. **Sammelrechnung** (Rechnungsart `3`, Abrechnungsstelle mit Inkassovollmacht) — der
+   Dateiaufbau unterscheidet sich strukturell.
+3. **Vollelektronische Abrechnung über KIM** mit XML-Hülle, `IMG`-Segment und
+   elektronischem Leistungsnachweis — solange TA 1 6.4.0 gilt; ab 01.02.2027 wandert
+   dieser Teil in die neue Technische Anlage 5.
+4. **Umlaut-Variante**, sobald Anlage 15 GGT (Zeichensätze) ausgewertet ist.
+5. **§ 302-Beispiel**, sobald die dortige Technische Anlage 1 vorliegt.

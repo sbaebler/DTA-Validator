@@ -1,8 +1,27 @@
 # Quellenverzeichnis
 
-Recherchestand: **31.08.2026**.
-Der direkte PDF-Abruf war in der Rechercheumgebung blockiert; die Einträge basieren auf
-Suchtreffern, Dokumenttiteln und Metadaten. **Vor Implementierung Primärdokument laden.**
+Recherchestand: **01.09.2026**.
+
+Der direkte PDF-Abruf ist inzwischen möglich. Ausgewertete Primärdokumente sind unten mit
+**✅ ausgewertet** gekennzeichnet; für alle übrigen Einträge gilt weiterhin: sie beruhen auf
+Suchtreffern, Portalseiten und Dokument-Metadaten — **vor Implementierung Primärdokument
+laden**. Den Beschaffungsstatus je Dokument führt
+[`../data/dokumentenregister.yaml`](../data/dokumentenregister.yaml).
+
+## Ausgewertete Primärdokumente (Stand 01.09.2026)
+
+| ID | Dokument | Fassung |
+|---|---|---|
+| Q7 | Anlage 2 GGT — Auftragsdatei (Auftragssatz) | Auftragssatz V 1.0, gültig ab 01.01.2025, Stand 10.10.2024 |
+| Q20 | Anlage 4 GGT — Verfahrenskennungen | Feldbeschreibung V 1.1, gültig ab 01.01.2026, Stand 06.11.2025 |
+| Q22 | § 105 SGB XI Technische Anlage 1 | V 6.4.0, gültig ab 01.05.2026 |
+| Q22a | § 105 SGB XI Technische Anlage 1 (Nachfolgefassung) | V 6.5.1, gültig ab 01.02.2027 |
+| Q22d | § 105 SGB XI TA 1 Anhang 1 — Struktur Auftragsdatei | V 2.0, gültig ab 01.07.2007 |
+| Q22e | § 105 SGB XI TA 1 Anhang 3 — Datenübermittlungsarten | V 2.1.2, gültig ab 01.05.2026 |
+| Q22g | § 105 SGB XI Technische Anlage 3 — Schlüsselverzeichnisse | V 6.4.0, gültig ab 01.05.2026 |
+| Q9b | Gemeinsames Rundschreiben Institutionskennzeichen | 02/2026 |
+| Q12 | Portalseite „Technische Standards" (Anlagenverzeichnis GGT) | Abruf 01.09.2026 |
+| Q22p | Portalseite „Pflege" (Versionsstände § 105 SGB XI) | Abruf 01.09.2026 |
 
 ## Portale und Herausgeber
 
@@ -32,20 +51,33 @@ Suchtreffern, Dokumenttiteln und Metadaten. **Vor Implementierung Primärdokumen
 
 ## Gemeinsame Grundsätze Technik (GGT) und Anlagen
 
+Vollständig aus der Portalseite [Q12] übernommen (Abruf 01.09.2026). Eine Anlage 11 wird dort nicht geführt.
+
 | ID | Dokument | URL |
 |---|---|---|
 | Q11d | GGT nach § 95 SGB IV (Gesamtdokument) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/gg_technik/GGT.pdf |
-| Q14 | Anlage 1 GGT — Krankenkassenkommunikationssystem (KKS) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_1_-_Krankenkassenkommunikationssystem.pdf |
-| Q7 | Anlage 2 GGT — Auftragsdatei (Auftragssatz) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_2_-_Auftragsdatei.pdf |
-| Q20 | Anlage 4 GGT — Verfahrenskennungen | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_4_-_Verfahrenskennungen.pdf |
-| Q31 | Anlage 5 GGT — Datenaustausch mit der Rentenversicherung | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_5_-_Datenaustausch_mit_der_Rentenversicherung.pdf |
-| Q32 | Anlage 6 GGT — Besonderheiten des GKV-internen Datenaustauschs und des Datenaustauschs der GKV mit Leistungserbringern | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_6_-_Besonderheiten_des_GKVinternen_Datenaustauschs_und_des_Datenaustauschs_der_GKV_mit_Leistungserbringern.pdf |
-| Q16 | Anlage 7 GGT — E-Mail | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_7_-_E-Mail.pdf |
-| Q17 | Anlage 13 GGT — GKV-Kommunikationsserver | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_13_-_GKV-Kommunikationsserver.pdf |
-| Q21 | Anlage 14 GGT — Datenträger | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_14_-_Datentraeger.pdf |
-| Q8 | Anlage 16 GGT — Security-Schnittstelle (SECON) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_16_-_Security_Schnittstelle.pdf |
-| Q17b | Anlage 17 GGT — Kommunikationsserver der Deutschen Rentenversicherung | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_17_-_KomServer_RV.pdf |
-| Q18 | Anlage 20 GGT — KIM (KOM-LE) innerhalb der Telematikinfrastruktur | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_20_KIM-KOM-LE.pdf |
+| Q11e | GGT — Änderungshistorie | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/gg_technik/Aenderungshistorie.pdf |
+| Q14 | Anlage 1 — Krankenkassenkommunikationssystem (KKS) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_1_-_Krankenkassenkommunikationssystem.pdf |
+| Q7 | **Anlage 2 — Auftragsdatei (Auftragssatz)** ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_2_-_Auftragsdatei.pdf |
+| Q41 | Anlage 3 — Einheitliches XML-basiertes Transportverfahren (eXTra) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_3_-_eXTra.pdf |
+| Q20 | **Anlage 4 — Verfahrenskennungen** ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_4_-_Verfahrenskennungen.pdf |
+| Q31 | Anlage 5 — Datenaustausch mit der Rentenversicherung | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_5_-_Datenaustausch_mit_der_Rentenversicherung.pdf |
+| Q32 | Anlage 6 — Besonderheiten des GKV-internen Datenaustauschs und des Datenaustauschs der GKV mit Leistungserbringern | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_6_-_Besonderheiten_des_GKVinternen_Datenaustauschs_und_des_Datenaustauschs_der_GKV_mit_Leistungserbringern.pdf |
+| Q16 | Anlage 7 — Electronic Mail (E-Mail) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_7_-_E-Mail.pdf |
+| Q42 | Anlage 8 — Hypertext Transfer Protocol (http / https) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_8_-_http_https.pdf |
+| Q43 | Anlage 9 — File-Transfer-Protocol (ftp / sftp / ftps) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_9_-_ftp_sftp_ftps.pdf |
+| Q44 | Anlage 10 — File Transfer, Access and Management (FTAM) over IP | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_10_-_FTAM_over_IP.pdf |
+| Q45 | Anlage 12 — XML-Richtlinie | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_12_-_XML-Richtlinie.pdf |
+| Q17 | Anlage 13 — GKV-Kommunikationsserver (KomServer) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_13_-_GKV-Kommunikationsserver.pdf |
+| Q21 | Anlage 14 — Datenträger | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_14_-_Datentraeger.pdf |
+| Q46 | **Anlage 15 — Zeichensätze** | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_15_-_Zeichensaetze.pdf |
+| Q8 | Anlage 16 — Security-Schnittstelle (SECON) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_16_-_Security_Schnittstelle.pdf |
+| Q8a | Anlage 16, Anlage 1 — Eigenerklärung | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_16_Anlage_1_Eigenerklaerung.pdf |
+| Q17b | Anlage 17 — KomServer RV (Deutsche Rentenversicherung) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_17_-_KomServer_RV.pdf |
+| Q47 | Anlage 18 — Begriffs- und Abkürzungsverzeichnis | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_18_-_Begriffs-_und_Abkuerzungsverzeichnis.pdf |
+| Q48 | Anlage 19 — DiGA-Schnittstelle | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_19_-_DiGa_Schnittstelle.pdf |
+| Q18 | Anlage 20 — Kommunikation im Medizinwesen (KIM / KOM-LE) | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_20_KIM-KOM-LE.pdf |
+| Q49 | Anlage 21 — Synchroner Dialog | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_21_-_Synchroner_Dialog.pdf |
 | Q27 | Best Practice zur Security-Schnittstelle | https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Best_Practice_Security.pdf |
 
 ## Sektorspezifische Dokumente
@@ -61,7 +93,18 @@ Suchtreffern, Dokumenttiteln und Metadaten. **Vor Implementierung Primärdokumen
 | Q35 | § 300 Technische Anlage 1, Version 039, Stand 31.03.2025 | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/apotheken/technische_anlagen_aktuell/TA1_039_20250331.pdf |
 | Q6b | Arzneimittelabrechnungsvereinbarung gemäß § 300 Abs. 3 SGB V (01.07.2023) | https://www.gkv-spitzenverband.de/media/dokumente/krankenversicherung_1/arzneimittel/rahmenvertraege/apotheken/2023-07-01_Arzneimittelabrechnungsvereinbarung_barrierefrei.pdf |
 | Q6c | § 300 TA7 Anhang 1 — Mapping (22.01.2024) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/apotheken/technische_anlagen_aktuell/TA7_Anhang1_005_20240122_Mapping.pdf |
-| Q22 | § 105 SGB XI Technische Anlage 1, Version 6.4.0 (07.07.2025) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_6.4.0_20250707_oA.pdf |
+| Q22 | **§ 105 SGB XI Technische Anlage 1, Version 6.4.0** (gültig ab 01.05.2026) ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_6.4.0_20250707_oA.pdf |
+| Q22a | § 105 SGB XI Technische Anlage 1, Version 6.5.1 (gültig ab 01.02.2027) ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_6.5.1_20260625.pdf |
+| Q22d | § 105 SGB XI TA 1 Anhang 1 — Struktur Auftragsdatei, V 2.0 ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/20070125_TA1_ANH1.pdf |
+| Q22e | § 105 SGB XI TA 1 Anhang 3 — Datenübermittlungsarten, V 2.1.2 ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH3_2.1.2_20250707_oA.pdf |
+| Q22e2 | § 105 SGB XI TA 1 Anhang 3, V 2.2.0 (ab 01.02.2027) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH3_2.2.0_20251201.pdf |
+| Q22g | **§ 105 SGB XI Technische Anlage 3 — Schlüsselverzeichnisse, V 6.4.0** ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA3_6.4.0_20250707_oA.pdf |
+| Q22g2 | § 105 SGB XI Technische Anlage 3, V 6.5.0 (ab 01.02.2027) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA3_6.5.0_20251201.pdf |
+| Q22h | § 105 SGB XI TA 1 Anhang 5 — Kostenträgerdatei, V 5.2 | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH5_5.2_20250707_oA.pdf |
+| Q22i | § 105 SGB XI TA 1 Anhang 4 — Softwareprüfung, V 1.0 | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH4_20250707_oA.pdf |
+| Q22j | § 105 SGB XI Technische Anlage 5 — Datenübermittlung in der TI, V 1.2.0 (ab 01.02.2027) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA5_1.2.0_20260625.pdf |
+| Q22f | Einvernehmliche Festlegung nach § 105 Abs. 2 SGB XI (Stand 05.10.2022) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2022_12_21_Einvernehmliche_Festlegung_nach__105_Abs._2_SGB_XI_Stand_05.10.2022.pdf |
+| Q22k | Empfehlungen zur Umsetzung der Beschäftigtennummer nach § 293 Abs. 8 Satz 2 SGB V | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2024_09_01_Empfehlungen_zur_Umsetzung_der_Beschaeftigtennummer_nach__293_Abs._8_Satz_2_SGB_V_abgestimmt.pdf |
 | Q22b | Vereinbarung nach § 105 Abs. 2 Satz 2 SGB XI (05.10.2023) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2023_10_05_Vereinbarung__105_Abs.2_Satz_2_SGBXI_final.pdf |
 | Q22c | Broschüre "Information zu den elektronischen Abrechnungsverfahren" TP6 (14.07.2025) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/20250714_Broschuere_TP6.pdf |
 | Q23 | Technische Anlage § 295 Abs. 1b SGB V, Version 10.0 (02.04.2025) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/direktabrechner/hzv_iv/technische_anlagen_aktuell_6/20250402_TA_295_1b_SGB_V_V_10.0.pdf |
@@ -70,6 +113,8 @@ Suchtreffern, Dokumenttiteln und Metadaten. **Vor Implementierung Primärdokumen
 | Q33 | Technische Anlage Hybrid-DRG (§ 115f), V1.2 (12.08.2025) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/direktabrechner/hybrid_drgs/technische_anlagen_aktuell_8/TA_Hybrid-DRG_115f_V1_2_20250812.pdf |
 | Q34 | Technische Anlage Klinische Krebsregister, V1.6 (15.03.2024) | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/klinische_krebsregister/technische_anlagen_aktuell_1/20240315_KKR_TA_1.6_oA.pdf |
 | Q10 | Richtlinie Aufbau/Vergabe Krankenversichertennummer (§ 290 SGB V), V3.4.0 (22.08.2024) | https://www.gkv-datenaustausch.de/media/dokumente/kvnr/Richtlinie_20240822_Gesamtsystem-KVNR_290_SGBV_3.4.0_fin.pdf |
+| Q9b | **Gemeinsames Rundschreiben Institutionskennzeichen 02/2026** ✅ ausgewertet | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/GR-IK-2026-02.pdf |
+| Q9c | Gemeinsames Rundschreiben Institutionskennzeichen 04/2027 | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/GR-IK-2027-04.pdf |
 | Q26 | Gemeinsame Grundsätze Beitragsnachweis Arbeitgeber (Fassung 01/2026) | https://www.gkv-datenaustausch.de/media/dokumente/arbeitgeber/beitragsnachweise/GG_BNA_202601.pdf |
 
 ## Sekundärquellen (Erläuterungen, Praxisdarstellungen)

@@ -16,7 +16,7 @@ Nachrichtenformaten, Schlüsselverzeichnissen und Fristen.
 | **Direktabrechner (Selektivverträge)** | § 295 Abs. 1b SGB V | Vertragspartner nach §§ 64d, 73b, 132e, 132f, 140a SGB V | ⚠️ | Technische Anlage V10.0 (02.04.2025) | ✅ [Q23] |
 | **Vertragsärzte** | § 295 SGB V | Ärzte über die KVen | KVDT/ADT (nicht GKV-DTA im engeren Sinn) | KBV-Regelwerk | ⚠️ |
 | **Zahnärzte** | § 295 SGB V | Vertragszahnärzte | ⚠️ | TA Zahnärzte + Anhang 1 zur TA TP2 V3.7 (19.09.2025); EBZ | ⚠️ [Q28] |
-| **Pflege** | § 105 SGB XI | Pflegeeinrichtungen, Pflegedienste | PLGA, PLAA | TA 1 Version 6.4.0 (07.07.2025) | ✅ [Q22] |
+| **Pflege** | § 105 SGB XI | Pflegeeinrichtungen, Pflegedienste | PLGA, PLAA (Version 6) | TA 1 Version 6.4.0, gültig ab 01.05.2026; Nachfolger 6.5.1 ab 01.02.2027 | ✅ [Q22][Q22a] |
 | **Hybrid-DRG** | § 115f SGB V | Krankenhäuser / Vertragsärzte | ⚠️ | TA Hybrid-DRG V1.2 (12.08.2025) | ✅ [Q33] |
 | **Klinische Krebsregister** | — | Klinische Krebsregister | ⚠️ | TA V1.6 (15.03.2024) | ✅ [Q34] |
 | **Anschlussrehabilitation** | — | Krankenhäuser / Reha | ⚠️ | TA 1.1 (15.05.2024) | ⚠️ |
@@ -58,7 +58,7 @@ Diese Gemeinsamkeiten sind der **Kern eines wiederverwendbaren Validator-Framewo
 | Prio | Verfahren | Begründung |
 |---|---|---|
 | 1 | **§ 302 (Sonstige Leistungserbringer)** | Größte Zahl kleiner Marktteilnehmer, höchster Fehler- und Absetzungsdruck, Repo-Namensgebung legt diesen Fokus nahe |
-| 2 | **§ 105 SGB XI (Pflege)** | Fachlich und technisch eng verwandt (PLGA/PLAA ↔ SLGA/SLLA), hohe Wiederverwendung |
+| 2 | **§ 105 SGB XI (Pflege)** | Fachlich und technisch eng verwandt (PLGA/PLAA ↔ SLGA/SLLA), hohe Wiederverwendung — und als einziges Sektorverfahren mit **vollständig ausgewerteter** Technischer Anlage ✅ [Q22][Q22g] |
 | 3 | **Transport-/Security-Layer (KKS + SECON)** | Verfahrensübergreifend, einmal gebaut für alle nutzbar |
 | 4 | **§ 301 (Krankenhaus)** | Größte fachliche Tiefe, aber etablierte Marktlösungen |
 | 5 | **§ 300 (Apotheken)** | Stark durch Rechenzentren abgedeckt, geringerer Bedarf an Einzelplatz-Validierung |

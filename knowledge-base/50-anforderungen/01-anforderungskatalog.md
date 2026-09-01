@@ -38,11 +38,11 @@ Nummerierte Anforderungen als Grundlage für Backlog und Abnahme.
 
 | ID | Anforderung | Prio | Beleg |
 |---|---|---|---|
-| REQ-TRANS-01 | Das System prüft die **Dateinamenskonvention** der Nutzdatendatei (8 Stellen: T/E, Verfahrenskennung, Version, Transfernummer). | MUSS | ⚠️ |
-| REQ-TRANS-02 | Das System prüft, dass Nutzdaten- und Auftragsdatei in den **ersten 8 Stellen identisch** benannt sind und die Auftragsdatei auf `.AUF` endet. | MUSS | ⚠️ |
-| REQ-TRANS-03 | Das System parst und validiert den **Auftragssatz** (Anlage 2 GGT) als positionsbasiertes Festsatzformat. | MUSS | ❓ Feldliste unvollständig |
-| REQ-TRANS-04 | Das System prüft die **Verfahrenskennung** (Auftragssatz Position 20–24) gegen die Werteliste aus Anlage 4 GGT. | MUSS | ❓ Werteliste fehlt |
-| REQ-TRANS-05 | Das System prüft die **Konsistenz zwischen Dateiname, Auftragssatz und Nutzdaten** (Verfahrenskennung, Test-/Echt-Kennzeichen, Absender-/Empfänger-IK). | MUSS | ❓ Feldzuordnung verifizieren |
+| REQ-TRANS-01 | Das System prüft die **Dateinamenskonvention** der Nutzdatendatei (8 Stellen: T/E, Verfahren, Version, Transfernummer) und unterscheidet dabei den **physikalischen** vom **logischen** Dateinamen. | MUSS | ✅ [Q20][Q22e] |
+| REQ-TRANS-02 | Das System prüft, dass Nutzdaten- und Auftragsdatei denselben **Transferdateinamen** tragen und die Auftragsdatei auf `.AUF` endet. Bei Übermittlung über KIM entfällt die Auftragsdatei. | MUSS | ✅ [Q22e] |
+| REQ-TRANS-03 | Das System parst und validiert den **Auftragssatz** (Anlage 2 GGT) als positionsbasiertes Festsatzformat fester Länge **348 Byte** über alle 37 Felder. | MUSS | ✅ [Q7] |
+| REQ-TRANS-04 | Das System prüft die **Verfahrenskennung** (Auftragssatz Stellen 20–24) gegen die Werteliste aus Anlage 4 GGT — **bereichsbezogen**, nicht über eine Längenregel. | MUSS | ✅ [Q20] |
+| REQ-TRANS-05 | Das System prüft die **Konsistenz zwischen Dateiname, Auftragssatz und Nutzdaten** (Verfahrenskennung, Transfernummer, logischer Dateiname ↔ `UNB`-Anwendungsreferenz, Absender-IK, Test-/Echt-Kennzeichen als Zuordnung `T` ↔ {`0`,`1`} und `E` ↔ {`2`}). | MUSS | ✅ [Q7][Q22e] |
 | REQ-TRANS-06 | Das System prüft transportwegspezifische Regeln, mindestens: genau **eine Nutzdaten- und eine Auftragsdatei pro E-Mail bzw. KIM-Nachricht**. | SOLL | ⚠️ |
 | REQ-TRANS-07 | Das System stellt sicher, dass die Auftragsdatei **keine Sozialdaten** enthält (Trennungsgebot). | MUSS | ⚠️ |
 | REQ-TRANS-08 | Das System unterstützt die Prüfung von Dateien für die Übertragung per **KIM** (Dateiname im Betreff, eine Nutzdatendatei pro Nachricht). | SOLL | ⚠️ |
@@ -53,11 +53,11 @@ Nummerierte Anforderungen als Grundlage für Backlog und Abnahme.
 |---|---|---|---|
 | REQ-SYN-01 | Das System liest die **Trennzeichen aus dem UNA-Segment** und hartkodiert sie nicht. | MUSS | ⚠️ |
 | REQ-SYN-02 | Das System prüft den **Dateirahmen UNB … UNZ** inkl. Zählerkonsistenz. | MUSS | ⚠️ |
-| REQ-SYN-03 | Das System unterstützt die Zeichensätze **DIN 66003 DRV (7-Bit)** und **DIN 66303:2000-06 (8-Bit)** und meldet unzulässige Zeichen. | MUSS | ⚠️ |
+| REQ-SYN-03 | Das System unterstützt die im Auftragssatz-Feld `ZEICHENSATZ` deklarierbaren Kodierungen (mindestens `I1` ISO 8859-1, `I7` DIN 66003 DRV, `I8` DIN 66303) und meldet unzulässige Zeichen; `EB` (EBCDIC) ist bei § 294 ff. SGB V zurückzuweisen. | MUSS | ✅ [Q7] |
 | REQ-SYN-04 | Das System behandelt das EDIFACT-**Freigabezeichen** korrekt. | MUSS | — |
 | REQ-SYN-05 | Das System toleriert **weggelassene, leere Datenelemente am Segmentende**. | MUSS | ⚠️ |
 | REQ-SYN-06 | Das System prüft **Segmentreihenfolge und Kardinalitäten** je Nachrichtentyp. | MUSS | ⚠️ |
-| REQ-SYN-07 | Das System prüft **Feldtypen, -längen und Pflichtfelder** je Segment. | MUSS | ❓ Feldkatalog fehlt |
+| REQ-SYN-07 | Das System prüft **Feldtypen, -längen und Pflichtfelder** je Segment. | MUSS | ✅ [Q22] für § 105 SGB XI, ❓ für §§ 300/301/302 |
 
 ## E. Stammdaten- und Schlüsselprüfung (`REQ-STAMM`)
 
