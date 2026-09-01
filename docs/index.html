@@ -1,0 +1,1380 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DTA-Validator Wiki</title>
+<meta name="description" content="Wissensstand des DTA-Validator-Vorprojekts: Regelwerke, Prüfstufenmodell und ein synthetisches Dateipärchen nach § 105 SGB XI, Feld für Feld durchgerechnet.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="DTA-Validator Wiki">
+<meta property="og:description" content="Abrechnungsdateien im deutschen GKV-Markt gegen die geltenden Regelwerke prüfen — bevor sie an eine Datenannahmestelle gehen.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%F0%9F%A7%BE%3C%2Ftext%3E%3C%2Fsvg%3E">
+<style>
+:root{color-scheme:light dark}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F1F4F3; --surface:#FFFFFF; --surface-2:#E9EEEC; --surface-3:#DFE6E3;
+  --ink:#16202B; --ink-2:#3F515E; --ink-3:#6B7C87;
+  --rule:#D2DAD8; --rule-strong:#B2C0BC;
+  --accent:#2B5183; --accent-ink:#2B5183; --accent-soft:#E1E9F3;
+  --belegt:#2E6A4E; --belegt-soft:#DEEBE3;
+  --sekundaer:#8A6113; --sekundaer-soft:#F3EAD6;
+  --offen:#A33A2C; --offen-soft:#F6E3DF;
+  --fa-m-bg:#DAE3DF; --fa-m-ln:#6B7C87;
+  --fa-c-bg:#E9EEEC; --fa-c-ln:#B2C0BC;
+  --fa-k-bg:#FFFFFF; --fa-k-ln:#D2DAD8;
+  --shadow:0 1px 2px rgba(22,32,43,.05), 0 8px 24px -16px rgba(22,32,43,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#11171B; --surface:#182026; --surface-2:#1E282F; --surface-3:#25313A;
+    --ink:#E2E9EC; --ink-2:#AAB9C1; --ink-3:#7E8E97;
+    --rule:#2A363D; --rule-strong:#3D4B54;
+    --accent:#8FB4E0; --accent-ink:#A8C6EA; --accent-soft:#1D2B3B;
+    --belegt:#7CC79E; --belegt-soft:#152A20;
+    --sekundaer:#DCB264; --sekundaer-soft:#2A2415;
+    --offen:#E68E7B; --offen-soft:#2E1A16;
+    --fa-m-bg:#2A353D; --fa-m-ln:#7E8E97;
+    --fa-c-bg:#1E282F; --fa-c-ln:#3D4B54;
+    --fa-k-bg:#182026; --fa-k-ln:#2A363D;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#11171B; --surface:#182026; --surface-2:#1E282F; --surface-3:#25313A;
+  --ink:#E2E9EC; --ink-2:#AAB9C1; --ink-3:#7E8E97;
+  --rule:#2A363D; --rule-strong:#3D4B54;
+  --accent:#8FB4E0; --accent-ink:#A8C6EA; --accent-soft:#1D2B3B;
+  --belegt:#7CC79E; --belegt-soft:#152A20;
+  --sekundaer:#DCB264; --sekundaer-soft:#2A2415;
+  --offen:#E68E7B; --offen-soft:#2E1A16;
+  --fa-m-bg:#2A353D; --fa-m-ln:#7E8E97;
+  --fa-c-bg:#1E282F; --fa-c-ln:#3D4B54;
+  --fa-k-bg:#182026; --fa-k-ln:#2A363D;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:16px; line-height:1.62; font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:Bitter,"IBM Plex Serif",Georgia,serif; text-wrap:balance; margin:0; line-height:1.22}
+code,kbd,pre,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--accent-ink); text-underline-offset:.18em; text-decoration-thickness:.06em}
+a:hover{text-decoration-thickness:.14em}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--rule); background:var(--surface)}
+.masthead-inner{max-width:1200px; margin:0 auto; padding:38px 24px 30px}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; font-weight:500;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ink-3); margin:0 0 14px
+}
+.masthead h1{font-size:clamp(2rem,1.3rem + 3vw,3.05rem); font-weight:700; letter-spacing:-.018em}
+.masthead .lede{
+  margin:14px 0 0; max-width:62ch; font-size:clamp(1rem,.96rem + .3vw,1.14rem);
+  color:var(--ink-2); line-height:1.55
+}
+.factbar{
+  display:flex; flex-wrap:wrap; gap:0 28px; margin-top:26px; padding-top:20px;
+  border-top:1px solid var(--rule); list-style:none
+}
+.factbar li{padding:6px 0}
+.factbar dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-3)
+}
+.factbar dd{margin:2px 0 0; font-size:14.5px; font-weight:500; font-variant-numeric:tabular-nums}
+
+/* ---------- shell ---------- */
+.shell{max-width:1200px; margin:0 auto; padding:0 24px 96px; display:grid; gap:56px}
+@media (min-width:1000px){
+  .shell{grid-template-columns:236px minmax(0,1fr); align-items:start; gap:0 64px}
+}
+
+/* ---------- rail ---------- */
+.rail{padding-top:44px}
+@media (min-width:1000px){.rail{position:sticky; top:0; max-height:100vh; overflow-y:auto; padding-bottom:44px}}
+.rail h2{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:600; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 12px
+}
+.rail nav ol{list-style:none; margin:0 0 32px; padding:0; counter-reset:navi}
+.rail nav li{counter-increment:navi; border-top:1px solid var(--rule)}
+.rail nav li:last-child{border-bottom:1px solid var(--rule)}
+.rail nav a{
+  display:grid; grid-template-columns:24px 1fr; gap:8px; padding:8px 0;
+  font-size:14px; color:var(--ink-2); text-decoration:none
+}
+.rail nav a::before{
+  content:counter(navi,decimal-leading-zero);
+  font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3); padding-top:3px
+}
+.rail nav a:hover{color:var(--accent-ink)}
+.rail nav a.is-key{font-weight:600; color:var(--ink)}
+.legend{list-style:none; margin:0 0 32px; padding:0; display:grid; gap:10px}
+.legend li{display:grid; grid-template-columns:auto 1fr; gap:9px; font-size:12.5px; color:var(--ink-2); line-height:1.4}
+.dot{width:10px; height:10px; border-radius:50%; margin-top:5px}
+.dot.b{background:var(--belegt)} .dot.s{background:var(--sekundaer)} .dot.o{background:var(--offen)}
+
+/* ---------- content ---------- */
+.content{padding-top:44px; min-width:0}
+section{scroll-margin-top:24px}
+section + section{margin-top:64px}
+.sec-head{border-top:2px solid var(--ink); padding-top:14px; margin-bottom:22px}
+.sec-num{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; letter-spacing:.12em;
+  color:var(--ink-3); display:block; margin-bottom:6px
+}
+.sec-head h2{font-size:clamp(1.42rem,1.2rem + .8vw,1.85rem); font-weight:600; letter-spacing:-.012em}
+h3{font-size:1.1rem; font-weight:600; margin:36px 0 12px; letter-spacing:-.005em}
+h4{font-size:.95rem; font-weight:600; margin:26px 0 8px}
+p{margin:0 0 16px; max-width:70ch}
+.content ul,.content ol{max-width:70ch; padding-left:1.25em; margin:0 0 16px}
+.content li{margin-bottom:7px}
+strong{font-weight:600}
+.small{font-size:13.5px; color:var(--ink-2)}
+
+/* ---------- chips ---------- */
+.chip{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500;
+  letter-spacing:.03em; padding:2px 7px; border-radius:3px; white-space:nowrap;
+  background:var(--surface-2); color:var(--ink-2); border:1px solid var(--rule)
+}
+.chip.b{background:var(--belegt-soft); color:var(--belegt); border-color:transparent}
+.chip.s{background:var(--sekundaer-soft); color:var(--sekundaer); border-color:transparent}
+.chip.o{background:var(--offen-soft); color:var(--offen); border-color:transparent}
+.chip.a{background:var(--accent-soft); color:var(--accent-ink); border-color:transparent}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto; margin:0 0 20px; border:1px solid var(--rule); border-radius:4px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:14px}
+th,td{text-align:left; padding:9px 14px; border-bottom:1px solid var(--rule); vertical-align:top}
+thead th{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; font-weight:600; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3); background:var(--surface-2); white-space:nowrap
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; font-family:"IBM Plex Mono",monospace}
+td code{font-size:12.5px; background:var(--surface-2); padding:1px 4px; border-radius:2px}
+p code,li code{font-size:.87em; background:var(--surface-2); padding:1px 4px; border-radius:2px}
+td.was{color:var(--ink-3); text-decoration:line-through; text-decoration-thickness:.05em}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--rule-strong); background:var(--surface); padding:16px 20px;
+  margin:0 0 22px; border-radius:0 4px 4px 0
+}
+.note.warn{border-left-color:var(--offen); background:var(--offen-soft)}
+.note.warn strong{color:var(--offen)}
+.note.ok{border-left-color:var(--belegt); background:var(--belegt-soft)}
+.note.ok h4{color:var(--belegt)}
+.note.info{border-left-color:var(--accent)}
+.note p:last-child{margin-bottom:0}
+.note h4{margin-top:0}
+
+.stat{
+  display:grid; grid-template-columns:auto 1fr; gap:0 22px; align-items:baseline;
+  padding:22px 24px; background:var(--surface); border:1px solid var(--rule);
+  border-radius:4px; margin:0 0 22px; box-shadow:var(--shadow)
+}
+.stat .fig{
+  font-family:Bitter,serif; font-size:clamp(2.2rem,1.6rem + 2.4vw,3.2rem); font-weight:700;
+  line-height:1; color:var(--accent-ink); font-variant-numeric:tabular-nums
+}
+.stat p{margin:0; font-size:14.5px; color:var(--ink-2)}
+@media (max-width:520px){.stat{grid-template-columns:1fr; gap:10px}}
+
+/* ---------- stufen ladder ---------- */
+.ladder{display:grid; gap:2px; margin:0 0 20px; border:1px solid var(--rule); border-radius:4px; overflow:hidden; background:var(--rule)}
+.rung{
+  display:grid; grid-template-columns:44px minmax(0,1fr) 150px 132px; gap:16px; align-items:center;
+  background:var(--surface); padding:11px 16px
+}
+.rung .st{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--surface);
+  background:var(--ink); width:26px; height:26px; display:grid; place-items:center; border-radius:3px
+}
+.rung .nm{font-weight:500; font-size:14.5px}
+.rung .cls{font-size:12.5px; color:var(--ink-3)}
+@media (max-width:760px){
+  .rung{grid-template-columns:34px minmax(0,1fr); gap:6px 12px}
+  .rung .cls,.rung .cov{grid-column:2}
+}
+
+/* ---------- mono strips ---------- */
+.strip{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:20px; margin:0 0 12px}
+.striplabel{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 6px
+}
+.fname{display:grid; grid-template-columns:repeat(8,2.6em); font-family:"IBM Plex Mono",monospace; justify-content:start}
+.fname.n11{grid-template-columns:repeat(11,2.6em)}
+.fname .ch{
+  font-size:20px; font-weight:600; text-align:center; padding:6px 0; border-bottom:2px solid var(--rule-strong)
+}
+.fname .lb{
+  grid-row:2; font-size:10.5px; color:var(--ink-3); text-align:center; padding-top:6px; line-height:1.3
+}
+.fname .g1{grid-column:1} .fname .g2{grid-column:2/5} .fname .g3{grid-column:5} .fname .g4{grid-column:6/9}
+.fname .h1{grid-column:1/3} .fname .h2{grid-column:3/6} .fname .h3{grid-column:6}
+.fname .h4{grid-column:7/9} .fname .h5{grid-column:9} .fname .h6{grid-column:10/12}
+.fname .ch.k{color:var(--accent-ink)}
+
+/* ---------- Auftragssatz-Feldband ---------- */
+.ruler{font-family:"IBM Plex Mono",monospace; display:grid; grid-auto-flow:column; justify-content:start}
+.fld{display:grid; grid-template-rows:auto auto auto}
+.fld .p{font-size:9.5px; color:var(--ink-3); padding-bottom:3px; white-space:nowrap; letter-spacing:0}
+.fld .v{
+  font-size:13px; line-height:1.9; white-space:pre; background:var(--fa-c-bg);
+  border-bottom:3px solid var(--fa-c-ln); border-right:1px solid var(--ground)
+}
+.fld .n{font-size:9.5px; color:var(--ink-3); padding-top:4px; white-space:nowrap; overflow:hidden}
+.fld.fa-M .v{background:var(--fa-m-bg); border-bottom-color:var(--fa-m-ln)}
+.fld.fa-c .v{background:var(--fa-c-bg); border-bottom-color:var(--fa-c-ln)}
+.fld.fa-K .v{background:var(--fa-k-bg); border-bottom-color:var(--fa-k-ln); border-bottom-style:dashed}
+.fld.hl .v{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.ruler-key{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:12.5px; color:var(--ink-2); margin:0 0 22px}
+.ruler-key span{display:inline-flex; align-items:center; gap:7px}
+.swatch{width:22px; height:9px; border-radius:2px; display:inline-block}
+.swatch.fa-M{background:var(--fa-m-bg); border-bottom:3px solid var(--fa-m-ln)}
+.swatch.fa-c{background:var(--fa-c-bg); border-bottom:3px solid var(--fa-c-ln)}
+.swatch.fa-K{background:var(--fa-k-bg); border-bottom:3px dashed var(--fa-k-ln)}
+
+/* ---------- edifact listing ---------- */
+.edi{
+  font-family:"IBM Plex Mono",monospace; font-size:12.5px; line-height:1.72;
+  background:var(--surface); border:1px solid var(--rule); border-radius:4px;
+  overflow-x:auto; margin:0 0 12px; padding:16px 0
+}
+.edi .seg{display:grid; grid-template-columns:64px minmax(0,1fr); gap:14px; padding:0 18px; white-space:pre}
+.edi .seg:hover{background:var(--surface-2)}
+.edi .tag{color:var(--ink-3); font-size:11px; padding-top:3px; letter-spacing:.04em}
+.edi .msg{border-left:3px solid var(--accent); margin:10px 0; padding:4px 0}
+.edi .msg > .seg{padding-left:15px}
+.edi .msghd{
+  padding:2px 18px 6px 15px; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--accent-ink); font-weight:600
+}
+.edi .casehd{
+  padding:10px 18px 4px 15px; font-size:10.5px; letter-spacing:.08em;
+  color:var(--ink-3); font-weight:600
+}
+.edi .ell{
+  padding:3px 18px 3px 93px; font-size:11.5px; color:var(--ink-3); font-style:italic
+}
+.edi .term{color:var(--offen)}
+.edi .kw{color:var(--accent-ink); font-weight:600}
+
+/* ---------- dossier band ---------- */
+.dossier{
+  background:var(--surface-2); border-top:2px solid var(--ink); border-bottom:1px solid var(--rule);
+  margin:64px -24px 0; padding:34px 24px 44px
+}
+@media (min-width:1000px){.dossier{margin-right:calc(-1 * max(0px, (100vw - 1200px)/2 + 24px))}}
+.dossier .sec-head{border-top:none; padding-top:0}
+.dossier .tw,.dossier .strip,.dossier .edi,.dossier .note,.dossier .stat{background:var(--surface)}
+.dossier .note.warn{background:var(--offen-soft)}
+.dossier .note.ok{background:var(--belegt-soft)}
+.dossier thead th{background:var(--surface-3)}
+.dossier p code,.dossier li code,.dossier td code{background:var(--surface-3)}
+
+/* ---------- key/value card ---------- */
+.kv{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:4px; overflow:hidden; margin:0 0 22px
+}
+.kv > div{background:var(--surface); padding:12px 16px}
+.kv dt{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.kv dd{margin:3px 0 0; font-size:14.5px; font-weight:500}
+.kv dd .ik{font-family:"IBM Plex Mono",monospace; font-weight:400; font-size:13.5px; color:var(--ink-2)}
+
+/* ---------- figure ---------- */
+figure{margin:0 0 24px}
+figure svg{display:block; max-width:100%; height:auto; color:var(--ink-2)}
+figcaption{font-size:13px; color:var(--ink-3); margin-top:10px; max-width:70ch; line-height:1.5}
+.figframe{background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:20px; overflow-x:auto}
+
+/* ---------- rule chips grid ---------- */
+.rules{display:flex; flex-wrap:wrap; gap:5px; margin:0 0 18px}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--rule); margin-top:72px; padding:28px 24px 48px;
+  background:var(--surface)
+}
+.foot-inner{max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:20px 48px; font-size:13px; color:var(--ink-3)}
+.foot-inner p{margin:0; max-width:52ch}
+</style>
+<header class="masthead">
+  <div class="masthead-inner">
+    <p class="eyebrow">Wiki · Öffentliche Referenzseite</p>
+    <h1>DTA-Validator</h1>
+    <p class="lede">
+      Abrechnungsdateien im deutschen GKV-Markt gegen die geltenden Regelwerke prüfen —
+      <em>bevor</em> sie an eine Datenannahmestelle gehen. Diese Seite fasst den Wissensstand
+      des Vorprojekts zusammen und rechnet ihn an einem synthetischen Dateipärchen durch.
+    </p>
+    <dl class="factbar">
+      <li><dt>Status</dt><dd>Vorprojekt · kein Code</dd></li>
+      <li><dt>Stand</dt><dd>01.09.2026</dd></li>
+      <li><dt>Beispiel</dt><dd>TPFL0001 · § 105 SGB XI</dd></li>
+      <li><dt>Prüfregeln</dt><dd>103 · davon 50 spezifiziert</dd></li>
+      <li><dt>Lizenz</dt><dd>MIT</dd></li>
+    </dl>
+  </div>
+</header>
+
+<div class="shell">
+
+  <aside class="rail">
+    <h2>Inhalt</h2>
+    <nav aria-label="Seitennavigation">
+      <ol>
+        <li><a href="#worum">Worum es geht</a></li>
+        <li><a href="#akteure">Akteure und Wege</a></li>
+        <li><a href="#verfahren">Die Verfahrensfamilie</a></li>
+        <li><a href="#transport">Der Transportrahmen</a></li>
+        <li><a href="#stufen">Das Prüfstufenmodell</a></li>
+        <li><a href="#beispiel" class="is-key">Das Beispiel: TPFL0001</a></li>
+        <li><a href="#abdeckung">Regelabdeckung</a></li>
+        <li><a href="#offen">Offene Punkte</a></li>
+        <li><a href="#bibliothek">Wissensbibliothek</a></li>
+      </ol>
+    </nav>
+    <h2>Vertrauens-Marker</h2>
+    <ul class="legend">
+      <li><span class="dot b"></span><span><strong>belegt</strong> — gegen das Primärdokument verifiziert</span></li>
+      <li><span class="dot s"></span><span><strong>sekundär</strong> — Suchtreffer oder Portalseite, Primärdokument nicht gelesen</span></li>
+      <li><span class="dot o"></span><span><strong>offen</strong> — unbelegt oder widersprüchlich, vor Implementierung zu klären</span></li>
+    </ul>
+  </aside>
+
+  <main class="content">
+
+    <!-- 1 -->
+    <section id="worum">
+      <div class="sec-head"><span class="sec-num">01</span><h2>Worum es geht</h2></div>
+
+      <div class="note ok">
+        <h4>Stand 01.09.2026 — die Primärdokumente liegen vor</h4>
+        <p>
+          Diese Seite beruhte bis zum 31.08.2026 auf Web-Recherche; der direkte Abruf der Regelwerke
+          von <code>gkv-datenaustausch.de</code> war blockiert. Inzwischen sind ausgewertet:
+          <strong>Anlage 2 GGT</strong> (Auftragsdatei), <strong>Anlage 4 GGT</strong>
+          (Verfahrenskennungen), die <strong>Technische Anlage 1 zu § 105 Abs. 2 SGB XI</strong> in
+          den Fassungen 6.4.0 und 6.5.1 nebst Anhängen, die <strong>Technische Anlage 3</strong>
+          (Schlüsselverzeichnisse) und das <strong>Gemeinsame Rundschreiben
+          Institutionskennzeichen</strong>.
+        </p>
+        <p>
+          Das Beispiel in Abschnitt 06 wurde daraufhin <strong>vollständig neu aufgebaut</strong> —
+          die Vorfassung <code>TPLG0001</code> war strukturell falsch. Was genau daran falsch war,
+          steht dort in einer eigenen Tabelle; es ist die nützlichste Liste typischer Fehlannahmen
+          über EDIFACT im GKV-Umfeld, die dieses Projekt hat.
+        </p>
+      </div>
+
+      <p>
+        <strong>DTA</strong> steht historisch für <em>Datenträgeraustausch</em> — die Abrechnung von
+        Leistungen gegenüber gesetzlichen Krankenkassen auf maschinell verwertbaren Datenträgern.
+        Der Begriff hat sich als Sammelbezeichnung gehalten, obwohl der Austausch heute praktisch
+        vollständig elektronisch stattfindet.
+      </p>
+      <p>
+        Zu unterscheiden davon: <strong>DTAUS</strong>, das abgelöste Zahlungsverkehrsformat der
+        Kreditwirtschaft — kein fachlicher Bezug. Und <strong>DALE-UV</strong>, der Datenaustausch mit
+        der gesetzlichen Unfallversicherung — technisch eng verwandt über dieselben Gemeinsamen
+        Grundsätze Technik, fachlich eigenständig.
+      </p>
+
+      <h3>Warum ein Validator</h3>
+      <div class="stat">
+        <span class="fig">5&nbsp;%</span>
+        <p>
+          § 303 SGB V verpflichtet die Krankenkassen, bei nicht maschinell verwertbarer Übermittlung
+          die Nacherfassungskosten per pauschaler <strong>Rechnungskürzung von bis zu 5 % des
+          Rechnungsbetrages</strong> in Rechnung zu stellen. Eine fehlerhafte Abrechnungsdatei ist
+          damit unmittelbar zahlungswirksam.
+        </p>
+      </div>
+      <p>
+        Der Validator soll Fehler dort finden, wo ihre Behebung noch nichts kostet: beim
+        Leistungserbringer, vor dem Versand. Er prüft nicht die Berechtigung einer Leistung —
+        er prüft, ob die Datei überhaupt verarbeitbar ist.
+      </p>
+    </section>
+
+    <!-- 2 -->
+    <section id="akteure">
+      <div class="sec-head"><span class="sec-num">02</span><h2>Akteure und Wege</h2></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Rolle</th><th>Aufgabe</th><th>Marker</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Leistungserbringer</strong></td><td>Erbringt die Leistung, stellt die Rechnung. Identifiziert durch das Institutionskennzeichen (IK).</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>Abrechnungszentrum</strong></td><td>Optionaler Dienstleister, der im Auftrag abrechnet. Bei Apotheken faktisch der Regelfall; im Pflegeverfahren steuert die Rechnungsart <code>2</code> oder <code>3</code> den Fall.</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>Datenannahmestelle</strong></td><td>Nimmt die verschlüsselten Nutzdaten entgegen, entschlüsselt, prüft und verteilt an die Kasse. Muss Entschlüsselungsbefugnis laut Kostenträgerdatei haben.</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>Belegannahmestelle</strong></td><td>Nimmt die Urbelege entgegen — Verordnungen, Leistungsnachweise. Eigener Weg, eigenes IK.</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>Kostenträger und Pflegekasse</strong></td><td>Zahlende Institution und Kasse des Leistungsbescheids — im Datensatz <em>zwei getrennte Felder</em>, oft zwei IK.</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>GKV-Spitzenverband</strong></td><td>Erlässt Richtlinien und Technische Anlagen, betreibt gkv-datenaustausch.de.</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>ITSG GmbH</strong></td><td>Betreibt Trust Center (Zertifikate) und Systemuntersuchung (Softwarezertifizierung).</td><td><span class="chip s">sekundär</span></td></tr>
+            <tr><td><strong>ARGE·IK</strong></td><td>Vergibt und pflegt die Institutionskennzeichen, angesiedelt bei der DGUV. Regelt Klassifikation, Regionalbereich, Seriennummer und Prüfziffer.</td><td><span class="chip b">belegt</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Ein Abrechnungsvorgang, zwei getrennte Transportwege</h3>
+      <p>
+        Der wohl häufigste Denkfehler beim Einstieg: die elektronische Datei sei der ganze Vorgang.
+        Sie ist es nicht. Der unterschriebene Papierbeleg läuft an eine <em>andere</em> Stelle mit
+        einem <em>anderen</em> IK, und erst die Kasse führt beide Stränge wieder zusammen. Die IK
+        unten stammen aus dem Beispiel in Abschnitt 06.
+      </p>
+      <figure>
+        <div class="figframe">
+        <svg viewBox="0 0 760 300" role="img" aria-label="Der Leistungserbringer sendet das verschlüsselte Dateipärchen an die Datenannahmestelle und die Urbelege auf Papier an die Belegannahmestelle; beide Wege laufen bei der Pflegekasse zusammen, die zurück an den Leistungserbringer zahlt oder absetzt.">
+          <defs>
+            <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <polygon points="0,0 10,5 0,10" fill="currentColor"></polygon>
+            </marker>
+            <marker id="arwA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <polygon points="0,0 10,5 0,10" fill="var(--accent)"></polygon>
+            </marker>
+          </defs>
+
+          <rect x="8" y="110" width="156" height="72" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"></rect>
+          <text x="86" y="138" text-anchor="middle" font-size="13" font-weight="600" fill="currentColor">Pflegedienst</text>
+          <text x="86" y="155" text-anchor="middle" font-size="11" fill="currentColor" opacity=".75">Leistungserbringer</text>
+          <text x="86" y="171" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" fill="currentColor" opacity=".75">461100877</text>
+
+          <rect x="300" y="28" width="168" height="68" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.5"></rect>
+          <text x="384" y="55" text-anchor="middle" font-size="13" font-weight="600" fill="var(--accent)">Datenannahmestelle</text>
+          <text x="384" y="72" text-anchor="middle" font-size="11" fill="var(--accent)" opacity=".85">entschlüsselt, prüft, routet</text>
+          <text x="384" y="88" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" fill="var(--accent)" opacity=".85">661100423</text>
+
+          <rect x="300" y="196" width="168" height="68" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"></rect>
+          <text x="384" y="223" text-anchor="middle" font-size="13" font-weight="600" fill="currentColor">Belegannahmestelle</text>
+          <text x="384" y="240" text-anchor="middle" font-size="11" fill="currentColor" opacity=".75">erfasst die Urbelege</text>
+          <text x="384" y="256" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" fill="currentColor" opacity=".75">661100559</text>
+
+          <rect x="596" y="102" width="156" height="88" rx="4" fill="none" stroke="currentColor" stroke-width="1.5"></rect>
+          <text x="674" y="128" text-anchor="middle" font-size="13" font-weight="600" fill="currentColor">Pflegekasse</text>
+          <text x="674" y="145" text-anchor="middle" font-size="11" fill="currentColor" opacity=".75">hält Beleg gegen Datei</text>
+          <text x="674" y="162" text-anchor="middle" font-size="11" font-family="IBM Plex Mono, monospace" fill="currentColor" opacity=".75">189524616</text>
+          <text x="674" y="179" text-anchor="middle" font-size="10.5" fill="currentColor" opacity=".6">Kostenträger 109524616</text>
+
+          <polyline points="164,146 232,146 232,62 294,62" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arwA)"></polyline>
+          <text x="240" y="100" font-size="11.5" font-weight="600" fill="var(--accent)">Dateipärchen</text>
+          <text x="240" y="115" font-size="11" fill="var(--accent)" opacity=".8">verschlüsselt</text>
+
+          <polyline points="164,146 232,146 232,230 294,230" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arw)"></polyline>
+          <text x="240" y="182" font-size="11.5" font-weight="600" fill="currentColor">Urbelege</text>
+          <text x="240" y="197" font-size="11" fill="currentColor" opacity=".7">Papier</text>
+
+          <polyline points="468,62 528,62 528,138 590,138" fill="none" stroke="var(--accent)" stroke-width="1.8" marker-end="url(#arwA)"></polyline>
+          <polyline points="468,230 528,230 528,154 590,154" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arw)"></polyline>
+
+          <polyline points="674,190 674,286 86,286 86,182" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arw)"></polyline>
+          <text x="380" y="279" text-anchor="middle" font-size="11.5" fill="currentColor">Zahlung, Absetzung oder Fehlernachricht</text>
+        </svg>
+        </div>
+        <figcaption>
+          Der Validator sitzt ausschließlich am blauen Strang — er prüft, was den Pflegedienst
+          Richtung Datenannahmestelle verlässt. Die Deckungsgleichheit mit dem Papierweg
+          (Mengen, Summen, Zeiträume) kann er nur insoweit prüfen, wie der Beleg maschinell vorliegt.
+        </figcaption>
+      </figure>
+
+      <div class="note info">
+        <h4>Kostenträger und Pflegekasse sind nicht dasselbe Feld</h4>
+        <p>
+          Die Technische Anlage 1 führt im <code>FKT</code>-Segment beide getrennt: den
+          <em>Kostenträger</em> als die Institution, die die Rechnung begleicht, und die
+          <em>Pflegekasse</em> als die Kasse des Leistungs- oder Bewilligungsbescheids. Das IK der
+          Pflegekasse <strong>beginnt immer mit <code>18</code></strong> — die Klassifikation 18 ist
+          im Gemeinsamen Rundschreiben für „Pflegekassen der Krankenversicherungsträger" reserviert.
+          Daraus wird eine direkt implementierbare Prüfregel.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="verfahren">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Die Verfahrensfamilie</h2></div>
+      <p>
+        Es gibt keinen einheitlichen „DTA-Standard", sondern eine Familie sektorspezifischer Verfahren
+        mit gemeinsamem technischem Unterbau und je eigenen Nachrichtenformaten, Schlüsselverzeichnissen
+        und Fristen. Ein Validator, der nur eines davon kennt, ist kein Framework.
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Verfahren</th><th>Rechtsgrundlage</th><th>Nachrichtentypen</th><th>Regelwerk</th><th>Marker</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Pflege</strong></td><td>§ 105 SGB XI</td><td><code>PLGA</code> <code>PLAA</code> <span class="small">Version 6</span></td><td>TA 1 <strong>6.4.0</strong>, gültig ab 01.05.2026<br><span class="small">Nachfolger 6.5.1 ab 01.02.2027</span></td><td><span class="chip b">ausgewertet</span></td></tr>
+            <tr><td><strong>Sonstige Leistungserbringer</strong><br><span class="small">Heil-, Hilfsmittel, häusliche Krankenpflege, Krankentransport, DiGA</span></td><td>§ 302 SGB V</td><td><code>SLGA</code> <code>SLLA</code></td><td>Richtlinien § 302 Abs. 2 + TA 1–6</td><td><span class="chip s">sekundär</span></td></tr>
+            <tr><td><strong>Krankenhäuser</strong></td><td>§ 301 Abs. 3 SGB V</td><td><code>AUFN</code> <code>ENTL</code> <code>RECH</code> <code>ZAHL</code> u. a. (13)</td><td>§ 301-Vereinbarung, Anlagen 1–5</td><td><span class="chip s">sekundär</span></td></tr>
+            <tr><td><strong>Apotheken</strong></td><td>§ 300 SGB V</td><td><span class="small">satzartenbasiert</span></td><td>Arzneimittelabrechnungsvereinbarung, TA 1–7</td><td><span class="chip s">sekundär</span></td></tr>
+            <tr><td><strong>Direktabrechner</strong><br><span class="small">Selektivverträge</span></td><td>§ 295 Abs. 1b SGB V</td><td><span class="small">—</span></td><td>Technische Anlage V10.0 (02.04.2025)</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>Hebammen</strong></td><td>§ 301a SGB V</td><td><span class="small">analog § 302</span></td><td>Richtlinien nach § 302 Abs. 2 SGB V</td><td><span class="chip s">sekundär</span></td></tr>
+            <tr><td><strong>Hybrid-DRG</strong></td><td>§ 115f SGB V</td><td><span class="small">—</span></td><td>TA Hybrid-DRG V1.2 (12.08.2025)</td><td><span class="chip b">belegt</span></td></tr>
+            <tr><td><strong>Arbeitgeber, Zahlstellen</strong></td><td>§§ 28a ff. SGB IV, DEÜV</td><td><span class="small">eXTra-XML</span></td><td>Gemeinsame Grundsätze DEÜV</td><td><span class="chip s">sekundär</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">
+        § 105 SGB XI steht bewusst oben: Es ist das einzige Sektorverfahren, dessen Technische Anlage
+        vollständig ausgewertet vorliegt — Segmentgrammatik, Feldkatalog und Schlüsselverzeichnis.
+        Für die §§ 300/301/302 SGB V fehlen die sektorspezifischen Anlagen weiterhin.
+      </p>
+
+      <h3>Was alle teilen — der wiederverwendbare Kern</h3>
+      <ol>
+        <li>Identifikation über <strong>Institutionskennzeichen</strong> mit einheitlicher Struktur und Prüfziffer.</li>
+        <li><strong>Dateipärchen</strong> aus Nutzdaten- und Auftragsdatei — außer innerhalb der Telematikinfrastruktur, dort entfällt die Auftragsdatei.</li>
+        <li><strong>Signatur und Verschlüsselung</strong> nach Anlage 16 GGT (SECON) auf PKCS#7/CMS-Basis.</li>
+        <li><strong>EDIFACT-nahe Syntax</strong> mit <code>UNB</code> … <code>UNZ</code>-Rahmen. Ein <code>UNA</code>-Segment gibt es <em>nicht</em> überall: § 105 SGB XI legt die Trennzeichen fest und kennt keines.</li>
+        <li><strong>Routing über Kostenträgerdateien</strong> — dem amtlichen Verzeichnis der Annahmestellen.</li>
+        <li><strong>Versionierte Technische Anlagen</strong> mit Stichtag: der Validator muss mehrere Regelwerksversionen parallel halten und nach Leistungsdatum auswählen.</li>
+        <li>Ein <strong>Rückmeldekanal</strong> mit Fehler- und Absetzungsnachrichten sowie ein Korrekturverfahren mit Bezug zur Ursprungsrechnung.</li>
+      </ol>
+
+      <div class="note">
+        <h4>Veröffentlicht ist nicht in Kraft</h4>
+        <p>
+          Die Versionsführung der TA 1 zu § 105 SGB XI listet die Versionen <strong>6.0.0 und 6.1.0
+          mit dem Vermerk „Tritt nicht in Kraft"</strong>. Eine Regelwerks-Registry muss beide
+          Zustände getrennt führen — sonst wählt sie zum Leistungsdatum eine Version aus, die es
+          nie gegeben hat.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="transport">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Der Transportrahmen</h2></div>
+      <p>
+        Das Krankenkassenkommunikationssystem (KKS) beschreibt, in welcher Weise Auftrags- und
+        Nutzdaten ausgetauscht werden. Ein Übertragungsvorgang außerhalb der Telematikinfrastruktur
+        besteht aus genau zwei Dateien, in dieser Reihenfolge:
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Reihenfolge</th><th>Datei</th><th>Inhalt</th><th>Verschlüsselung</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td><strong>Nutzdatendatei</strong></td><td>Fachliche Abrechnungsdaten</td><td><strong>verschlüsselt</strong> — Anlage 16 / SECON</td></tr>
+            <tr><td class="num">2</td><td><strong>Auftragsdatei</strong> <code>.AUF</code></td><td>Auftragssatz, <strong>348 Byte</strong> Festsatzformat, ISO 8859-1</td><td>unverschlüsselt</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Die Auftragsdatei fungiert damit als <strong>Commit-Signal</strong>: Erst wenn sie vorliegt,
+        gilt die Nutzdatendatei als vollständig übertragen. Eine Nutzdatendatei ohne Auftragsdatei
+        ist ein Transportfehler, kein Fachfehler — das ist der Grund, warum Prüfstufe 0 überhaupt
+        existiert.
+      </p>
+      <div class="note info">
+        <h4>Warum die Auftragsdatei unverschlüsselt ist — und was daraus folgt</h4>
+        <p>
+          Die Datenannahmestelle muss sie <em>vor</em> der Entschlüsselung lesen können, um routen zu
+          können. Daraus folgt datenschutzrechtlich das <strong>Trennungsgebot</strong>: Der Auftragssatz
+          darf keine Sozialdaten enthalten. Keine Versichertennummer, keine Namen, keine Diagnosen.
+        </p>
+      </div>
+      <div class="note warn">
+        <h4>Ausnahme Telematikinfrastruktur</h4>
+        <p>
+          Bei der vollelektronischen Abrechnung über KIM wird <strong>keine Auftragsdatei
+          gebildet</strong> — die Transport-Metadaten wandern in den XML-Header der Nutzdatendatei.
+          Ein Validator darf das Dateipärchen deshalb nicht bedingungslos erzwingen, sondern nur für
+          den Weg außerhalb der TI.
+        </p>
+      </div>
+
+      <h3>Zwei Dateinamen, zwei Systematiken</h3>
+      <p>
+        Der <strong>physikalische</strong> Name (Transferdateiname) trägt das Verfahren und die
+        Transfernummer. Beide Dateien eines Pärchens tragen ihn; die Auftragsdatei hängt
+        <code>.AUF</code> an.
+      </p>
+      <div class="strip">
+        <p class="striplabel">Physikalischer Dateiname · 8 Stellen</p>
+        <div class="fname" aria-label="Aufbau des physikalischen Dateinamens TPFL0001">
+          <span class="ch k">T</span><span class="ch">P</span><span class="ch">F</span><span class="ch">L</span><span class="ch">0</span><span class="ch">0</span><span class="ch">0</span><span class="ch">1</span>
+          <span class="lb g1">Stelle 1<br>T = Test<br>E = Echt</span>
+          <span class="lb g2">Stellen 2–4<br>Verfahren</span>
+          <span class="lb g3">Stelle 5<br>Version</span>
+          <span class="lb g4">Stellen 6–8<br>Transfernummer</span>
+        </div>
+      </div>
+      <p>
+        Der <strong>logische</strong> Name steht im Auftragssatz-Feld <code>DATEINAME</code>
+        (Stellen 105–115) und in der <code>UNB</code>-Anwendungsreferenz. Er folgt einer völlig
+        anderen Systematik und trägt <em>kein</em> Test-/Echt-Kennzeichen:
+      </p>
+      <div class="strip">
+        <p class="striplabel">Logischer Dateiname · 11 Stellen · § 105 SGB XI</p>
+        <div class="fname n11" aria-label="Aufbau des logischen Dateinamens PL076001SBK">
+          <span class="ch">P</span><span class="ch">L</span><span class="ch">0</span><span class="ch">7</span><span class="ch">6</span><span class="ch">0</span><span class="ch">0</span><span class="ch">1</span><span class="ch">S</span><span class="ch">B</span><span class="ch">K</span>
+          <span class="lb h1">1–2<br>Absender-<br>klassifikation</span>
+          <span class="lb h2">3–5<br>Abrechnungs-<br>monat MMJ</span>
+          <span class="lb h3">6<br>Art der<br>Lieferung</span>
+          <span class="lb h4">7–8<br>lfd. Nr.</span>
+          <span class="lb h5">9<br>S | A</span>
+          <span class="lb h6">10–11<br>Kassenart</span>
+        </div>
+      </div>
+      <p class="small">
+        <code>PL</code> für Pflege-Leistungserbringer, <code>076</code> für Juli 2026,
+        <code>0</code> für Regeldaten (<code>1</code>–<code>9</code> wären Korrekturlieferungen),
+        <code>S</code> für Selbstabrechner, <code>BK</code> für Betriebskrankenkassen. Aus beiden
+        Namen zusammen folgen sieben der neun Regeln der Prüfstufe 0.
+      </p>
+    </section>
+
+    <!-- 5 -->
+    <section id="stufen">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Das Prüfstufenmodell</h2></div>
+      <p>
+        Ein Validator arbeitet in klar getrennten Stufen. Jede hat eine eigene Fehlerklasse und
+        eine eigene Abbruchsemantik. Regel-IDs folgen dem Schema
+        <code>&lt;Stufe&gt;-&lt;Verfahren&gt;-&lt;Nr&gt;</code>, etwa <code>S4-XI-002</code>;
+        <code>ALL</code> steht für verfahrensübergreifend, <code>XI</code> für § 105 SGB XI.
+      </p>
+      <div class="note">
+        <p>
+          <strong>Abbruchregel.</strong> Schlägt eine Stufe mit einem <code>FEHLER</code> fehl, sind die
+          Ergebnisse aller höheren Stufen nicht mehr aussagekräftig. Sie werden als
+          <em>nicht geprüft</em> gekennzeichnet — nicht als <em>bestanden</em>.
+        </p>
+      </div>
+      <div class="ladder">
+        <div class="rung"><span class="st">0</span><span class="nm">Dateipärchen und Namenskonvention</span><span class="cls">Transportfehler</span><span class="cov"><span class="chip b">spezifiziert</span></span></div>
+        <div class="rung"><span class="st">1</span><span class="nm">Auftragssatz — Anlage 2 GGT</span><span class="cls">Transportfehler</span><span class="cov"><span class="chip b">spezifiziert</span></span></div>
+        <div class="rung"><span class="st">2</span><span class="nm">Kryptografie — Anlage 16 / SECON</span><span class="cls">Sicherheitsfehler</span><span class="cov"><span class="chip s">Anlage 16 fehlt</span></span></div>
+        <div class="rung"><span class="st">3</span><span class="nm">Syntax — UNB … UNZ, Zeichensatz</span><span class="cls">Syntaxfehler</span><span class="cov"><span class="chip b">§ 105 spezifiziert</span></span></div>
+        <div class="rung"><span class="st">4</span><span class="nm">Feldformate und Schlüsselwerte</span><span class="cls">Formatfehler</span><span class="cov"><span class="chip b">§ 105 spezifiziert</span></span></div>
+        <div class="rung"><span class="st">5</span><span class="nm">Referenzielle Integrität und Summen</span><span class="cls">Konsistenzfehler</span><span class="cov"><span class="chip b">§ 105 spezifiziert</span></span></div>
+        <div class="rung"><span class="st">6</span><span class="nm">Fachliche Plausibilität</span><span class="cls">Plausibilitätsfehler</span><span class="cov"><span class="chip s">teilweise</span></span></div>
+      </div>
+      <div class="note ok">
+        <h4>Der Blocker in Stufe 1 ist aufgelöst</h4>
+        <p>
+          Bis August 2026 galt: ohne die vollständige Feldliste aus <strong>Anlage 2 GGT</strong> ist
+          der Auftragssatz nicht implementierbar. Das Dokument liegt jetzt vor — 37 Felder über
+          348 Byte, lückenlos. Zusammen mit der Werteliste aus Anlage 4 GGT sind
+          <strong>Prüfstufe 0 und 1 verfahrensübergreifend implementierungsreif</strong>.
+        </p>
+        <p>
+          Offen bleibt Stufe 2: Anlage 16 GGT (SECON, 94 Seiten) ist noch nicht ausgewertet. Und für
+          die §§ 300/301/302 SGB V fehlen in den Stufen 3–6 die sektorspezifischen Technischen
+          Anlagen.
+        </p>
+      </div>
+      <p class="small">
+        Der Regelkatalog umfasst 103 Regeln, davon 50 mit dem Status <code>spezifiziert</code> —
+        Quelle verifiziert, implementierungsreif. Vor der Auswertung der Primärdokumente war
+        <em>keine</em> Regel in diesem Zustand.
+      </p>
+    </section>
+
+    <!-- 6: DOSSIER -->
+    <section id="beispiel" class="dossier">
+      <div class="sec-head"><span class="sec-num">06 · Beispiel-Dossier</span><h2>TPFL0001 — eine Monatsabrechnung, durchgerechnet</h2></div>
+
+      <div class="note ok">
+        <h4>Wie belastbar ist dieses Beispiel?</h4>
+        <p>
+          <strong>Struktur und Feldbelegung sind gegen die Primärdokumente gebaut</strong> — Anlage 2
+          GGT, Anlage 4 GGT, TA 1 Version 6.4.0, TA 3 Version 6.4.0, Anhang 1 und Anhang 3 sowie das
+          Gemeinsame Rundschreiben Institutionskennzeichen.
+        </p>
+        <p>
+          <strong>Erfunden sind nur die Stammdaten:</strong> Namen, Anschriften, IK, KVNR, Preise,
+          Leistungskomplexnummern und der Sachverhalt selbst. Preise und Leistungskomplexe ergeben
+          sich real aus der jeweiligen Vergütungsvereinbarung; als Vorlage für die Erzeugung echter
+          Abrechnungsdateien taugt das Beispiel deshalb weiterhin nicht.
+        </p>
+        <p>
+          Das Beispiel ist ein <strong>Positivfall</strong>: Eine korrekte Implementierung meldet
+          darauf keinen Befund.
+        </p>
+      </div>
+
+      <h3>Was sich gegenüber der Vorfassung geändert hat</h3>
+      <p>
+        Die Vorfassung <code>TPLG0001</code> entstand ohne Primärdokumente und war strukturell
+        falsch. Die Unterschiede sind die brauchbarste Liste typischer Fehlannahmen, die dieses
+        Projekt hat — deshalb stehen sie hier, statt gelöscht zu werden.
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Vorher</th><th>Jetzt</th><th>Warum</th></tr></thead>
+          <tbody>
+            <tr><td class="was">Verfahrenskennung <code>PLG</code>, Datei <code>TPLG0001</code></td><td><code>TPFL0</code>, Datei <code>TPFL0001</code></td><td>Anlage 4 GGT Kapitel 1.5: <code>PFL</code> für den Datenaustausch nach § 105 SGB XI</td></tr>
+            <tr><td class="was">Auftragssatz 128 Byte, Layout geraten</td><td><strong>348 Byte</strong>, 37 Felder nach Katalog</td><td>Anlage 2 GGT: <code>LÄNGE_AUFTRAG</code> ist die Konstante <code>00000348</code></td></tr>
+            <tr><td class="was"><code>UNA:+.? '</code> mit Dezimalpunkt</td><td>kein <code>UNA</code>, Dezimal<strong>komma</strong></td><td>TA 1 Abschnitt 4.1 Abs. 10 legt die Trennzeichen fest und sieht kein <code>UNA</code> vor</td></tr>
+            <tr><td class="was">1 PLGA + 2 PLAA</td><td>1 PLGA + <strong>1</strong> PLAA mit zwei <code>INV</code>-Blöcken</td><td>„Auf eine PLGA hat immer eine PLAA zu folgen" — beide Fälle betreffen dieselbe Pflegekasse</td></tr>
+            <tr><td class="was">Segmente <code>SKO</code>, <code>EPL</code>, <code>GES</code> in der PLAA</td><td><code>SRD</code>, <code>MAN</code>, <code>ELS</code>, <code>IAF</code></td><td><code>SKO</code> und <code>EPL</code> existieren in § 105 SGB XI nicht; <code>GES</code> gehört in die PLGA, das Fall-Ende ist <code>IAF</code></td></tr>
+            <tr><td class="was">Monatsmengen <code>20</code> / <code>31</code> in einer Zeile</td><td><strong>ein <code>ESK</code> je Einsatz</strong>, darunter die <code>ELS</code></td><td><code>ESK</code> ist je Leistungseinsatz vorzugeben, aufsteigend nach Tag und Uhrzeit</td></tr>
+            <tr><td class="was"><code>UNH+…+PLGA:06:04:00</code></td><td><code>UNH+…+PLGA:6</code></td><td><code>S009</code> besteht aus Nachrichtentyp-Kennung und Versionsnummer — aktuell <code>6</code></td></tr>
+            <tr><td class="was">IK Pflegedienst <code>261099874</code></td><td><code>461100877</code></td><td>Klassifikation <code>26</code> steht für Krankenhäuser, <code>46</code> für Kranken- und Altenpfleger</td></tr>
+            <tr><td class="was">Kostenträger als Pflegekasse geführt</td><td>getrennte IK: <code>109524616</code> / <code>189524616</code></td><td>Das IK der Pflegekasse beginnt immer mit <code>18</code></td></tr>
+            <tr><td class="was">Firmenname 38 Zeichen</td><td>auf 27 gekürzt</td><td><code>PLGA.NAM.Name 1</code> ist <code>..30</code> Stellen lang</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Der abgebildete Fall</h3>
+      <dl class="kv">
+        <div><dt>Leistungserbringer</dt><dd>Pflegedienst Sonnenhof GmbH<br><span class="ik">IK 461100877 · Klass. 46</span></dd></div>
+        <div><dt>Datenannahmestelle</dt><dd><span class="ik">IK 661100423 · Klass. 66</span></dd></div>
+        <div><dt>Belegannahmestelle</dt><dd><span class="ik">IK 661100559</span></dd></div>
+        <div><dt>Kostenträger</dt><dd>Muster BKK<br><span class="ik">IK 109524616 · Klass. 10</span></dd></div>
+        <div><dt>Pflegekasse</dt><dd>Pflegekasse bei der Muster BKK<br><span class="ik">IK 189524616 · Klass. 18</span></dd></div>
+        <div><dt>Leistungserbringergruppe</dt><dd>Abrechnungscode 36<br><span class="ik">Tarifkennzeichen 23000</span></dd></div>
+        <div><dt>Leistungsart · Rechnungsart</dt><dd>01 ambulante Pflege · 1</dd></div>
+        <div><dt>Abrechnungszeitraum</dt><dd>01.07.2026 – 31.07.2026</dd></div>
+        <div><dt>Rechnung</dt><dd>2026070001:0 vom 05.08.2026</dd></div>
+        <div><dt>Rechnungsbetrag</dt><dd>1.671,00 EUR</dd></div>
+        <div><dt>Umsatzsteuer</dt><dd>befreit · Grund 01<br><span class="ik">§ 4 Nr. 16 UStG</span></dd></div>
+      </dl>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Fall</th><th>Versicherte Person</th><th>KVNR</th><th class="num">PG</th><th>Leistungsziffer</th><th class="num">Einsätze</th><th class="num">Einzelpreis</th><th class="num">Betrag</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3"><code>2607001</code></td><td rowspan="3">Hanna Kerzenmacher<br><span class="small">geb. 12.03.1948</span></td><td rowspan="3"><code>K741852967</code></td><td class="num" rowspan="3">3</td><td><code>01:01:1:003</code><br><span class="small">Große Morgentoilette · Pflegefachkraft</span></td><td class="num">20</td><td class="num">24,50</td><td class="num">490,00</td></tr>
+            <tr><td><code>01:01:2:015</code><br><span class="small">Hauswirtschaftliche Versorgung</span></td><td class="num">8</td><td class="num">18,20</td><td class="num">145,60</td></tr>
+            <tr><td colspan="3"><strong>Summe · Segment <code>IAF</code></strong></td><td class="num"><strong>635,60</strong></td></tr>
+            <tr><td rowspan="3"><code>2607002</code></td><td rowspan="3">Otto Brinkmeier<br><span class="small">geb. 27.11.1939</span></td><td rowspan="3"><code>M305921844</code></td><td class="num" rowspan="3">4</td><td><code>01:01:1:004</code><br><span class="small">Kleine Morgentoilette mit Lagern</span></td><td class="num">31</td><td class="num">28,90</td><td class="num">895,90</td></tr>
+            <tr><td><code>01:06:0:03</code><br><span class="small">Wegepauschale · Einsatz-/Fahrtkostenpauschale</span></td><td class="num">31</td><td class="num">4,50</td><td class="num">139,50</td></tr>
+            <tr><td colspan="3"><strong>Summe · Segment <code>IAF</code></strong></td><td class="num"><strong>1.035,40</strong></td></tr>
+            <tr><td colspan="7"><strong>Rechnungsbetrag · Segment <code>GES</code> der PLGA</strong></td><td class="num"><strong>1.671,00</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note info">
+        <h4>Die Leistungsziffer ist ein kaskadierender Schlüssel</h4>
+        <p>
+          Sie besteht aus vier durch Doppelpunkte getrennten Teilen: Art der abgegebenen Leistung
+          (Schlüssel 2.4), Vergütungsart (2.5), qualifikationsabhängige Vergütung (2.6) und Leistung
+          (2.7.n). <strong>Welcher Abschnitt für „Leistung" gilt, entscheidet die Vergütungsart</strong> —
+          <code>01</code> verweist auf 2.7.1 (Leistungskomplexe, 3 Stellen), <code>06</code> auf 2.7.5
+          (Wegegebühren-Art, 2 Stellen). Eine flache Schlüsseltabelle genügt hier nicht.
+        </p>
+      </div>
+
+      <h3>Was zum Dateipärchen gehört</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Datei</th><th>Inhalt</th><th>Umfang</th></tr></thead>
+          <tbody>
+            <tr><td><code>TPFL0001</code></td><td>Nutzdaten (PLGA/PLAA), EDIFACT, <strong>Klartext</strong></td><td class="num">4924 Bytes · 163 Segmente</td></tr>
+            <tr><td><code>TPFL0001.AUF</code></td><td>Auftragsdatei, Festsatzformat, ISO 8859-1</td><td class="num">348 Bytes</td></tr>
+            <tr><td><code>urbeleg-leistungsnachweis</code></td><td>Urbeleg: Leistungsnachweise beider Fälle, A4 quer</td><td class="num">2 Seiten</td></tr>
+            <tr><td><code>urbeleg-begleitzettel</code></td><td>Deckblatt der Papiersendung an die Belegannahmestelle</td><td class="num">1 Seite</td></tr>
+            <tr><td><code>beispiel-metadaten.yaml</code></td><td>Erwartungswerte maschinenlesbar: Beteiligte, Summen, Zähler, 57 erfüllte Regel-IDs</td><td class="num">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <h4>Zwei bewusste Abweichungen von der Realität</h4>
+        <p>
+          <strong>Die Nutzdatendatei ist unverschlüsselt.</strong> Real wäre <code>TPFL0001</code> der
+          SECON-Umschlag — <code>EnvelopedData</code> über <code>SignedData</code> nach Anlage 16 GGT.
+          Hier liegt der Klartext unter dem Dateinamen, damit die Fixture ohne Schlüsselmaterial
+          nutzbar ist. Prüfstufe 2 ist damit nicht testbar. Der Auftragssatz weist das konsistent aus:
+          <code>VERSCHLÜSSELUNGSART</code> und <code>ELEKTRONISCHE_UNTERSCHRIFT</code> stehen beide auf
+          <code>00</code> — eine der zwei zulässigen Kombinationen.
+        </p>
+        <p>
+          <strong>Test-, nicht Echtdaten.</strong> Stelle 1 des Dateinamens ist <code>T</code>, der
+          <code>UNB</code>-Dateiindikator <code>0</code>. Beispieldaten gehören nie in den
+          Echtdatenpfad.
+        </p>
+      </div>
+
+      <h3>Der Auftragssatz — 348 Byte, vier Objekte</h3>
+      <p>
+        Positionsbasiertes Festsatzformat, keine Trennzeichen, keine Zeilenumbrüche. Logisch in vier
+        Objekte gegliedert, physisch ein zusammenhängender Satz; alle Objekte müssen vorhanden sein.
+        Die Einfärbung zeigt die <strong>Feldart</strong> — was gefüllt werden muss und was nur mit
+        einem Default belegt wird. <code>␣</code> steht für ein Leerzeichen.
+      </p>
+
+      <div class="strip">
+        <p class="striplabel">Teil 1 · Stellen 1–104 · Identifikation und Routing</p>
+        <div class="ruler" aria-label="Auftragssatz Stellen 1 bis 104">
+          <div class="fld fa-M"><span class="p">1</span><span class="v">500000</span><span class="n">IDENTIFIKATOR</span></div>
+          <div class="fld fa-M"><span class="p">7</span><span class="v">01</span><span class="n">VERS</span></div>
+          <div class="fld fa-M"><span class="p">9</span><span class="v">00000348</span><span class="n">LÄNGE</span></div>
+          <div class="fld fa-c"><span class="p">17</span><span class="v">000</span><span class="n">SEQ</span></div>
+          <div class="fld fa-M hl"><span class="p">20</span><span class="v">TPFL0</span><span class="n">VERF.</span></div>
+          <div class="fld fa-M"><span class="p">25</span><span class="v">001</span><span class="n">TRF</span></div>
+          <div class="fld fa-c"><span class="p">28</span><span class="v">     </span><span class="n">SPEZ</span></div>
+          <div class="fld fa-M"><span class="p">33</span><span class="v">461100877      </span><span class="n">ABSENDER_EIGNER</span></div>
+          <div class="fld fa-M"><span class="p">48</span><span class="v">461100877      </span><span class="n">ABSENDER_PHYS</span></div>
+          <div class="fld fa-M"><span class="p">63</span><span class="v">661100423      </span><span class="n">EMPFÄNGER_NUTZER</span></div>
+          <div class="fld fa-M"><span class="p">78</span><span class="v">661100423      </span><span class="n">EMPFÄNGER_PHYS</span></div>
+          <div class="fld fa-M"><span class="p">93</span><span class="v">000000</span><span class="n">FEHLER-NR</span></div>
+          <div class="fld fa-M"><span class="p">99</span><span class="v">000000</span><span class="n">MAßNAHME</span></div>
+        </div>
+      </div>
+
+      <div class="strip">
+        <p class="striplabel">Teil 1 · Stellen 105–210 · Datei-Metadaten</p>
+        <div class="ruler" aria-label="Auftragssatz Stellen 105 bis 210">
+          <div class="fld fa-M hl"><span class="p">105</span><span class="v">PL076001SBK</span><span class="n">DATEINAME</span></div>
+          <div class="fld fa-M"><span class="p">116</span><span class="v">20260805114700</span><span class="n">DATUM_ERSTELLUNG</span></div>
+          <div class="fld fa-c"><span class="p">130</span><span class="v">20260805114730</span><span class="n">ÜBERTR_GESENDET</span></div>
+          <div class="fld fa-K"><span class="p">144</span><span class="v">00000000000000</span><span class="n">EMPF_START</span></div>
+          <div class="fld fa-K"><span class="p">158</span><span class="v">00000000000000</span><span class="n">EMPF_ENDE</span></div>
+          <div class="fld fa-M"><span class="p">172</span><span class="v">000000</span><span class="n">DATEIVERS</span></div>
+          <div class="fld fa-M"><span class="p">178</span><span class="v">0</span><span class="n"> </span></div>
+          <div class="fld fa-M"><span class="p">179</span><span class="v">000000004924</span><span class="n">GRÖßE_NUTZDATEN</span></div>
+          <div class="fld fa-M"><span class="p">191</span><span class="v">000000004924</span><span class="n">GRÖßE_ÜBERTRAGUNG</span></div>
+          <div class="fld fa-M"><span class="p">203</span><span class="v">I1</span><span class="n">ZS</span></div>
+          <div class="fld fa-M"><span class="p">205</span><span class="v">00</span><span class="n">KOMP</span></div>
+          <div class="fld fa-M"><span class="p">207</span><span class="v">00</span><span class="n">VERSCHL</span></div>
+          <div class="fld fa-M"><span class="p">209</span><span class="v">00</span><span class="n">SIGN</span></div>
+        </div>
+      </div>
+
+      <div class="strip">
+        <p class="striplabel">Teil 2 und 3 · Stellen 211–274 · Bandverarbeitung und KKS-Verfahren</p>
+        <div class="ruler" aria-label="Auftragssatz Stellen 211 bis 274">
+          <div class="fld fa-c"><span class="p">211</span><span class="v">   </span><span class="n">SATZFMT</span></div>
+          <div class="fld fa-c"><span class="p">214</span><span class="v">00000</span><span class="n">SATZLÄNGE</span></div>
+          <div class="fld fa-c"><span class="p">219</span><span class="v">00000000</span><span class="n">BLOCKLÄNGE</span></div>
+          <div class="fld fa-c"><span class="p">227</span><span class="v"> </span><span class="n"> </span></div>
+          <div class="fld fa-c"><span class="p">228</span><span class="v">00</span><span class="n">WDH</span></div>
+          <div class="fld fa-c"><span class="p">230</span><span class="v">5</span><span class="n"> </span></div>
+          <div class="fld fa-c"><span class="p">231</span><span class="v">0000000000</span><span class="n">VERZ_VERSAND</span></div>
+          <div class="fld fa-c"><span class="p">241</span><span class="v">000000</span><span class="n">FTAM-NR</span></div>
+          <div class="fld fa-c"><span class="p">247</span><span class="v">                            </span><span class="n">VARIABLES INFO-FELD — 28 × Blank</span></div>
+        </div>
+      </div>
+
+      <div class="strip">
+        <p class="striplabel">Teil 4 · Stellen 275–348 · Verarbeitung innerhalb eines Rechenzentrums</p>
+        <div class="ruler" aria-label="Auftragssatz Stellen 275 bis 348">
+          <div class="fld fa-c"><span class="p">275</span><span class="v">                                            </span><span class="n">E-MAIL-ADRESSE ABSENDER — 44 × Blank</span></div>
+          <div class="fld fa-c"><span class="p">319</span><span class="v">01                          01</span><span class="n">DATEI_BEZEICHNUNG</span></div>
+        </div>
+      </div>
+
+      <p class="ruler-key">
+        <span><i class="swatch fa-M"></i> <code>M</code> — Muss versorgt werden · 21 Felder</span>
+        <span><i class="swatch fa-c"></i> <code>m</code> — bedingtes Mussfeld · 14 Felder</span>
+        <span><i class="swatch fa-K"></i> <code>K</code> — Kann, aber Default-Wert Pflicht · 2 Felder</span>
+      </p>
+
+      <div class="note warn">
+        <h4><code>K</code> heißt nicht „darf leer bleiben"</h4>
+        <p>
+          Kann-Felder sind mit dem Default-Wert ihres Feldtyps zu belegen: numerische mit <code>0</code>,
+          alphanumerische mit Leerzeichen. Deshalb stehen in
+          <code>DATUM_ÜBERTRAGUNG_EMPFANGEN_START</code> und <code>…_ENDE</code> vierzehn Nullen und
+          keine Leerzeichen. Ein Auftragssatz mit Nullbytes oder abgeschnittener Länge ist unabhängig
+          von der Feldart fehlerhaft.
+        </p>
+      </div>
+
+      <div class="note info">
+        <h4>Zwei Stellen, an denen dieselben Bytes Verschiedenes bedeuten</h4>
+        <p>
+          <strong>Stellen 275–344.</strong> Die E-Mail-Adresse des Absenders wurde auf 70 Zeichen
+          erweitert und darf über die Feldgrenze hinaus bis Stelle 344 in <code>DATEI_BEZEICHNUNG</code>
+          hineinreichen. Ein Parser, der beide Felder unabhängig ausliest, zerschneidet lange Adressen.
+        </p>
+        <p>
+          <strong>Stellen 319–320.</strong> Für § 105 SGB XI belegt Anhang 1 der TA 1 sie mit der Art
+          der abgegebenen Leistung (<code>01</code>) — eine Zusatzbelegung, die die Anlage 2 GGT nicht
+          kennt. Die Stellen 347–348 tragen daneben die Anzahl der Gesamtpakete nach Anlage 2 GGT.
+        </p>
+      </div>
+
+      <div class="note ok">
+        <h4>Ein Widerspruch der Vorfassung hat sich aufgelöst</h4>
+        <p>
+          Diese Seite hielt bisher fest: <code>VERFAHREN_KENNUNG</code> belegt fünf Stellen (20–24),
+          Regel <code>S1-ALL-003</code> verlangte aber Übereinstimmung mit den Stellen 2–5 des
+          Dateinamens — vier Zeichen. Der Widerspruch war ein Recherchefehler. Richtig ist: Die
+          Verfahrenskennung ist fünfstellig <em>und</em> bildet die <strong>Stellen 1–5</strong> des
+          Transferdateinamens, Test-/Echt-Kennzeichen eingeschlossen. <code>TPFL0</code> steht an
+          beiden Orten identisch.
+        </p>
+      </div>
+
+      <h3>Die Nutzdatendatei</h3>
+      <p>
+        Die Datei enthält <strong>keine Zeilenumbrüche</strong> — Segmente werden ausschließlich durch
+        das Segmentendezeichen <code>'</code> getrennt. Ein Parser darf sich nicht auf Zeilenstruktur
+        verlassen. Von den 163 Segmenten sind hier die strukturtragenden abgedruckt; die
+        Einsatzblöcke sind gekürzt:
+      </p>
+      <div class="edi">
+        <div class="seg"><span class="tag">UNB</span><span><span class="kw">UNB</span>+UNOC:3+461100877+661100423+20260805:1147+1+PL076001SBK+0<span class="term">'</span></span></div>
+        <div class="msg">
+          <div class="msghd">Nachricht 1 — PLGA · Gesamtaufstellung · 8 Segmente</div>
+          <div class="seg"><span class="tag">UNH</span><span><span class="kw">UNH</span>+1+PLGA:6<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">FKT</span><span><span class="kw">FKT</span>+01++461100877+109524616+189524616+461100877<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">REC</span><span><span class="kw">REC</span>+2026070001:0+20260805+1+EUR<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">SRD</span><span><span class="kw">SRD</span>+36:23000+01<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">UST</span><span><span class="kw">UST</span>+DE999999999+J+01<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">GES</span><span><span class="kw">GES</span>+1671,00+++1671,00<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">NAM</span><span><span class="kw">NAM</span>+Pflegedienst Sonnenhof GmbH+Abrechnung 030 5550123<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">UNT</span><span><span class="kw">UNT</span>+8+1<span class="term">'</span></span></div>
+        </div>
+        <div class="msg">
+          <div class="msghd">Nachricht 2 — PLAA · beide Abrechnungsfälle · 153 Segmente</div>
+          <div class="seg"><span class="tag">UNH</span><span><span class="kw">UNH</span>+2+PLAA:6<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">FKT</span><span><span class="kw">FKT</span>+01+461100877+109524616+189524616+461100877<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">REC</span><span><span class="kw">REC</span>+2026070001:0+20260805+1+EUR<span class="term">'</span></span></div>
+          <div class="casehd">Abrechnungsfall 2607001 · 20 Einsätze</div>
+          <div class="seg"><span class="tag">INV</span><span><span class="kw">INV</span>+K741852967+2607001<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">NAD</span><span><span class="kw">NAD</span>+Kerzenmacher+Hanna+19480312+Rosenweg+3+12345+Musterstadt<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">MAN</span><span><span class="kw">MAN</span>+202607+++3<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ESK</span><span><span class="kw">ESK</span>+01+0715<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ELS</span><span><span class="kw">ELS</span>+01:01:1:003+24,50+++00+1,00+999999998<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ESK</span><span><span class="kw">ESK</span>+02+0715<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ELS</span><span><span class="kw">ELS</span>+01:01:1:003+24,50+++00+1,00+999999998<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ESK</span><span><span class="kw">ESK</span>+03+0715<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ELS</span><span><span class="kw">ELS</span>+01:01:1:003+24,50+++00+1,00+999999998<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ELS</span><span><span class="kw">ELS</span>+01:01:2:015+18,20+++00+1,00+999999996<span class="term">'</span></span></div>
+          <div class="ell">… 17 weitere ESK-Blöcke, Kalendertage 06 bis 31 …</div>
+          <div class="seg"><span class="tag">IAF</span><span><span class="kw">IAF</span>+635,60+++635,60<span class="term">'</span></span></div>
+          <div class="casehd">Abrechnungsfall 2607002 · 31 Einsätze</div>
+          <div class="seg"><span class="tag">INV</span><span><span class="kw">INV</span>+M305921844+2607002<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">NAD</span><span><span class="kw">NAD</span>+Brinkmeier+Otto+19391127<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">MAN</span><span><span class="kw">MAN</span>+202607+++4<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ESK</span><span><span class="kw">ESK</span>+01+0745<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ELS</span><span><span class="kw">ELS</span>+01:01:1:004+28,90+++00+1,00+999999998<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">ELS</span><span><span class="kw">ELS</span>+01:06:0:03+4,50+++00+1,00+999999998<span class="term">'</span></span></div>
+          <div class="ell">… 30 weitere ESK-Blöcke, Kalendertage 02 bis 31 …</div>
+          <div class="seg"><span class="tag">IAF</span><span><span class="kw">IAF</span>+1035,40+++1035,40<span class="term">'</span></span></div>
+          <div class="seg"><span class="tag">UNT</span><span><span class="kw">UNT</span>+153+2<span class="term">'</span></span></div>
+        </div>
+        <div class="seg"><span class="tag">UNZ</span><span><span class="kw">UNZ</span>+2+1<span class="term">'</span></span></div>
+      </div>
+      <p class="small">
+        163 Segmente: 1 × <code>UNB</code> + 8 (PLGA) + 153 (PLAA) + 1 × <code>UNZ</code>. Die
+        <code>UNT</code>-Zähler nennen die Segmentanzahl je Nachricht einschließlich <code>UNH</code>
+        und <code>UNT</code>; <code>UNZ+2</code> nennt die Anzahl Nachrichten und wiederholt die
+        Datenaustauschreferenz aus dem <code>UNB</code>.
+      </p>
+
+      <div class="note warn">
+        <h4>Warum die Datei fast fünfmal so groß ist wie die Vorfassung</h4>
+        <p>
+          4924 statt 1002 Byte — nicht weil mehr abgerechnet würde, sondern weil die Vorfassung einen
+          ganzen Monat in eine Zeile gepresst hat. Die TA 1 verlangt <strong>ein <code>ESK</code> je
+          Leistungseinsatz</strong> und darunter die einzelnen <code>ELS</code>. Aus „20 × Große
+          Morgentoilette" werden 20 Einsatzkopfsegmente. Ein Validator leitet die Menge deshalb nicht
+          aus einem Mengenfeld ab, sondern aus der <strong>Zahl der Segmente</strong>.
+        </p>
+      </div>
+
+      <h4>Trennzeichen — fest vereinbart, kein <code>UNA</code></h4>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Funktion</th><th>§ 105 SGB XI</th><th>EDIFACT-Default</th></tr></thead>
+          <tbody>
+            <tr><td>innerhalb zusammengesetzter Datenelemente</td><td><code>:</code></td><td><code>:</code></td></tr>
+            <tr><td>Datenelementtrenner</td><td><code>+</code></td><td><code>+</code></td></tr>
+            <tr><td><strong>Dezimalzeichen</strong></td><td><strong><code>,</code></strong></td><td><code>.</code></td></tr>
+            <tr><td>Aufhebungszeichen</td><td><code>?</code></td><td><code>?</code></td></tr>
+            <tr><td>Segmentendezeichen</td><td><code>'</code></td><td><code>'</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Die Technische Anlage legt diese Zeichen direkt fest und sieht <strong>kein
+        <code>UNA</code>-Segment</strong> vor. Ein <code>UNA</code> in einer § 105-Datei ist selbst
+        ein Befund. Die eine Abweichung, die zählt, ist das <strong>Dezimalkomma</strong>: Ein Parser,
+        der die Defaults annimmt, liest <code>1671,00</code> falsch — und zwar ohne Syntaxfehler.
+      </p>
+      <p class="small">
+        Das Aufhebungszeichen gilt jeweils für das unmittelbar folgende Zeichen. Beispiel aus der
+        TA 1: Luigi D'Angelo wird als <code>D?'Angelo+Luigi+</code> übermittelt.
+      </p>
+
+      <h4>Zeichensatz</h4>
+      <p>
+        Zulässig sind ISO 8859-1, ISO 7-Bit (DIN 66003 DRV 7) und ISO 8-Bit (DIN 66303 DRV 8); der
+        Auftragssatz deklariert <code>I1</code> = ISO 8859-1. Die Beispieldatei enthält nur Zeichen,
+        die in allen drei Kodierungen byte-identisch sind — nicht aus Vorsicht, sondern weil
+        Leistungsbezeichnungen im EDIFACT gar nicht übertragen werden: <code>ELS</code> trägt die
+        Leistungsziffer <code>003</code>, nicht das Wort „Große Morgentoilette".
+      </p>
+      <div class="note info">
+        <h4>Innerhalb der TI gelten zwei Zeichensätze gleichzeitig</h4>
+        <p>
+          Bei der vollelektronischen Abrechnung über KIM ist die XML-Hülle <strong>UTF-8 nach
+          DIN SPEC 91379</strong> ohne Byte-Order-Mark — die darin base64-codierten
+          EDIFACT-Abrechnungsdaten behalten aber ihren ISO-Zeichensatz. Ein Validator, der die
+          decodierten Daten als UTF-8 liest, verstümmelt Umlaute.
+        </p>
+      </div>
+
+      <h3>Segmentstruktur der beiden Nachrichtentypen</h3>
+      <p>
+        Alle Segmentkennungen und Kardinalitäten stammen aus TA 1 Abschnitt 4.4 — die Spalte
+        „Herkunft", die diese Seite früher brauchte, ist entfallen.
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>PLGA</th><th>Art</th><th class="num">Max</th><th>Inhalt</th></tr></thead>
+          <tbody>
+            <tr><td><code>FKT</code></td><td>M</td><td class="num">1</td><td>Verarbeitungskennzeichen, Sammelrechnung, IK Rechnungssteller, IK Kostenträger, IK Pflegekasse, IK Absender</td></tr>
+            <tr><td><code>REC</code></td><td>M</td><td class="num">1</td><td>Rechnungsnummer <code>Sammel:Einzel</code>, Rechnungsdatum, Rechnungsart, Währung</td></tr>
+            <tr><td><code>SRD</code></td><td>M</td><td class="num">1</td><td>Leistungserbringergruppe <code>Abrechnungscode:Tarifkennzeichen</code>, Leistungsart</td></tr>
+            <tr><td><code>UST</code></td><td>K</td><td class="num">1</td><td>Ordnungsnummer, Kennung USt-Befreiung, Grund — entfällt in der Sammelrechnungs-PLGA</td></tr>
+            <tr><td><code>GES</code></td><td>M</td><td class="num">1</td><td>Summe Gesamtbrutto, Zuzahlungen, Beihilfe, Gesamtrechnungsbetrag, Mehrwertsteuer</td></tr>
+            <tr><td><code>NAM</code></td><td>M</td><td class="num">1</td><td>Name 1–4 des Rechnungsstellers, je <code>..30</code> Stellen</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>PLAA</th><th>Art</th><th>Kardinalität</th><th>Inhalt</th></tr></thead>
+          <tbody>
+            <tr><td><code>FKT</code></td><td>M</td><td>1 je Nachricht</td><td>ohne Sammelrechnungs-Feld, dafür mit IK des Rechnungsstellers</td></tr>
+            <tr><td><code>REC</code></td><td>M</td><td>1 je Nachricht</td><td>identisch mit <code>PLGA.REC</code></td></tr>
+            <tr><td><code>INV</code></td><td>M</td><td>1–n je Nachricht</td><td>Versicherten-Nummer, eindeutige Belegnummer — Beginn des Abrechnungsfalls</td></tr>
+            <tr><td><code>NAD</code></td><td>M</td><td>1 je <code>INV</code></td><td>Nachname, Vorname, Geburtsdatum, optional Anschrift</td></tr>
+            <tr><td><code>IMG</code></td><td>K</td><td>0–n je <code>INV</code></td><td>Leistungsnachweis-ID (UUID), nur vollelektronisch — <strong>entfällt ab TA 1 6.5.0</strong></td></tr>
+            <tr><td><code>MAN</code></td><td>M</td><td>1 je <code>INV</code></td><td>Kalendermonat, Pflegestufe, Pflegeklasse, Pflegegrad</td></tr>
+            <tr><td><code>ESK</code></td><td>M</td><td>1–n je <code>MAN</code></td><td>Kennzeichen der Leistungserbringung, Uhrzeit — aufsteigend zu sortieren</td></tr>
+            <tr><td><code>ELS</code></td><td>M</td><td>1–n je <code>ESK</code></td><td>Leistungsziffer, Einzelpreis, Punktwert, Punktzahl, Dauer/km, Anzahl, Beschäftigtennummern</td></tr>
+            <tr><td><code>ZUS</code></td><td>K</td><td>0–n je <code>ELS</code></td><td>Zuschläge und Abzüge je Leistung</td></tr>
+            <tr><td><code>HIL</code></td><td>K</td><td>0–1 je <code>ELS</code></td><td>technische und zum Verbrauch bestimmte Pflegehilfsmittel</td></tr>
+            <tr><td><code>IAF</code></td><td>M</td><td>1 je <code>INV</code></td><td>Gesamtbrutto, Zuzahlung, Beihilfe, Rechnungsbetrag — Ende des Abrechnungsfalls</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">
+        Ein <strong>Abrechnungsfall</strong> umfasst die Daten eines Versicherten in einem
+        Kalendermonat mit demselben Pflegegrad. Wechselt der Pflegegrad innerhalb des Monats, ist ein
+        neuer Abrechnungsfall <em>mit neuer Rechnungsnummer und neuer Nachricht</em> zu bilden.
+      </p>
+
+      <h3>Prüfziffern zum Nachrechnen</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Wert</th><th>Kern</th><th class="num">Prüfziffer</th><th>Verfahren</th><th>Marker</th></tr></thead>
+          <tbody>
+            <tr><td><code>260326822</code> <span class="small">Testvektor aus der Quelle</span></td><td><code>032682</code></td><td class="num">2</td><td rowspan="6" class="small">Modulo 10 über die Stellen 3–8, Gewichtung von rechts 1·2·1·2·1·2, Quersumme der Produkte, Rest modulo 10. Gemeinsames Rundschreiben Institutionskennzeichen 02/2026, Nummer 1.2.5.</td><td rowspan="6"><span class="chip b">belegt</span></td></tr>
+            <tr><td><code>461100877</code> <span class="small">IK Leistungserbringer</span></td><td><code>110087</code></td><td class="num">7</td></tr>
+            <tr><td><code>661100423</code> <span class="small">IK Datenannahmestelle</span></td><td><code>110042</code></td><td class="num">3</td></tr>
+            <tr><td><code>661100559</code> <span class="small">IK Belegannahmestelle</span></td><td><code>110055</code></td><td class="num">9</td></tr>
+            <tr><td><code>109524616</code> <span class="small">IK Kostenträger</span></td><td><code>952461</code></td><td class="num">6</td></tr>
+            <tr><td><code>189524616</code> <span class="small">IK Pflegekasse</span></td><td><code>952461</code></td><td class="num">6</td></tr>
+            <tr><td><code>K741852967</code> <span class="small">KVNR Fall 2607001</span></td><td><code>11</code> + <code>74185296</code></td><td class="num">7</td><td rowspan="2" class="small">Buchstabe als zweistellige Zahl (A = 01 … Z = 26), Modulo 10 mit Gewichtung 1·2·1·2 über alle zehn Ziffern</td><td rowspan="2"><span class="chip o">offen</span></td></tr>
+            <tr><td><code>M305921844</code> <span class="small">KVNR Fall 2607002</span></td><td><code>13</code> + <code>30592184</code></td><td class="num">4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">
+        <strong>Wie der führende Buchstabe der KVNR tatsächlich in die Prüfziffer eingeht, ist
+        weiterhin unbelegt.</strong> Ändert die KVNR-Richtlinie V3.4.0 diese Annahme, sind beide KVNR
+        neu zu rechnen. Das IK-Verfahren dagegen ist verifiziert — der Testvektor stammt aus dem
+        Rundschreiben selbst.
+      </p>
+
+      <h3>Der Urbeleg — und warum er zur Datei passen muss</h3>
+      <p>
+        Zum Dateipärchen gehört der Papierbeleg: je Abrechnungsfall ein Leistungsnachweis mit
+        Tagesraster, Handzeichen der Pflegekraft, Zusammenstellung und Unterschriftenfeldern. Die
+        pflegebedürftige Person bestätigt mit ihrer Unterschrift die erbrachten Einsätze. Er geht an
+        die Belegannahmestelle laut Kostenträgerdatei, nicht an die Datenannahmestelle. Die Kasse
+        hält bei Prüfung den Beleg gegen die elektronische Abrechnung:
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Prüfung</th><th>Auf dem Beleg</th><th>In <code>TPFL0001</code></th></tr></thead>
+          <tbody>
+            <tr><td>Handzeichen im Tagesraster</td><td>20 / 8 / 31 / 31</td><td><strong>Anzahl der <code>ELS</code>-Segmente</strong> je Leistungsziffer</td></tr>
+            <tr><td>Zusammenstellung je Fall</td><td>635,60 / 1.035,40</td><td><code>IAF</code> der beiden Abrechnungsfälle</td></tr>
+            <tr><td>Summe beider Fälle</td><td>1.671,00</td><td><code>GES</code> der PLGA</td></tr>
+            <tr><td>Belegnummer</td><td>2607001 / 2607002</td><td><code>INV</code>, zweites Datenelement</td></tr>
+            <tr><td>Rechnungsbezug</td><td>2026070001 vom 05.08.2026</td><td><code>REC</code> in beiden Nachrichten</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Die TA 1 verlangt ausdrücklich, dass die Belegnummer aus dem <code>INV</code>-Segment
+        <strong>auf den Urbeleg zu übertragen</strong> ist und die Rechnungsnummer vollständig und
+        unverändert auf den Urbelegen erscheint. Der Einsatzkalender erklärt die Mengen: Juli 2026 hat
+        23 Werktage, abgerechnet sind 20 Einsätze — die Differenz ist ein Krankenhausaufenthalt vom
+        13. bis 15.07., der als Bemerkung auf dem Beleg steht. Eine Abrechnung mit mehr Einsätzen als
+        Handzeichen ist genau der Fall, den eine Kasse absetzt.
+      </p>
+
+      <h3>Drei Fallen, in die dieses Beispiel tappen lässt</h3>
+      <div class="note warn">
+        <h4>1 · Das Trennungsgebot als Regex</h4>
+        <p>
+          Regel <code>S1-ALL-008</code> — keine Sozialdaten im Auftragssatz — verführt zu einer
+          Mustersuche über den Rohsatz. Das schlägt fehl: Ein <code>^[A-Z][0-9]{9}$</code>-Muster
+          findet ab Stelle 115 den Treffer <code>K202608051</code> — das letzte Zeichen des logischen
+          Dateinamens <code>PL076001SB<strong>K</strong></code> plus den Anfang des Erstellungsdatums
+          <code>20260805114700</code>. Das ist eine <strong>Feldgrenze</strong>, keine
+          Versichertennummer.
+        </p>
+        <p>
+          Die Regel ist erst <strong>nach dem Parsen feldweise</strong> auszuwerten. Bei einem
+          positionsbasierten Format ohne Trennzeichen erzeugt jede Feldgrenze Zeichenfolgen, die es
+          als Wert nie gibt.
+        </p>
+      </div>
+      <div class="note warn">
+        <h4>2 · Das Test-/Echt-Kennzeichen ist keine Gleichheitsprüfung</h4>
+        <p>
+          Es steht an drei Orten — und zwei davon haben unterschiedliche Wertebereiche:
+        </p>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Ort</th><th>Wert</th><th>Wertebereich</th></tr></thead>
+            <tbody>
+              <tr><td>Dateiname, Stelle 1</td><td><code>T</code></td><td><code>T</code> | <code>E</code></td></tr>
+              <tr><td>Auftragssatz, <code>VERFAHREN_KENNUNG</code> Stelle 20</td><td><code>T</code></td><td><code>T</code> | <code>E</code></td></tr>
+              <tr><td><code>UNB</code>, Dateiindikator DE 0035</td><td><code>0</code></td><td><code>0</code> Test · <code>1</code> Erprobung · <code>2</code> Echt</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Es gilt <code>T</code> ↔ {<code>0</code>, <code>1</code>} und <code>E</code> ↔
+          <code>2</code>. Eine naive Gleichheitsprüfung weist jede Erprobungsdatei zurück.
+        </p>
+      </div>
+      <div class="note warn">
+        <h4>3 · Die IK-Prüfziffer ignoriert die Klassifikation</h4>
+        <p>
+          <code>109524616</code> und <code>189524616</code> teilen sich die Prüfziffer <code>6</code>,
+          weil sie nur aus den Stellen 3–8 gebildet wird. Eine Implementierung, die über die Stellen
+          1–8 rechnet, weist beide zurück — und fällt bei diesem Beispiel garantiert auf. Umgekehrt
+          lässt sich der Regionalbereich <em>nicht</em> ohne die Klassifikation auflösen: Anlage 2.1
+          (Leistungserbringer) und Anlage 2.2 (Kassen) vergeben dieselben Zahlen an verschiedene
+          Regionen.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="abdeckung">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Regelabdeckung</h2></div>
+      <p>
+        Der Katalog umfasst <strong>103 Regeln</strong>, davon 50 mit dem Status
+        <code>spezifiziert</code>. Das Beispiel erfüllt <strong>57</strong> davon — eine korrekte
+        Implementierung meldet darauf keinen Befund.
+      </p>
+      <div class="rules">
+        <span class="chip b">S0-ALL-001</span><span class="chip b">S0-ALL-002</span><span class="chip b">S0-ALL-003</span><span class="chip b">S0-ALL-004</span><span class="chip b">S0-ALL-005</span><span class="chip b">S0-ALL-006</span><span class="chip b">S0-ALL-007</span>
+        <span class="chip b">S1-ALL-001</span><span class="chip b">S1-ALL-002</span><span class="chip b">S1-ALL-003</span><span class="chip b">S1-ALL-004</span><span class="chip b">S1-ALL-005</span><span class="chip b">S1-ALL-007</span><span class="chip b">S1-ALL-008</span><span class="chip b">S1-ALL-009</span><span class="chip b">S1-ALL-010</span><span class="chip b">S1-ALL-011</span><span class="chip b">S1-ALL-012</span><span class="chip b">S1-ALL-013</span><span class="chip b">S1-ALL-014</span><span class="chip b">S1-ALL-015</span><span class="chip b">S1-XI-001</span><span class="chip b">S1-XI-002</span>
+        <span class="chip b">S3-ALL-002</span><span class="chip b">S3-ALL-003</span><span class="chip b">S3-ALL-004</span><span class="chip b">S3-ALL-005</span><span class="chip b">S3-ALL-006</span><span class="chip b">S3-XI-001</span><span class="chip b">S3-XI-002</span><span class="chip b">S3-XI-003</span><span class="chip b">S3-XI-004</span><span class="chip b">S3-XI-005</span><span class="chip b">S3-XI-006</span><span class="chip b">S3-XI-007</span>
+        <span class="chip b">S4-ALL-001</span><span class="chip b">S4-ALL-003</span><span class="chip b">S4-XI-001</span><span class="chip b">S4-XI-002</span><span class="chip b">S4-XI-003</span><span class="chip b">S4-XI-004</span><span class="chip b">S4-XI-005</span><span class="chip b">S4-XI-006</span><span class="chip b">S4-XI-007</span><span class="chip b">S4-XI-008</span><span class="chip b">S4-XI-009</span><span class="chip b">S4-XI-010</span>
+        <span class="chip b">S5-ALL-001</span><span class="chip b">S5-ALL-002</span><span class="chip b">S5-XI-001</span><span class="chip b">S5-XI-002</span><span class="chip b">S5-XI-003</span><span class="chip b">S5-XI-004</span><span class="chip b">S5-XI-005</span><span class="chip b">S5-XI-006</span>
+        <span class="chip b">S6-ALL-001</span><span class="chip b">S6-ALL-002</span>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Regel</th><th>Prüft</th><th>Im Beispiel</th></tr></thead>
+          <tbody>
+            <tr><td><code>S0-ALL-003</code></td><td>Transferdateiname bei beiden Dateien identisch</td><td><code>TPFL0001</code> / <code>TPFL0001.AUF</code></td></tr>
+            <tr><td><code>S0-ALL-005</code></td><td>Stellen 2–4 sind eine bekannte Verfahrenskennung</td><td><code>PFL</code> aus Anlage 4 GGT</td></tr>
+            <tr><td><code>S1-ALL-001</code></td><td>Auftragssatz 348 Byte, <code>LÄNGE_AUFTRAG</code> = <code>00000348</code></td><td>erfüllt</td></tr>
+            <tr><td><code>S1-ALL-009</code></td><td>Muss-Felder gefüllt, Kann-Felder mit Default-Wert</td><td>alle 37 Felder</td></tr>
+            <tr><td><code>S1-ALL-010</code></td><td>Krypto-Kombination zulässig</td><td><code>00</code> + <code>00</code></td></tr>
+            <tr><td><code>S1-ALL-012</code></td><td><code>DATEIGRÖßE_NUTZDATEN</code> = tatsächliche Größe</td><td><code>000000004924</code> = 4924 Byte</td></tr>
+            <tr><td><code>S1-XI-002</code></td><td>Stellen 319–320 = Art der abgegebenen Leistung</td><td><code>01</code></td></tr>
+            <tr><td><code>S3-XI-002</code></td><td>kein <code>UNA</code>, Dezimalzeichen Komma</td><td>erfüllt</td></tr>
+            <tr><td><code>S3-XI-004</code></td><td>PLAA-Grammatik und Kardinalitäten</td><td><code>FKT REC (INV NAD MAN (ESK ELS+)+ IAF)+</code></td></tr>
+            <tr><td><code>S3-XI-005</code></td><td>auf eine PLGA folgt eine PLAA</td><td>1 PLGA, 1 PLAA</td></tr>
+            <tr><td><code>S3-XI-006</code></td><td><code>ESK</code> aufsteigend nach Kalendertag</td><td>01 … 31</td></tr>
+            <tr><td><code>S3-ALL-004</code></td><td><code>UNT</code>-Zähler = Segmentanzahl</td><td>8 / 153</td></tr>
+            <tr><td><code>S4-ALL-001</code></td><td>IK-Prüfziffer</td><td>5 IK, alle gültig</td></tr>
+            <tr><td><code>S4-XI-002</code></td><td>IK der Pflegekasse beginnt mit <code>18</code></td><td><code>189524616</code></td></tr>
+            <tr><td><code>S5-ALL-002</code></td><td><code>DATEINAME</code> = <code>UNB</code>-Anwendungsreferenz</td><td><code>PL076001SBK</code></td></tr>
+            <tr><td><code>S5-XI-003</code></td><td><code>GES</code> = Summe der <code>IAF</code></td><td>635,60 + 1.035,40 = 1.671,00</td></tr>
+            <tr><td><code>S6-ALL-001/002</code></td><td>Leistungs- ≤ Rechnungs- ≤ Erstellungsdatum</td><td>31.07. ≤ 05.08. = 05.08.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Was mit diesem Beispiel <em>nicht</em> prüfbar ist</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Regeln oder Bereich</th><th>Grund</th></tr></thead>
+          <tbody>
+            <tr><td><code>S2-ALL-001</code> … <code>S2-ALL-014</code> <span class="small">(Stufe 2 vollständig)</span></td><td>Die Nutzdaten liegen im Klartext vor, es gibt keinen SECON-Umschlag.</td></tr>
+            <tr><td><code>S1-ALL-006</code></td><td>Die Kostenträgerdatei (TA 1 Anhang 5) liegt nicht vor — die Zuständigkeit der Datenannahmestelle ist nicht prüfbar.</td></tr>
+            <tr><td><code>S4-ALL-002</code></td><td>Das KVNR-Prüfziffernverfahren ist nicht verifiziert.</td></tr>
+            <tr><td><code>S5-XI-007</code></td><td>Das Beispiel nutzt den Weg außerhalb der TI, nicht KIM.</td></tr>
+            <tr><td>Sammelrechnungen, Rechnungsarten <code>2</code> und <code>3</code></td><td>Nur Rechnungsart <code>1</code> ist modelliert; die anderen unterscheiden sich strukturell im Dateiaufbau.</td></tr>
+            <tr><td><code>ZUS</code> <code>HIL</code> <code>IMG</code></td><td>Keine Zuschläge, keine Pflegehilfsmittel, keine vollelektronische Abrechnung.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note info">
+        <h4>Was als Nächstes fehlt: die Negativfälle</h4>
+        <p>
+          Zu jedem Positivfall gehört ein <strong>Negativfall-Satz</strong> — Dateien mit je genau
+          einem eingebauten Fehler: <code>UNA</code> vorhanden, Dezimalpunkt statt Komma, falscher
+          <code>UNT</code>-Zähler, <code>ESK</code> unsortiert, Pflegegrad <em>und</em> Pflegestufe
+          belegt, falsche Prüfziffer. Erst damit lässt sich für jede Regel nachweisen, dass sie auch
+          wirklich anschlägt. Für § 105 SGB XI ist das jetzt möglich — die Fachstruktur ist nicht mehr
+          geraten.
+        </p>
+      </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="offen">
+      <div class="sec-head"><span class="sec-num">08</span><h2>Offene Punkte</h2></div>
+      <p>
+        Verbindlich sind ausschließlich die Originaldokumente unter
+        <a href="https://www.gkv-datenaustausch.de">gkv-datenaustausch.de</a>. Diese Seite gibt den
+        Auswertungsstand wieder, nicht das Regelwerk selbst.
+      </p>
+
+      <h3>Am 01.09.2026 geklärt</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Frage</th><th>Antwort</th></tr></thead>
+          <tbody>
+            <tr><td>Titel der GGT-Anlagen 3, 10, 11, 12, 15, 18, 19</td><td>Anlage 3 = eXTra, 10 = FTAM over IP, 12 = XML-Richtlinie, 15 = Zeichensätze, 18 = Begriffsverzeichnis, 19 = DiGA-Schnittstelle. Zusätzlich existiert eine <strong>Anlage 21</strong> (Synchroner Dialog) — die Reihe endet nicht bei 20.</td></tr>
+            <tr><td>Vollständige Feldliste des Auftragssatzes</td><td>37 Felder, Stellen 1–348, vier Objekte, lückenlos.</td></tr>
+            <tr><td>EDIFACT-Default-Trennzeichen oder abweichende?</td><td>Für § 105 SGB XI <strong>abweichend</strong>: Dezimalkomma, kein <code>UNA</code>. Für §§ 300/301/302 weiter offen.</td></tr>
+            <tr><td>Zeichensatz für § 105 SGB XI</td><td>ISO 8859-1 / ISO 7-Bit / ISO 8-Bit für die Nutzdaten, UTF-8 nach DIN SPEC 91379 nur für die XML-Hülle in der TI.</td></tr>
+            <tr><td>IK-Prüfziffer: Gewichtungsrichtung, Klassifikationstabelle</td><td>Modulo 10 über die Stellen 3–8, von rechts 1·2·1·2·1·2, Quersumme. Testvektor <code>260326822</code>. Klassifikationen und zwei getrennte Regionaltabellen liegen vor.</td></tr>
+            <tr><td><code>PLAA</code> oder <code>PLLA</code>?</td><td><strong><code>PLAA</code></strong>. „PLLA" aus der Literatur ist falsch.</td></tr>
+            <tr><td>Zertifizierungspflicht für Abrechnungssoftware</td><td>Für § 105 SGB XI ja — Softwareprüfung nach Anhang 4 der TA 1 mit Prüfkatalog und Selbsterklärung, plus Anmeldung bei den Datenannahmestellen. Für § 302 SGB V weiter offen.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Weiterhin offen</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Frage</th><th>Betrifft</th></tr></thead>
+          <tbody>
+            <tr><td>§ 302: SLLA-Segmentliste, Sub-Nachrichtentypen, Verarbeitungskennzeichen</td><td>Prüfstufen 3–6 für § 302</td></tr>
+            <tr><td>§ 301: Ist Anlage 1 das Datensatz- oder das Schlüsselverzeichnis?</td><td>Ausbaustufe Krankenhaus</td></tr>
+            <tr><td>SECON: Sind RSASSA-PSS und RSAES-OAEP verpflichtend oder optional?</td><td>Prüfstufe 2</td></tr>
+            <tr><td>KVNR: Wie geht der führende Großbuchstabe in die Prüfziffer ein?</td><td><code>S4-ALL-002</code></td></tr>
+            <tr><td>Kostenträgerdatei: Satzartenstruktur und Verkettungslogik</td><td><code>S1-ALL-006</code>, KIM-Adressermittlung</td></tr>
+            <tr><td><strong>Neu:</strong> Widerspruch zwischen Anhang 1 der TA 1 (Stand 2007: PEM) und Anlage 2 GGT (Stand 2024: PKCS#7). Die hier vertretene Auslegung „GGT schlägt Anhang, Zusatzbelegung bleibt" ist nirgends ausgeschrieben.</td><td>Auftragssatz im Pflegeverfahren</td></tr>
+            <tr><td><strong>Neu:</strong> Existiert eine GGT-Anlage 11? Die Portalseite führt sie nicht.</td><td>Anlagenverzeichnis</td></tr>
+            <tr><td><strong>Neu:</strong> Beschäftigtennummer nach § 293 Abs. 8 Satz 2 SGB V — Aufbau, Vergabe und Prüfziffer sind nicht erfasst; belegt sind nur die Ersatzwerte.</td><td><code>S4-XI-008</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Beschaffung — was noch fehlt</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th class="num">Prio</th><th>Dokument</th><th>Blockiert</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td><strong>§ 302 Anlage 1</strong> — Technische Anlage</td><td>Segmentgrammatik SLGA/SLLA, Feldkatalog</td></tr>
+            <tr><td class="num">1</td><td><strong>§ 302 Anlage 3</strong> — Schlüsselverzeichnisse</td><td>Prüfstufe 4 für § 302</td></tr>
+            <tr><td class="num">2</td><td><strong>Anlage 16 GGT</strong> — Security-Schnittstelle, 94 Seiten</td><td>Prüfstufe 2 vollständig</td></tr>
+            <tr><td class="num">2</td><td><strong>Anlage 15 GGT</strong> — Zeichensätze</td><td><code>S3-ALL-006</code>, normative Bedeutung von <code>I1</code> … <code>U8</code></td></tr>
+            <tr><td class="num">2</td><td>Kostenträgerdateien § 302 und TA 1 Anhang 5 (Pflege)</td><td><code>S1-ALL-006</code>, Routing-Prüfungen</td></tr>
+            <tr><td class="num">2</td><td>Richtlinie Gesamtsystem KVNR V3.4.0</td><td>KVNR-Prüfziffer</td></tr>
+            <tr><td class="num">3</td><td>§ 105 SGB XI Technische Anlage 5 — Datenübermittlung in der TI</td><td>TI-Strecke ab 01.02.2027</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">
+        Die Regelwerke sind frei verfügbar. Die PDFs liegen bewusst nicht im Repository — Urheber-
+        und Nutzungsrechte —, sondern nur die daraus abgeleiteten strukturierten Regeldateien mit
+        Fundstellenangabe.
+      </p>
+    </section>
+
+    <!-- 9 -->
+    <section id="bibliothek">
+      <div class="sec-head"><span class="sec-num">09</span><h2>Wissensbibliothek</h2></div>
+      <p>
+        Die vollständigen Anforderungen liegen im Projekt-Repository unter <code>knowledge-base/</code>.
+        Jede Aussage dort trägt eine Quellenangabe der Form <code>[Qxx]</code> mit Auflösung im
+        Quellenverzeichnis und einen der drei Vertrauens-Marker.
+      </p>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Bereich</th><th>Inhalt</th></tr></thead>
+          <tbody>
+            <tr><td><code>00-ueberblick/</code></td><td>Domänenüberblick, Glossar, Quellenverzeichnis</td></tr>
+            <tr><td><code>10-rechtsgrundlagen/</code></td><td>§§ 294–303 SGB V, § 105 SGB XI, § 95 SGB IV, Sanktionen, Fristen</td></tr>
+            <tr><td><code>20-verfahren/</code></td><td>Fachliche Anforderungen je Sektor: §§ 300, 301, 301a, 302 SGB V, § 105 SGB XI</td></tr>
+            <tr><td><code>30-technik/</code></td><td>GGT, KKS, Auftragsdatei, EDIFACT-Syntax, Transportwege, SECON, Mindmap</td></tr>
+            <tr><td><code>40-stammdaten/</code></td><td>IK, Krankenversichertennummer, Kostenträgerdateien, Schlüsselverzeichnisse</td></tr>
+            <tr><td><code>50-anforderungen/</code></td><td>Nummerierter Anforderungskatalog (<code>REQ-*</code>) und Validierungsregeln</td></tr>
+            <tr><td><code>60-projekt/</code></td><td>Scope, Architekturskizze, Roadmap, offene Punkte</td></tr>
+            <tr><td><code>beispiele/pflege-105-sgbxi/</code></td><td>Das hier beschriebene Dateipärchen samt Urbelegen und Metadaten</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Maschinenlesbare Referenzdaten</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Datei</th><th>Inhalt</th><th>Quelle</th></tr></thead>
+          <tbody>
+            <tr><td><code>data/auftragssatz.yaml</code></td><td><strong>Feldkatalog des Auftragssatzes</strong> — 37 Felder, Stellen 1–348 lückenlos, mit Nutzungstyp, Feldtyp, Feldart, Konstanten und Wertelisten</td><td><span class="chip b">Anlage 2 GGT</span></td></tr>
+            <tr><td><code>data/verfahrenskennungen.yaml</code></td><td><strong>Werteliste der Verfahrenskennungen</strong> — 322 Einträge plus die Bereichsregeln für den Leistungserbringer-Datenaustausch</td><td><span class="chip b">Anlage 4 GGT</span></td></tr>
+            <tr><td><code>data/nachrichtentypen.yaml</code></td><td>Nachrichtentypen, Segmente, Kardinalitäten und Versionshistorie je Verfahren</td><td><span class="chip b">TA 1 6.4.0</span></td></tr>
+            <tr><td><code>data/pruefregeln.yaml</code></td><td>103 Prüfregeln mit Stufe, Schwere, Status und Fundstelle</td><td>abgeleitet</td></tr>
+            <tr><td><code>data/dokumentenregister.yaml</code></td><td>Regelwerke mit Version, Stand, Gültigkeit, URL und Beschaffungsstatus</td><td>Portalseiten</td></tr>
+            <tr><td><code>data/verfahren.yaml</code></td><td>Alle DTA-Verfahren mit Rechtsgrundlage, Format und Validator-Priorität</td><td>gemischt</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">
+        Diese Seite ist bewusst selbsttragend gehalten: Alle Beispielinhalte stehen vollständig hier
+        und setzen keinen Repository-Zugang voraus. Wer tiefer einsteigen will, findet die
+        Wissensbibliothek, die Referenzdaten und das Dateipärchen im Repository
+        <a href="https://github.com/sbaebler/DTA-Validator"><code>sbaebler/DTA-Validator</code></a>.
+      </p>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <p>
+      <strong>DTA-Validator</strong> — Wissensstand 01.09.2026. Quellcode und Wissensbibliothek auf
+      <a href="https://github.com/sbaebler/DTA-Validator">GitHub</a>, unter MIT-Lizenz. Die verlinkten Regelwerke des
+      GKV-Spitzenverbandes und anderer Herausgeber unterliegen deren eigenen Nutzungsbedingungen.
+    </p>
+    <p>
+      Sämtliche Beispieldaten sind synthetisch. Institutionskennzeichen sind neunstellige Zahlen aus
+      einem endlichen Wertebereich — eine zufällige Übereinstimmung mit einem real vergebenen IK ist
+      nicht ausschließbar und ohne Bedeutung.
+    </p>
+  </div>
+</footer>
+</body>
+</html>
