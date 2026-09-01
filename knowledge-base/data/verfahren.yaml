@@ -3,7 +3,7 @@
 # Siehe knowledge-base/README.md fuer die Bedeutung.
 
 schema_version: 1
-stand: 2026-08-31
+stand: 2026-09-01
 
 verfahren:
   - id: sgbv-302
@@ -32,10 +32,18 @@ verfahren:
     format: edifact
     regelwerk: Technische Anlage 1 zur Regelung der Datenuebermittlung nach § 105 Abs. 2 SGB XI
     aktuelle_version: 6.4.0
+    gueltig_ab: 2026-05-01
     stand: 2025-07-07
+    nachfolger_version: 6.5.1
+    nachfolger_gueltig_ab: 2027-02-01
+    nachrichtentyp_version: "6"
     vertrauen: belegt
+    beschafft: true
+    ausgewertet_am: 2026-09-01
     prioritaet_validator: 2
-    hinweis: "Literatur nennt gelegentlich PLLA; belegt ist PLAA. Zu verifizieren."
+    hinweis: >-
+      PLAA ist bestaetigt; "PLLA" aus der Literatur ist falsch. Struktur, Kardinalitaeten
+      und Schluesselverzeichnisse sind gegen TA 1 6.4.0 und TA 3 6.4.0 verifiziert.
 
   - id: sgbv-301
     bezeichnung: Krankenhaeuser

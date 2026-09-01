@@ -3,11 +3,13 @@
 # beschafft: true = Primaerdokument liegt im Projekt vor und wurde ausgewertet.
 
 schema_version: 1
-stand: 2026-08-31
+stand: 2026-09-01
 hinweis: >-
-  Alle Eintraege wurden per Websuche ermittelt; der direkte PDF-Abruf war durch die
-  Netzwerk-Egress-Policy blockiert. Versionsangaben stammen aus Dokumenttiteln und
-  Suchtreffern und sind vor Verwendung gegen das Portal zu pruefen.
+  Eintraege mit beschafft: true sind gegen das Primaerdokument verifiziert. Alle uebrigen
+  wurden per Websuche oder aus der Portalseite ermittelt; ihre Versionsangaben stammen aus
+  Dokumenttiteln und Verlinkungstexten und sind vor Verwendung gegen das Primaerdokument
+  zu pruefen. Das Anlagenverzeichnis der GGT wurde am 01.09.2026 vollstaendig von der
+  Portalseite uebernommen.
 
 ggt:
   titel: Gemeinsame Grundsaetze Technik nach § 95 SGB IV
@@ -28,22 +30,31 @@ ggt:
     - nr: 2
       titel: Auftragsdatei (Auftragssatz)
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_2_-_Auftragsdatei.pdf
+      auftragssatz_version: "1.0"
+      gueltig_ab: 2025-01-01
+      stand: 2024-10-30
+      dokumentstand: 2024-10-10
+      seiten: 15
       vertrauen: belegt
-      beschafft: false
-      prioritaet_beschaffung: 1
+      beschafft: true
+      ausgewertet_am: 2026-09-01
+      abgeleitete_datei: auftragssatz.yaml
     - nr: 3
-      titel: null
-      vertrauen: offen
+      titel: Einheitliches XML-basiertes Transportverfahren (eXTra)
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_3_-_eXTra.pdf
+      vertrauen: belegt
       beschafft: false
     - nr: 4
       titel: Verfahrenskennungen
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_4_-_Verfahrenskennungen.pdf
+      version_feldbeschreibung: "1.1"
       gueltig_ab: 2026-01-01
       stand: 2025-11-06
       seiten: 47
       vertrauen: belegt
-      beschafft: false
-      prioritaet_beschaffung: 1
+      beschafft: true
+      ausgewertet_am: 2026-09-01
+      abgeleitete_datei: verfahrenskennungen.yaml
     - nr: 5
       titel: Datenaustausch mit der Rentenversicherung
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_5_-_Datenaustausch_mit_der_Rentenversicherung.pdf
@@ -67,12 +78,25 @@ ggt:
       vertrauen: belegt
       beschafft: false
     - nr: 8
-      titel: HTTP / HTTPS
-      vertrauen: sekundaer
+      titel: Hypertext Transfer Protocol (http / https)
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_8_-_http_https.pdf
+      vertrauen: belegt
       beschafft: false
     - nr: 9
-      titel: File Transfer Protocol (FTP / SFTP / FTPS)
-      vertrauen: sekundaer
+      titel: File-Transfer-Protocol (ftp / sftp / ftps)
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_9_-_ftp_sftp_ftps.pdf
+      vertrauen: belegt
+      beschafft: false
+    - nr: 10
+      titel: File Transfer, Access and Management (FTAM) over IP
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_10_-_FTAM_over_IP.pdf
+      vertrauen: belegt
+      beschafft: false
+    - nr: 12
+      titel: XML-Richtlinie
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_12_-_XML-Richtlinie.pdf
+      anhang: XSV-Basis-Schemata (ZIP)
+      vertrauen: belegt
       beschafft: false
     - nr: 13
       titel: GKV-Kommunikationsserver
@@ -84,6 +108,15 @@ ggt:
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_14_-_Datentraeger.pdf
       vertrauen: belegt
       beschafft: false
+    - nr: 15
+      titel: Zeichensaetze
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_15_-_Zeichensaetze.pdf
+      vertrauen: belegt
+      beschafft: false
+      prioritaet_beschaffung: 2
+      blockiert: >-
+        Normative Beschreibung der Zeichensatzkennungen I1/I5/I7/I8/P8/U8 aus dem
+        Auftragssatz (Pruefregel S3-ALL-006)
     - nr: 16
       titel: Security-Schnittstelle (SECON)
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_16_-_Security_Schnittstelle.pdf
@@ -98,19 +131,43 @@ ggt:
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_17_-_KomServer_RV.pdf
       vertrauen: belegt
       beschafft: false
+    - nr: 18
+      titel: Begriffs- und Abkuerzungsverzeichnis
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_18_-_Begriffs-_und_Abkuerzungsverzeichnis.pdf
+      vertrauen: belegt
+      beschafft: false
+    - nr: 19
+      titel: DiGA-Schnittstelle
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_19_-_DiGa_Schnittstelle.pdf
+      vertrauen: belegt
+      beschafft: false
     - nr: 20
-      titel: KIM (KOM-LE) innerhalb der Telematikinfrastruktur
+      titel: Kommunikation im Medizinwesen (KIM / KOM-LE)
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_20_KIM-KOM-LE.pdf
       gueltig_ab: 2023-01-01
       stand: 2022-11-17
       seiten: 4
       vertrauen: belegt
       beschafft: false
-    # Anlagen 10, 11, 12, 15, 18, 19: nicht belegt - Portalseite auswerten
+    - nr: 21
+      titel: Synchroner Dialog
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_21_-_Synchroner_Dialog.pdf
+      vertrauen: belegt
+      beschafft: false
+    # Anlage 11 wird auf der Portalseite nicht gefuehrt (Abruf 01.09.2026).
+    # Ob die Nummer entfallen ist oder das Dokument nicht oeffentlich steht, ist offen.
 
   zusatzdokumente:
     - titel: Best Practice zur Security-Schnittstelle
       url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Best_Practice_Security.pdf
+      vertrauen: belegt
+      beschafft: false
+    - titel: Anlage 16, Anlage 1 - Eigenerklaerung
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_16_Anlage_1_Eigenerklaerung.pdf
+      vertrauen: belegt
+      beschafft: false
+    - titel: Aenderungshistorie zu den Gemeinsamen Grundsaetzen Technik
+      url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/gg_technik/Aenderungshistorie.pdf
       vertrauen: belegt
       beschafft: false
 
@@ -201,22 +258,128 @@ sektorregelwerke:
 
   sgbxi-105:
     portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/pflege/pflege.jsp
+    portalseite_abgerufen: 2026-09-01
+    einvernehmliche_festlegung:
+      titel: Einvernehmliche Festlegung nach § 105 Abs. 2 SGB XI
+      url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2022_12_21_Einvernehmliche_Festlegung_nach__105_Abs._2_SGB_XI_Stand_05.10.2022.pdf
+      stand: 2022-10-05
+      vertrauen: belegt
+      beschafft: false
     vereinbarung:
       titel: Vereinbarung nach § 105 Abs. 2 Satz 2 SGB XI
       url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2023_10_05_Vereinbarung__105_Abs.2_Satz_2_SGBXI_final.pdf
       stand: 2023-10-05
       vertrauen: belegt
+      beschafft: false
     technische_anlagen:
       - nr: 1
         titel: Technische Anlage zur Regelung der Datenuebermittlung nach § 105 Abs. 2 SGB XI
         version: 6.4.0
+        gueltig_ab: 2026-05-01
         stand: 2025-07-07
+        seiten: 55
         url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_6.4.0_20250707_oA.pdf
         vertrauen: belegt
-        beschafft: false
+        beschafft: true
+        ausgewertet_am: 2026-09-01
+        status: in Kraft
+        nachfolger_version: 6.5.1
         anhaenge:
-          - {nr: 1, titel: Struktur Auftragsdatei, stand: 2007-01-25, vertrauen: sekundaer}
-          - {nr: 3, titel: Datenuebermittlungsarten, stand: 2017-09-07, vertrauen: sekundaer}
+          - {nr: 1, titel: Struktur Auftragsdatei, version: "2.0", gueltig_ab: 2007-07-01,
+             stand: 2007-01-25, url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/20070125_TA1_ANH1.pdf",
+             vertrauen: belegt, beschafft: true, ausgewertet_am: 2026-09-01}
+          - {nr: 2, titel: Erprobungs- und Testverfahren, version: "2.2", gueltig_ab: 2026-05-01,
+             url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH2_2.2.1_20251201.pdf", vertrauen: belegt, beschafft: false,
+             hinweis: "Portal fuehrt bereits V 2.2.1; entfaellt ab TA 1 6.5.0"}
+          - {nr: 3, titel: Datenuebermittlungsarten, version: 2.1.2, gueltig_ab: 2026-05-01,
+             stand: 2025-06-26, seiten: 12, url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH3_2.1.2_20250707_oA.pdf",
+             vertrauen: belegt, beschafft: true, ausgewertet_am: 2026-09-01}
+          - {nr: 4, titel: Softwarepruefung, version: "1.0", gueltig_ab: 2026-05-01,
+             url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH4_20250707_oA.pdf", vertrauen: belegt, beschafft: false}
+          - {nr: 5, titel: Kostentraegerdatei, version: "5.2", gueltig_ab: 2026-05-01,
+             url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH5_5.2_20250707_oA.pdf", vertrauen: belegt, beschafft: false,
+             prioritaet_beschaffung: 2}
+          - {nr: 6, titel: Fehlermeldeverfahren, version: "1.0", gueltig_ab: 2003-01-31,
+             url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/20030131_TA1_ANH6.pdf", vertrauen: belegt, beschafft: false}
+          - {nr: 7, titel: entfallen, vertrauen: belegt, beschafft: false}
+      - nr: 1
+        titel: Technische Anlage zur Regelung der Datenuebermittlung nach § 105 Abs. 2 SGB XI
+        version: 6.5.1
+        gueltig_ab: 2027-02-01
+        stand: 2026-06-25
+        seiten: 40
+        url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_6.5.1_20260625.pdf"
+        vertrauen: belegt
+        beschafft: true
+        ausgewertet_am: 2026-09-01
+        status: angekuendigt
+        vorversion: 6.4.0
+        aenderungen:
+          - TI-Strecke ausgelagert in die neue Technische Anlage 5
+          - IMG-Segment aus dem Nachrichtentyp PLAA entfernt
+          - Testverfahren aus Anhang 2 uebernommen, Anhang 2 entfaellt
+          - Abschnitt Softwarepruefung entfernt
+        anhaenge:
+          - {nr: 3, titel: Datenuebermittlungsarten, version: 2.2.0, gueltig_ab: 2027-02-01,
+             url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH3_2.2.0_20251201.pdf", vertrauen: belegt, beschafft: false}
+          - {nr: 5, titel: Kostentraegerdatei, version: "5.3", gueltig_ab: 2027-02-01,
+             url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA1_ANH5_5.3_20251218.pdf", vertrauen: belegt, beschafft: false}
+      - nr: 2
+        titel: Abrechnung auf maschinellem Vordruck
+        version: "1.0"
+        gueltig_ab: 2003-07-29
+        url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA2_200502_105.pdf"
+        vertrauen: belegt
+        beschafft: false
+      - nr: 3
+        titel: Schluesselverzeichnisse
+        version: 6.4.0
+        gueltig_ab: 2026-05-01
+        stand: 2025-06-26
+        seiten: 39
+        url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA3_6.4.0_20250707_oA.pdf"
+        vertrauen: belegt
+        beschafft: true
+        ausgewertet_am: 2026-09-01
+        status: in Kraft
+      - nr: 3
+        titel: Schluesselverzeichnisse
+        version: 6.5.0
+        gueltig_ab: 2027-02-01
+        url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA3_6.5.0_20251201.pdf"
+        vertrauen: belegt
+        beschafft: false
+        status: angekuendigt
+      - nr: 4
+        titel: Begleitzettel fuer Urbelege
+        version: "1.0"
+        gueltig_ab: 2003-01-31
+        url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/Anlage_4_310103.pdf"
+        vertrauen: belegt
+        beschafft: false
+        prioritaet_beschaffung: 3
+      - nr: 5
+        titel: Datenuebermittlung in der Telematik Infrastruktur
+        version: 1.2.0
+        gueltig_ab: 2027-02-01
+        url: "https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/technische_anlagen_aktuell_2/TA5_1.2.0_20260625.pdf"
+        vertrauen: belegt
+        beschafft: false
+        status: angekuendigt
+        hinweis: >-
+          Neu ab TA 1 6.5.0. Uebernimmt die XML-Datenstrukturen der vollelektronischen
+          Abrechnung, die bis 6.4.0 in TA 1 Abschnitt 4.6 standen.
+    zusatzdokumente:
+      - titel: Empfehlungen zur Umsetzung der Beschaeftigtennummer nach § 293 Abs. 8 Satz 2 SGB V
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/2024_09_01_Empfehlungen_zur_Umsetzung_der_Beschaeftigtennummer_nach__293_Abs._8_Satz_2_SGB_V_abgestimmt.pdf
+        stand: 2024-09-01
+        vertrauen: belegt
+        beschafft: false
+      - titel: INFORMATION zum maschinellen Abrechnungsverfahren mit den gesetzlichen Pflegekassen (TP6)
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/pflege/20260715_Broschuere_TP6.pdf
+        stand: 2026-07-15
+        vertrauen: belegt
+        beschafft: false
 
   sgbv-295-1b:
     portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/direktabrechner/vertraege_73b_73c_140a_sgb_v/vertraege_nach_73b_73c_140a_sgb_v.jsp
@@ -239,10 +402,24 @@ stammdaten:
     prioritaet_beschaffung: 2
   - id: arge-ik-rundschreiben
     titel: Gemeinsames Rundschreiben Institutionskennzeichen (IK)
+    ausgabe: 02/2026
+    url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/GR-IK-2026-02.pdf
     portalseite: https://www.dguv.de/arge-ik/index.jsp
-    vertrauen: sekundaer
+    seiten: 46
+    vertrauen: belegt
+    beschafft: true
+    ausgewertet_am: 2026-09-01
+    ausgewertet_umfang: >-
+      Nummer 1.2 (Aufbau, Klassifikation, Regionalbereich, Seriennummer, Pruefziffer)
+      sowie Anlage 1 (Klassifikationen) und Anlage 2.1/2.2 (Regionalschluessel).
+      Die uebrigen Abschnitte sind nicht ausgewertet.
+  - id: arge-ik-rundschreiben-2027
+    titel: Gemeinsames Rundschreiben Institutionskennzeichen (IK)
+    ausgabe: 04/2027
+    url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/GR-IK-2027-04.pdf
+    vertrauen: belegt
     beschafft: false
-    prioritaet_beschaffung: 2
+    status: angekuendigt
   - id: kostentraegerdatei-sle
     titel: Kostentraegerdatei Sonstige Leistungserbringer
     portalseite: https://www.gkv-datenaustausch.de/leistungserbringer/sonstige_leistungserbringer/kostentraegerdateien_sle/kostentraegerdateien.jsp

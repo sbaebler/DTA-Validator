@@ -1,61 +1,78 @@
-# Maschinenlesbare Beschreibung des Beispiel-Dateipaerchens TPLG0001 / TPLG0001.AUF
+# Maschinenlesbare Beschreibung des Beispiel-Dateipaerchens TPFL0001 / TPFL0001.AUF
 #
 # Zweck: Erwartungswerte fuer Parser- und Regeltests, ohne die Beispieldateien
 # selbst parsen zu muessen. Feldkonventionen wie in knowledge-base/data/README.md:
 #   vertrauen: belegt | sekundaer | offen
 #
-# ACHTUNG: Die fachliche Struktur von PLGA/PLAA ist ERFUNDEN. Siehe README.md.
+# Stand 01.09.2026: Struktur und Feldbelegung sind gegen die Primaerdokumente
+# gebaut - TA 1 (Pflege) V 6.4.0, TA 3 V 6.4.0, TA 1 Anhang 1 V 2.0,
+# TA 1 Anhang 3 V 2.1.2, Anlage 2 GGT (Auftragssatz V 1.0), Anlage 4 GGT.
+# ERFUNDEN sind nur die Stammdaten (Namen, Anschriften, IK, KVNR, Preise,
+# Leistungskomplexnummern) und der Sachverhalt selbst.
 
-schema_version: 1
-stand: 2026-08-31
+schema_version: 2
+stand: 2026-09-01
 
 beispiel:
   id: pflege-105-sgbxi-001
   bezeichnung: Monatsabrechnung eines ambulanten Pflegedienstes, zwei Abrechnungsfaelle
   verfahren: sgbxi-105
   art: positivfall
-  vertrauen: offen
+  vertrauen: belegt
   hinweis: >-
-    Transportrahmen an den belegten Vorgaben ausgerichtet, fachliche Segment- und
-    Feldstruktur von PLGA/PLAA erfunden. Nicht als Referenz fuer die Erzeugung
-    echter Abrechnungsdateien verwenden.
+    Transportrahmen und Nutzdatenstruktur folgen den ausgewerteten Primaerdokumenten.
+    Die Stammdaten sind synthetisch. Preise und Leistungskomplexnummern stammen aus
+    keiner realen Verguetungsvereinbarung - sie sind formal gueltig (Schluessel 2.7.1:
+    3 Stellen alphanumerisch), inhaltlich aber frei gewaehlt.
   synthetisch: true
   enthaelt_sozialdaten: false
+  regelwerk:
+    ta1_version: 6.4.0
+    ta1_gueltig_ab: 2026-05-01
+    ta3_version: 6.4.0
+    anhang1_version: "2.0"
+    anhang3_version: 2.1.2
+    auftragssatz_version: "1.0"
+    hinweis_nachfolger: >-
+      Ab 01.02.2027 gilt TA 1 6.5.1. Dort entfaellt das IMG-Segment aus PLAA und die
+      TI-Strecke wandert in die neue Technische Anlage 5. Dieses Beispiel nutzt kein
+      IMG-Segment und bleibt insoweit auch unter 6.5.1 gueltig.
 
 dateien:
   nutzdaten:
-    name: TPLG0001
-    groesse_bytes: 1002
+    name: TPFL0001
+    groesse_bytes: 4924
     verschluesselt: false
     hinweis: >-
       Real waere dies der SECON-Umschlag (EnvelopedData ueber SignedData nach
-      Anlage 16 GGT). Hier liegt der entschluesselte Inhalt unter dem Dateinamen,
-      damit die Fixture ohne Schluesselmaterial nutzbar ist. Pruefstufe 2 ist mit
-      diesem Beispiel nicht testbar.
+      Anlage 16 GGT). Hier liegt der Klartext unter dem Dateinamen, damit die Fixture
+      ohne Schluesselmaterial nutzbar ist. Pruefstufe 2 ist mit diesem Beispiel nicht
+      testbar. Der Auftragssatz weist die Datei konsistent als unverschluesselt aus
+      (VERSCHLUESSELUNGSART und ELEKTRONISCHE_UNTERSCHRIFT beide "00" - eine der zwei
+      zulaessigen Kombinationen).
     zeilenumbrueche: false
-    zeichensatz: ascii
+    zeichensatz: iso-8859-1
     zeichensatz_hinweis: >-
-      Umlaute und ss durchgaengig transliteriert. Der zulaessige Zeichensatz fuer
-      § 105 SGB XI ist nicht belegt; ASCII ist unter allen in Frage kommenden
-      Kodierungen byte-identisch.
+      Anhang 1 der TA 1 laesst ISO 8859-1, ISO 7-Bit (DIN 66003 DRV 7) und ISO 8-Bit
+      (DIN 66303 DRV 8) zu; der Auftragssatz deklariert I1 = ISO 8859-1. Die Datei
+      enthaelt nur Zeichen, die in allen drei Kodierungen byte-identisch sind.
   auftragsdatei:
-    name: TPLG0001.AUF
-    groesse_bytes: 128
+    name: TPFL0001.AUF
+    groesse_bytes: 348
     format: festsatz
-    satzlaenge_vertrauen: offen
-    satzlaenge_hinweis: >-
-      128 ist ein Platzhalter. Die echte Satzlaenge steht in Anlage 2 GGT und ist
-      nicht bekannt.
+    satzlaenge: 348
+    satzlaenge_vertrauen: belegt
+    satzlaenge_quelle: Anlage 2 GGT, Feld LAENGE_AUFTRAG (Konstante 00000348 bei VERSION 01)
+    zeichensatz: iso-8859-1
   urbeleg_begleitzettel:
     name: urbeleg-begleitzettel.html
     art: Begleitzettel fuer Urbelege
     seiten: 1
     vertrauen: offen
     hinweis: >-
-      Aufbau erfunden. Fuer § 302 SGB V definiert Anlage 4 den Begleitzettel
-      (Q36, beschafft: false); fuer § 105 SGB XI ist kein entsprechendes Dokument
-      erfasst. Erzeugt aus dieser YAML, damit die Werte nicht von der DTA-Datei
-      abweichen koennen.
+      Aufbau erfunden. Anlage 4 zur TA 1 (Pflege) "Begleitzettel fuer Urbelege" V 1.0
+      vom 31.01.2003 existiert und ist im Dokumentenregister erfasst, aber noch nicht
+      ausgewertet.
     adressat: belegannahmestelle
     verknuepfungsmerkmale: [rechnungsnummer, dateiname, transfernummer]
   urbeleg:
@@ -64,110 +81,228 @@ dateien:
     seiten: 2
     vertrauen: offen
     hinweis: >-
-      Aufbau erfunden. Fuer § 302 SGB V definieren Anlage 4 (Begleitzettel) und
-      Anlage 5 (Inhalt der Urbelege) die Vorgaben; fuer § 105 SGB XI ist in der
-      Wissensbibliothek kein Dokument zum Urbeleg-Inhalt erfasst.
+      Aufbau erfunden. Fuer den ELEKTRONISCHEN Leistungsnachweis ist die Struktur in
+      TA 1 Abschnitt 4.6.2 (Schema PFL_LNW_2.2.0.xsd) belegt; fuer den papiergebundenen
+      Beleg ist kein Dokument ausgewertet.
     weg: Belegannahmestelle laut Kostentraegerdatei, nicht Datenannahmestelle
     zeichensatz: utf-8
     zeichensatz_hinweis: >-
-      Der Papierbeleg traegt korrekte deutsche Rechtschreibung mit Umlauten, die
-      Nutzdatendatei transliteriert. Ein Feldvergleich zwischen beiden Welten darf
-      nicht zeichenweise erfolgen.
+      Der Papierbeleg traegt korrekte deutsche Rechtschreibung mit Umlauten; die
+      Nutzdatendatei kommt in diesem Beispiel ohne Umlaute aus. Ein Feldvergleich
+      zwischen beiden Welten darf nicht zeichenweise erfolgen.
 
-dateiname:
-  wert: TPLG0001
+# Physikalischer Dateiname (Transferdateiname), Anhang 3 Abschnitt 2.2.2
+dateiname_physikalisch:
+  wert: TPFL0001
   test_echt: T
-  verfahrenskennung: PLG
-  verfahrenskennung_vertrauen: offen
-  verfahrenskennung_hinweis: Werteliste steht in Anlage 4 GGT, liegt nicht vor.
+  verfahrenskennung: TPFL0
+  verfahren: PFL
   verfahrensversion: "0"
   transfernummer: "001"
+  vertrauen: belegt
+  quelle: Anlage 4 GGT Kapitel 1.5; TA 1 Anhang 3 Abschnitt 2.2.2
+
+# Logischer Dateiname (Anwendungsreferenz), Anhang 3 Abschnitt 2.2.1.
+# Steht im UNB-Segment und im Auftragssatz-Feld DATEINAME (Stellen 105-115).
+dateiname_logisch:
+  wert: PL076001SBK
+  absenderklassifikation: PL
+  abrechnungszeitraum: "076"        # MMJ = Juli 2026
+  art_der_lieferung: "0"            # Regeldaten
+  lfd_nummer: "01"
+  art_der_abrechnung: S             # Selbstabrechner
+  kassenarten_kennung: BK           # Betriebskrankenkassen
+  vertrauen: belegt
 
 beteiligte:
   leistungserbringer:
-    name: Ambulanter Pflegedienst Sonnenhof GmbH
-    ik: "261099874"
+    name: Pflegedienst Sonnenhof GmbH
+    ik: "461100877"
+    ik_klassifikation: "46"         # Kranken- und Altenpfleger, Haushaltshilfen, Hauspfleger
+    ik_regionalbereich: "11"        # Berlin (Anlage 2.1 des Gemeinsamen Rundschreibens IK)
     strasse: Lindenweg 14
     plz: "12345"
     ort: Musterstadt
+    abrechnungscode: "36"           # privat gewerblicher Anbieter, ambulante Pflege
+    tarifkennzeichen: "23000"       # Tarifbereich 23 Berlin, Sondertarif 000
+    hinweis_name: >-
+      Der Firmenname ist auf 27 Zeichen gekuerzt, weil PLGA.NAM.Name 1 nur ..30 Stellen
+      zulaesst. Die Langform "Ambulanter Pflegedienst Sonnenhof GmbH" (38 Zeichen) waere
+      ein Laengenfehler.
   datenannahmestelle:
-    ik: "109999712"
+    ik: "661100423"
+    ik_klassifikation: "66"         # Abrechnungsstellen, Rechenzentren, Rechnungspruefstellen
+    ik_regionalbereich: "11"
+    rolle: Datenannahmestelle mit Entschluesselungsbefugnis laut Kostentraegerdatei
   belegannahmestelle:
     bezeichnung: Belegannahmestelle
-    ik: "108999630"
+    ik: "661100559"
+    ik_klassifikation: "66"
     anschrift: Postfach 11 22, 12345 Musterstadt
     hinweis: >-
-      Nimmt die Urbelege mit Begleitzettel entgegen. Eigenes IK, nicht identisch
-      mit Datenannahmestelle oder Kostentraeger - alle drei stehen getrennt in der
-      Kostentraegerdatei.
+      Nimmt die Urbelege mit Begleitzettel entgegen. Eigenes IK, nicht identisch mit
+      Datenannahmestelle, Kostentraeger oder Pflegekasse.
   kostentraeger:
+    bezeichnung: Muster BKK
+    ik: "109524616"
+    ik_klassifikation: "10"         # Krankenversicherungstraeger
+    ik_regionalbereich: "95"        # Berlin (Anlage 2.2)
+    rolle: Institution, die die Rechnung begleicht
+  pflegekasse:
     bezeichnung: Pflegekasse bei der Muster BKK
-    ik: "106999146"
+    ik: "189524616"
+    ik_klassifikation: "18"         # Pflegekassen der Krankenversicherungstraeger
+    ik_regionalbereich: "95"
+    rolle: Kasse des Leistungs-/Bewilligungsbescheids
+    hinweis: >-
+      PLGA.FKT.IK der Pflegekasse beginnt laut TA 1 immer mit "18". Kostentraeger und
+      Pflegekasse teilen hier Regionalbereich und Seriennummer und unterscheiden sich
+      nur in der Klassifikation - weil die Pruefziffer nur aus den Stellen 3-8 gebildet
+      wird, ist sie bei beiden IK dieselbe.
 
 rechnung:
-  nummer: "2026070001"
+  nummer_sammel: "2026070001"
+  nummer_einzel: "0"                # Selbstabrechner: Einzel-Rechnungsnummer immer 0
+  rechnungsnummer_im_segment: "2026070001:0"
   datum: 2026-08-05
   erstellungszeitpunkt: 2026-08-05T11:47:00
+  rechnungsart: "1"                 # Abrechnung von LE, Zahlung an IK LE
+  leistungsart: "01"                # ambulante Pflege
   leistungszeitraum_von: 2026-07-01
   leistungszeitraum_bis: 2026-07-31
   waehrung: EUR
   betrag_gesamt: 1671.00
-  zuzahlung: 0.00
-  eigenanteil: 0.00
+  zuzahlung: null
+  beihilfe: null
+  mehrwertsteuer: null
   zahlbetrag: 1671.00
   umsatzsteuer:
-    satz_prozent: 0.00
+    ordnungsnummer: DE999999999
     befreit: true
-    grund: Pflegeleistungen nach SGB XI, § 4 Nr. 16 UStG
+    grund_schluessel: "01"          # TA 3, Schluessel 2.13: Befreiung nach § 4 Nr. 16 UStG
+  hinweis_leere_kannfelder: >-
+    Zuzahlung, Beihilfe und Mehrwertsteuer sind nicht belegt. Nach TA 1 Abschnitt 4.2
+    ist anstelle eines leeren Kann-Datenelements das Trennkennzeichen anzugeben - im
+    GES-Segment daher "GES+1671,00+++1671,00", nicht "0,00".
 
 abrechnungsfaelle:
-  - lfd_nr: "001"
+  - belegnummer: "2607001"
     versicherte:
       name: Kerzenmacher
       vorname: Hanna
       geburtsdatum: 1948-03-12
       kvnr: K741852967
+      strasse: Rosenweg
+      hausnummer: "3"
+      plz: "12345"
+      ort: Musterstadt
       pflegegrad: 3
-    positionen:
-      - {position: LK03, bezeichnung: Grosse Morgentoilette, menge: 20, einzelpreis: 24.50, betrag: 490.00}
-      - {position: LK15, bezeichnung: Hauswirtschaftliche Versorgung, menge: 8, einzelpreis: 18.20, betrag: 145.60}
-    summe: 635.60
+    monat: "202607"
+    einsaetze: 20
+    uhrzeit_beginn: "0715"
+    leistungen:
+      - leistungsziffer: "01:01:1:003"
+        bezeichnung_klartext: Grosse Morgentoilette
+        art_der_leistung: "01"
+        verguetungsart: "01"        # Leistungskomplexverguetung
+        qualifikation: "1"          # Pflegefachkraft
+        leistung: "003"             # TA 3, Schluessel 2.7.1
+        einzelpreis: 24.50
+        anzahl_je_einsatz: 1.00
+        einsatztage: [1, 2, 3, 6, 7, 8, 9, 10, 16, 17, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31]
+        summe: 490.00
+      - leistungsziffer: "01:01:2:015"
+        bezeichnung_klartext: Hauswirtschaftliche Versorgung
+        art_der_leistung: "01"
+        verguetungsart: "01"
+        qualifikation: "2"          # hauswirtschaftliche Fachkraft
+        leistung: "015"
+        einzelpreis: 18.20
+        anzahl_je_einsatz: 1.00
+        einsatztage: [3, 7, 10, 17, 21, 24, 28, 31]
+        summe: 145.60
+    gesamtbrutto: 635.60
+    rechnungsbetrag: 635.60
 
-  - lfd_nr: "002"
+  - belegnummer: "2607002"
     versicherte:
       name: Brinkmeier
       vorname: Otto
       geburtsdatum: 1939-11-27
       kvnr: M305921844
+      anschrift_uebermittelt: false
+      anschrift_hinweis: >-
+        Anschrift entfaellt, weil die Versicherten-Nummer bekannt ist. Die Kann-Felder
+        am Segmentende werden weggelassen, das Segment endet nach dem Geburtsdatum.
       pflegegrad: 4
-    positionen:
-      - {position: LK04, bezeichnung: Kleine Morgentoilette mit Lagern, menge: 31, einzelpreis: 28.90, betrag: 895.90}
-      - {position: LK31, bezeichnung: Wegepauschale, menge: 31, einzelpreis: 4.50, betrag: 139.50}
-    summe: 1035.40
+    monat: "202607"
+    einsaetze: 31
+    uhrzeit_beginn: "0745"
+    leistungen:
+      - leistungsziffer: "01:01:1:004"
+        bezeichnung_klartext: Kleine Morgentoilette mit Lagern
+        art_der_leistung: "01"
+        verguetungsart: "01"
+        qualifikation: "1"
+        leistung: "004"
+        einzelpreis: 28.90
+        anzahl_je_einsatz: 1.00
+        einsatztage: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+        summe: 895.90
+      - leistungsziffer: "01:06:0:03"
+        bezeichnung_klartext: Wegepauschale
+        art_der_leistung: "01"
+        verguetungsart: "06"        # Wegegebuehren
+        qualifikation: "0"          # datentechnisch nicht relevant
+        leistung: "03"              # TA 3, Schluessel 2.7.5: Einsatz-/Fahrtkostenpauschale
+        einzelpreis: 4.50
+        anzahl_je_einsatz: 1.00
+        einsatztage: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+        summe: 139.50
+        hinweis: >-
+          Das Feld "Dauer, gefahrene Kilometer, Bis-Zeitraum" ist bei Wegegebuehren-Art
+          01-03 mit "00" zu belegen; nur bei Art 04 (gefahrene Kilometer) steht dort die
+          gerundete Kilometerzahl.
+    gesamtbrutto: 1035.40
+    rechnungsbetrag: 1035.40
 
-# Einsatzkalender des Urbelegs. Die Anzahl der Handzeichen je Leistungskomplex
-# muss der abgerechneten Menge im zugehoerigen EPL-Segment entsprechen.
+# Beschaeftigtennummern nach § 293 Abs. 8 Satz 2 SGB V
+beschaeftigtennummern:
+  verwendet: [999999998, 999999996]
+  quelle: TA 3, Schluessel 2.17 (Ersatz-Beschaeftigtennummer)
+  bedeutung:
+    "999999998": neue(r) Beschaeftigte(r) ohne Beschaeftigtennummer
+    "999999997": Beschaeftigtennummer fehlt aus sonstigem Grund
+    "999999996": Auszubildende(r) ohne Beschaeftigtennummer
+  hinweis: >-
+    Das Beispiel verwendet ausschliesslich die in Schluessel 2.17 definierten
+    Ersatzwerte. Vergabe und Pruefverfahren echter Beschaeftigtennummern sind in dieser
+    Wissensbibliothek nicht erfasst; eine erfundene neunstellige Nummer wuerde eine
+    Formatzusage machen, die nicht belegt ist.
+
+# Einsatzkalender des Urbelegs. Die Anzahl der Handzeichen je Leistung muss der Anzahl
+# der ELS-Segmente mit dieser Leistungsziffer entsprechen.
 einsatzkalender:
   monat: 2026-07
   werktage_im_monat: 23
   faelle:
-    - lfd_nr: "001"
+    - belegnummer: "2607001"
       abwesenheit:
         von: 2026-07-13
         bis: 2026-07-15
         grund: stationaerer Krankenhausaufenthalt
         betroffene_werktage: 3
       regeln:
-        LK03: Werktage Mo-Fr abzueglich Abwesenheit
-        LK15: Dienstag und Freitag abzueglich Abwesenheit
-      einsaetze: {LK03: 20, LK15: 8}
-      handzeichen: MB (LK03), TK (LK15)
-    - lfd_nr: "002"
+        "003": Werktage Mo-Fr abzueglich Abwesenheit
+        "015": Dienstag und Freitag abzueglich Abwesenheit
+      einsaetze: {"003": 20, "015": 8}
+      handzeichen: MB (003), TK (015)
+    - belegnummer: "2607002"
       abwesenheit: null
       regeln:
-        LK04: alle Kalendertage
-        LK31: eine Wegepauschale je Einsatz
-      einsaetze: {LK04: 31, LK31: 31}
+        "004": alle Kalendertage
+        "06/03": eine Wegepauschale je Einsatz
+      einsaetze: {"004": 31, "06/03": 31}
       handzeichen: SR
 
 # Erwartungswerte fuer die Syntaxpruefung (Stufe 3)
@@ -175,72 +310,128 @@ struktur:
   trennzeichen:
     komponente: ":"
     datenelement: "+"
-    dezimal: "."
-    freigabe: "?"
-    reserviert: " "
+    dezimal: ","
+    aufhebung: "?"
     segmentende: "'"
-    vertrauen: offen
+    una_segment: nein
+    vertrauen: belegt
+    quelle: TA 1 Abschnitt 4.1 Absatz 10
     hinweis: >-
-      EDIFACT-Defaults, uebernommen aus dem § 302-Beispiel der Wissensbibliothek.
-      Aus der Technischen Anlage zu verifizieren, insbesondere das Dezimalzeichen.
-  segmente_gesamt: 30            # ohne UNA
-  nachrichten: 3
-  datenaustauschreferenz: "00001"
+      Die TA 1 legt die Trennzeichen fest; ein UNA-Segment ist nicht vorgesehen. Das
+      Dezimalzeichen ist das Komma, nicht der EDIFACT-Default-Punkt.
+  segmente_gesamt: 163
+  nachrichten: 2
+  datenaustauschreferenz: "1"
+  dateiindikator: "0"               # 0 = Testdatei, 1 = Erprobung, 2 = Echtdaten
   nachrichten_details:
-    - {referenz: "00001", typ: PLGA, segmente: 8}
-    - {referenz: "00002", typ: PLAA, segmente: 10}
-    - {referenz: "00003", typ: PLAA, segmente: 10}
-  segmentfolge_plga: [FKT, REC, UST, SKO, GES, NAM]
-  segmentfolge_plaa: [FKT, REC, INV, NAD, ESK, EPL, EPL, GES]
-  segmentherkunft:
-    FKT: {herkunft: standardsegment, vertrauen: sekundaer}
-    REC: {herkunft: analog SLGA § 302, vertrauen: offen}
-    UST: {herkunft: analog SLGA § 302, vertrauen: offen}
-    SKO: {herkunft: analog SLGA § 302, vertrauen: offen}
-    GES: {herkunft: analog SLGA § 302, vertrauen: offen}
-    NAM: {herkunft: analog SLGA § 302, vertrauen: offen}
-    INV: {herkunft: standardsegment, vertrauen: sekundaer}
-    NAD: {herkunft: standardsegment, vertrauen: sekundaer}
-    ESK: {herkunft: analog SLLA § 302 (Einsatzkopfsegment), vertrauen: offen}
-    EPL: {herkunft: frei erfunden, vertrauen: offen}
+    - {referenz: "1", typ: PLGA, version: "6", segmente: 8}
+    - {referenz: "2", typ: PLAA, version: "6", segmente: 153}
+  segmentfolge_plga: [FKT, REC, SRD, UST, GES, NAM]
+  segmentfolge_plaa_je_abrechnungsfall: [INV, NAD, MAN, "ESK (1-n)", "ELS (1-n je ESK)", IAF]
+  kardinalitaeten:
+    PLGA: {FKT: 1, REC: 1, SRD: 1, UST: "0-1", GES: 1, NAM: 1}
+    PLAA: {FKT: 1, REC: 1, INV: "1-n", NAD: "1 je INV", IMG: "0-n je INV",
+           MAN: "1 je INV", ESK: "1-n je MAN", ELS: "1-n je ESK",
+           ZUS: "0-n je ELS", HIL: "0-1 je ELS", IAF: "1 je INV"}
+  segmentherkunft_vertrauen: belegt
+  quelle_struktur: TA 1 Abschnitte 4.3 bis 4.5
 
-# Das Test-/Echt-Kennzeichen ist dreifach kodiert - Grundlage fuer eine
-# verfahrensuebergreifende Konsistenzpruefung.
+# Feldgleichheiten, die die TA 1 ausdruecklich fordert (Pruefstufe 5)
 kreuzpruefungen:
   test_echt:
     dateiname_stelle_1: T
-    auftragssatz_position_25: T
-    unb_element_0035: "1"
+    auftragssatz_verfahren_kennung: TPFL0
+    unb_dateiindikator: "0"
+    hinweis: >-
+      Keine Gleichheitspruefung: der Dateiname kennt nur T und E, der Dateiindikator
+      drei Werte. T entspricht 0 ODER 1, E entspricht 2.
   absender_ik:
-    auftragssatz: "261099874"
-    nutzdaten_fkt: "261099874"
+    auftragssatz_absender_eigner: "461100877"
+    unb_absender: "461100877"
+    plga_fkt_ik_absender_der_datei: "461100877"
+  empfaenger_ik:
+    auftragssatz_empfaenger_nutzer: "661100423"
+    unb_empfaenger: "661100423"
+  dateiname:
+    auftragssatz_dateiname: PL076001SBK
+    unb_anwendungsreferenz: PL076001SBK
+  verarbeitungskennzeichen:
+    plga_fkt: "01"
+    plaa_fkt: "01"
+  ik_kostentraeger:
+    plga_fkt: "109524616"
+    plaa_fkt: "109524616"
+  ik_pflegekasse:
+    plga_fkt: "189524616"
+    plaa_fkt: "189524616"
   rechnungsbezug:
-    plga_rec: "2026070001:20260805"
-    plaa_rec: "2026070001:20260805"
+    plga_rec: "2026070001:0+20260805+1+EUR"
+    plaa_rec: "2026070001:0+20260805+1+EUR"
+  summen:
+    ges_gesamtrechnungsbetrag: 1671.00
+    summe_iaf_rechnungsbetraege: 1671.00
+  dateigroesse:
+    auftragssatz_dateigroesse_nutzdaten: 4924
+    tatsaechliche_groesse_nutzdatendatei: 4924
 
-# Regeln aus knowledge-base/50-anforderungen/02-validierungsregeln.md, die dieses
-# Beispiel erfuellt. Eine korrekte Implementierung meldet hier keinen Befund.
+# Regeln aus knowledge-base/data/pruefregeln.yaml, die dieses Beispiel erfuellt.
+# Eine korrekte Implementierung meldet hier keinen Befund.
 erfuellte_regeln:
   - S0-ALL-001
   - S0-ALL-002
   - S0-ALL-003
   - S0-ALL-004
+  - S0-ALL-005
+  - S0-ALL-006
   - S0-ALL-007
+  - S1-ALL-001
+  - S1-ALL-002
+  - S1-ALL-003
   - S1-ALL-004
   - S1-ALL-005
   - S1-ALL-007
   - S1-ALL-008
-  - S3-ALL-001
+  - S1-ALL-009
+  - S1-ALL-010
+  - S1-ALL-011
+  - S1-ALL-012
+  - S1-ALL-013
+  - S1-ALL-014
+  - S1-ALL-015
+  - S1-XI-001
+  - S1-XI-002
   - S3-ALL-002
   - S3-ALL-003
   - S3-ALL-004
   - S3-ALL-005
   - S3-ALL-006
   - S3-XI-001
+  - S3-XI-002
+  - S3-XI-003
+  - S3-XI-004
+  - S3-XI-005
+  - S3-XI-006
+  - S3-XI-007
   - S4-ALL-001
-  - S4-ALL-002
   - S4-ALL-003
+  - S4-XI-001
+  - S4-XI-002
+  - S4-XI-003
+  - S4-XI-004
+  - S4-XI-005
+  - S4-XI-006
+  - S4-XI-007
+  - S4-XI-008
+  - S4-XI-009
+  - S4-XI-010
   - S5-ALL-001
+  - S5-ALL-002
+  - S5-XI-001
+  - S5-XI-002
+  - S5-XI-003
+  - S5-XI-004
+  - S5-XI-005
+  - S5-XI-006
   - S6-ALL-001
   - S6-ALL-002
 
@@ -249,23 +440,35 @@ nicht_abgedeckt:
              S2-ALL-007, S2-ALL-008, S2-ALL-009, S2-ALL-010, S2-ALL-011, S2-ALL-012,
              S2-ALL-013, S2-ALL-014]
     grund: Nutzdaten liegen im Klartext vor, kein SECON-Umschlag.
-  - regeln: [S1-ALL-001, S1-ALL-002, S1-ALL-003, S1-ALL-009]
-    grund: Auftragssatz-Layout und Verfahrenskennung sind erfunden.
-  - regeln: [S0-ALL-005, S0-ALL-006]
-    grund: Werteliste der Verfahrenskennungen aus Anlage 4 GGT liegt nicht vor.
-  - regeln: [S1-ALL-006, S4-302-002, S4-302-003]
-    grund: Kostentraegerdatei und Positionsnummernverzeichnisse liegen nicht vor.
+  - regeln: [S1-ALL-006]
+    grund: Kostentraegerdatei liegt nicht vor, Zustaendigkeit der Datenannahmestelle nicht pruefbar.
+  - regeln: [S4-ALL-002]
+    grund: KVNR-Pruefziffernverfahren ist nicht verifiziert (siehe pruefziffern.kvnr).
+  - regeln: [S3-ALL-001]
+    grund: Regel gilt nur fuer Verfahren mit UNA-Segment; § 105 SGB XI hat keines.
+  - regeln: [S5-XI-007]
+    grund: Beispiel nutzt den Weg ausserhalb der TI, nicht KIM.
+  - regeln: [S0-ALL-009]
+    grund: Kein Datentraegerversand.
+  - regeln: [S0-ALL-008]
+    grund: >-
+      Hinweisregel ohne Historie - eine Wiederverwendung der Transfernummer laesst sich
+      an einem einzelnen Dateipaerchen nicht feststellen.
 
 pruefziffern:
   ik:
-    verfahren: Modulo 10 ueber die Stellen 3-8, Gewichte 2-1-2-1-2-1 von links
-    quelle: knowledge-base/40-stammdaten/01-institutionskennzeichen.md
-    vertrauen: sekundaer
+    verfahren: >-
+      Modulo 10 ueber die Stellen 3-8, Gewichtung von rechts 1-2-1-2-1-2 (von links
+      2-1-2-1-2-1), Quersumme der Produkte, Rest modulo 10
+    quelle: Gemeinsames Rundschreiben Institutionskennzeichen 02/2026, Nummer 1.2.5
+    vertrauen: belegt
+    testvektor_aus_quelle: {ik: "260326822", kern: "032682", pruefziffer: 2}
     werte:
-      - {ik: "261099874", kern: "109987", pruefziffer: 4}
-      - {ik: "109999712", kern: "999971", pruefziffer: 2}
-      - {ik: "106999146", kern: "699914", pruefziffer: 6}
-      - {ik: "108999630", kern: "899963", pruefziffer: 0}
+      - {ik: "461100877", kern: "110087", pruefziffer: 7}
+      - {ik: "661100423", kern: "110042", pruefziffer: 3}
+      - {ik: "661100559", kern: "110055", pruefziffer: 9}
+      - {ik: "109524616", kern: "952461", pruefziffer: 6}
+      - {ik: "189524616", kern: "952461", pruefziffer: 6}
   kvnr:
     verfahren: >-
       Buchstabe als zweistellige Zahl (A=01 ... Z=26), Modulo 10 mit Gewichtung

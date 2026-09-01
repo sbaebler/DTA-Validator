@@ -9,7 +9,7 @@
 | **Anlage 16 / SECON** | Security-Schnittstelle der Gemeinsamen Grundsätze Technik (Signatur/Verschlüsselung) |
 | **ARGE·IK** | Arbeitsgemeinschaft Institutionskennzeichen, angesiedelt bei der DGUV; vergibt IK |
 | **AUFN** | § 301-Nachrichtentyp: Aufnahmeanzeige stationäre Behandlung |
-| **Auftragsdatei / Auftragssatz** | Unverschlüsselte Begleitdatei mit Transport-Metadaten (Endung `.AUF`) |
+| **Auftragsdatei / Auftragssatz** | Unverschlüsselte Begleitdatei mit Transport-Metadaten (Endung `.AUF`), Festsatzformat von **348 Byte** nach Anlage 2 GGT; entfällt bei Übermittlung über KIM |
 | **Belegannahmestelle** | Stelle, die Urbelege (Verordnungen, Leistungsnachweise) entgegennimmt |
 | **CMS** | Cryptographic Message Syntax (RFC 5652), Nachfolger von PKCS#7 |
 | **DAV / Datenannahmestelle** | Entschlüsselungsbefugte Stelle, die Nutzdaten annimmt und weiterleitet |
@@ -55,7 +55,7 @@
 | **UNA/UNB/UNZ** | EDIFACT-Servicesegmente: Trennzeichenvorgabe / Dateikopf / Dateiende |
 | **Urbeleg** | Papier-/Original-Nachweis zur Abrechnung (Verordnung, Leistungsnachweis) |
 | **Verarbeitungskennzeichen (VKZ)** | Steuert Erstabrechnung / Nachforderung / Wiedereinreichung im Korrekturverfahren |
-| **Verfahrenskennung** | 4- bzw. 5-stelliger Schlüssel für das Fachverfahren; Teil von Dateiname und Auftragssatz |
+| **Verfahrenskennung** | Schlüssel für das Fachverfahren im Auftragssatz (Stellen 20–24) und im Transferdateinamen; im LE-Datenaustausch 5-stellig (`E`/`T` + 3 Stellen Verfahren + Versionsziffer), im Verkehr mit der Rentenversicherung 2-stellig |
 | **VERL** | § 301-Nachrichtentyp: Verlängerungsanzeige |
 | **ZAAO** | § 301-Nachrichtentyp: Zahlungssatz zu AMBO |
 | **ZAHL** | § 301-Nachrichtentyp: Zahlungssatz (Bestätigung/Ablehnung zu RECH) |

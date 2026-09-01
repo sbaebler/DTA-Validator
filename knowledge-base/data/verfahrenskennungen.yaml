@@ -1,0 +1,442 @@
+# Verfahrenskennungen (Feld VERFAHREN_KENNUNG, Stellen 20-24 des Auftragssatzes)
+#
+# Quelle: Anlage 4 zu den Gemeinsamen Grundsaetzen Technik nach § 95 SGB IV,
+#         "Verfahrenskennungen", Version des Feldes 1.1,
+#         gueltig ab 01.01.2026, Stand 06.11.2025, 47 Seiten.
+#         https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/
+#         technische_spezifikationen/Anlage_4_-_Verfahrenskennungen.pdf
+#
+# Primaerdokument ausgewertet am 2026-09-01. Alle Eintraege: vertrauen = belegt.
+#
+# Abschnitt "bereiche": wortgetreue Uebernahme der Kapitel 1.3 bis 1.6 (Datenaustausch
+# mit Leistungserbringern) - das ist der fuer den Validator relevante Teil.
+# Abschnitt "verzeichnis": maschinell aus Kapitel 3 uebernommenes Gesamtverzeichnis
+# aller Kennungen. Die Kapitel 1.1/1.2 und 1.7 bis 1.58 (Arbeitgeber, Rentenversicherung,
+# GKV-intern) sind nur ueber das Verzeichnis abgedeckt.
+
+schema_version: 1
+stand: 2026-09-01
+quelle:
+  dokument: Anlage 4 GGT - Verfahrenskennungen
+  version_feldbeschreibung: "1.1"
+  gueltig_ab: 2026-01-01
+  dokumentstand: 2025-11-06
+  seiten: 47
+  url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_4_-_Verfahrenskennungen.pdf
+  vertrauen: belegt
+
+# Aufbau der Kennung im Datenaustausch mit Leistungserbringern.
+# Achtung: Dieses Schema gilt NICHT verfahrensuebergreifend. Im Datenaustausch mit der
+# Rentenversicherung (Kapitel 1.2) sind die Kennungen zweistellig (z. B. "BK", "TR"),
+# und die Verzeichniseintraege in Kapitel 3 sind 1-6 Stellen lang.
+feldaufbau_leistungserbringer:
+  laenge: 5
+  position_im_auftragssatz: "20-24"
+  stelle_20:
+    bedeutung: Test-/Echtkennzeichen
+    werte:
+      E: Echtdaten
+      T: Testdaten (und Erprobungsverfahren)
+  stellen_21_23:
+    bedeutung: Verfahren (dreistelliges Kuerzel, s. bereiche)
+  stelle_24:
+    bedeutung: Ziffer fuer die Version des Verfahrens, beginnend mit 0
+    format: "[0-9]"
+
+bereiche:
+
+  # Kapitel 1.3
+  sgbv-294ff:
+    titel: Datenaustausch zwischen Leistungserbringern und Krankenkassen nach § 294 ff. SGB V
+    kapitel: "1.3"
+    richtung: LE -> GKV
+    kuerzel:
+      - {abk: KAV, beschreibung: fuer Kassenaerztliche Vereinigungen}
+      - {abk: KZV, beschreibung: fuer Kassenzahnaerztliche Vereinigungen}
+      - {abk: APO, beschreibung: fuer Apotheken}
+      - {abk: IMG, beschreibung: fuer die Imagedaten nach § 7 der Vereinbarung nach § 300 SGB V}
+      - {abk: KRH, beschreibung: fuer Krankenhaeuser}
+      - {abk: REH, beschreibung: fuer Reha-Einrichtungen}
+      - {abk: SOL, beschreibung: fuer Sonstige Leistungserbringer}
+      - {abk: EBZ, beschreibung: fuer das Elektronische Beantragungs- und Genehmigungsverfahren Zahnaerzte, richtung: Zahnaerzte -> GKV}
+      - {abk: GKH, beschreibung: Grundsatz-Datenaustausch zwischen Krankenhaeusern und Krankenkassen}
+
+  # Kapitel 1.4
+  sgbv-295-1b:
+    titel: Datenaustausch zwischen Leistungserbringern und Krankenkassen nach § 295 Abs. 1b SGB V (Direktabrechner)
+    kapitel: "1.4"
+    richtung: LE -> GKV
+    konvention: >-
+      Fuer alle Selektivvertraege sind die Stellen 21-22 mit "DR" zu belegen; die weitere
+      Spezifizierung erfolgt in Stelle 23 (Buchstaben A-Z).
+    kuerzel:
+      - {abk: DIR, beschreibung: "fuer Direktabrechner (Technische Anlage 1.0; galt fuer bestehende Verfahren uebergangsweise bis Ende 2011)"}
+      - {abk: DRB, beschreibung: "fuer hausarztzentrierte Versorgung (Technische Anlage ab Version 2.0)"}
+      - {abk: DRC, beschreibung: "fuer besondere aerztlich ambulante Versorgung (Technische Anlage ab Version 2.0)"}
+      - {abk: DRI, beschreibung: "Integrierte Versorgung (Technische Anlage 3.0)"}
+      - {abk: DRM, beschreibung: Modellvorhaben nach § 64d SGB V}
+      - {abk: DRS, beschreibung: Vertraege nach § 132e und § 132f SGB V}
+
+  # Kapitel 1.5
+  sgbxi-105:
+    titel: Datenaustausch zwischen Leistungserbringern und Pflegekassen nach § 105 SGB XI
+    kapitel: "1.5"
+    richtung: LE -> GKV
+    kuerzel:
+      - {abk: PFL, beschreibung: Datenaustausch nach § 105 SGB XI}
+      - {abk: PFU, beschreibung: Uebermittlung elektronischer Urbeleg nach § 105 Abs. 2 SGB XI}
+    beispiele: [EPFL0, TPFL0]
+
+  # Kapitel 1.6
+  versichertenkarten:
+    titel: Datenuebertragung mit Erstellern von Versichertenkarten
+    kapitel: "1.6"
+    richtung: GKV -> Personalisierer
+    kuerzel:
+      - {abk: KVK, beschreibung: fuer Krankenversichertenkarte}
+
+# Feld VERFAHREN_KENNUNG_SPEZIFIKATION (Stellen 28-32 des Auftragssatzes), Kapitel 2.
+# Die Werte werden eindeutig je Verfahren festgelegt (z. B. der Nachrichtentyp, sofern
+# eindeutig pro Lieferung). Das Feld kann auch die Verarbeitungsprioritaet ausdruecken.
+# Es gibt KEINE verfahrensuebergreifende Werteliste; Anlage 4 nennt nur Beispiele und
+# haelt fest, dass diese Listen nicht fortgeschrieben werden.
+verfahren_kennung_spezifikation:
+  kapitel: "2"
+  fortschreibung: nein
+  beispiele:
+    amtliche_statistiken: [KM1, KM6, KG1, KG2, KG3, KG4, KG5, KG8, KV451, KV452, KJ1, KJ2,
+                           SGB1K, SGB1P, PG1, PG2, PG4, PG5, PV45, PJ1]
+    bas_mrs: [MR100, MR111, MR400, MR500, MR600, MR610, MR700]
+    gkv_sv_pqd_pqv: [UPDT, VOLL]
+  hinweis_pflege: >-
+    Im Datenaustausch nach § 105 SGB XI wird das Feld laut Anhang 1 der Technischen
+    Anlage 1 nicht belegt; die Art der abgegebenen Leistung steht dort stattdessen in
+    DATEI_BEZEICHNUNG, Stellen 319-320.
+
+# Gesamtverzeichnis aus Kapitel 3 ("Verzeichnis der Verfahrenskennungen").
+# Maschinell uebernommen; Bindestriche aus dem Blocksatz wurden zusammengefuehrt.
+# Mehrfach vorkommende Kennungen (z. B. BAK, BK, IKB) stehen mehrfach im Verzeichnis -
+# dieselbe Kennung wird in verschiedenen Verfahren verwendet.
+verzeichnis:
+  - {kennung: "1xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "2xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "3xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "4xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "5xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "6xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "7xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "8xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "9xx", bezeichnung: "Interne Verfahren"}
+  - {kennung: "AAG", bezeichnung: "für Erstattungsanträge nach AAG"}
+  - {kennung: "AAK", bezeichnung: "Rückmeldungen für Erstattungsanträge nach AAG"}
+  - {kennung: "AKA", bezeichnung: "AG-Konto Anlage"}
+  - {kennung: "ALG", bezeichnung: "Arbeitsbescheinigungen für Zwecke des über- und zwischenstaatlichen Rechts sowie Nebeneinkommen"}
+  - {kennung: "AN", bezeichnung: "Anforderungssätze mit Fehlernummern 01-06"}
+  - {kennung: "AND", bezeichnung: "für die Datenübermittlung zur Absendernummer"}
+  - {kennung: "ANR", bezeichnung: "für die Datenübermittlung zur Absendernummer (2. Variante)"}
+  - {kennung: "AOP", bezeichnung: "AOP-Daten gemäß § 115b SGB V"}
+  - {kennung: "APO", bezeichnung: "Datenaustausch nach § 294 ff. SGB V"}
+  - {kennung: "APR", bezeichnung: "Anträge beitragsabführender Stellen im Verfahren gemäß § 55a Abs. 1 Satz 3 SGB XI"}
+  - {kennung: "ARV", bezeichnung: "Rückmeldung der angeforderten EBV -Werte durch registrierte Arbeitgeber (rvBEA)"}
+  - {kennung: "ASA", bezeichnung: "Übermittlung ambulanter Abrechnungsdaten"}
+  - {kennung: "ASI", bezeichnung: "Weiterleitung IK -Daten"}
+  - {kennung: "ASK", bezeichnung: "Amtliche Statistiken im Datenaustausch mit dem/den BMG,BMAS, obersten Landesbehörden, gesetzlichen Krankenkassen, Kassenverbänden auf Bundesebene, Dienstleistern der gesetzlichen Krankenkassen"}
+  - {kennung: "ASP", bezeichnung: "Amtliche Statistiken im Datenaustausch mit dem/den BMG, BMAS, obersten Landesbehörden, gesetzlichen Krankenkassen, Kassenverbänden auf Bundesebene, Dienstleistern der gesetzlichen Krankenkassen"}
+  - {kennung: "ASR", bezeichnung: "Rückläufer Amtliche Statistiken"}
+  - {kennung: "ASS", bezeichnung: "Verfahrenskennzeichen für die Datenlieferung entsprechend technischer Spezifikation"}
+  - {kennung: "ASV", bezeichnung: "Verfahrenskennzeichen für die Datenlieferung entsprechend technischer Spezifikation"}
+  - {kennung: "ASX", bezeichnung: "Prüfung Amtliche Statistiken"}
+  - {kennung: "A1A", bezeichnung: "Übermittlung der Anträge der Arbeitgeber im A1 Verfahren oder der Ablehnung oder der Quittierung oder von Fehlern"}
+  - {kennung: "A1S", bezeichnung: "Übermittlung der Bewilligung"}
+  - {kennung: "AUB", bezeichnung: "Ausstellung von Unbedenklichkeitsbescheinigungen nach § 108b SGB IV"}
+  - {kennung: "AUF", bezeichnung: "Dateierweiterung für Auftragssatz (Kennung wird für Fehlermeldungen genutzt)"}
+  - {kennung: "AXL", bezeichnung: "Bescheinigung zur Versicherungspflicht sowie über das fortgeführte Beschäftigungsverhältnis bei Gewährung von Teilarbeitslosengeld"}
+  - {kennung: "AZK", bezeichnung: "Abruf der zuständigen Krankenkasse"}
+  - {kennung: "BAK", bezeichnung: "Bundesagentur für Arbeit und den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BAK", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BAS", bezeichnung: "für Meldungen im Sozialausgleich an die BA"}
+  - {kennung: "BB", bezeichnung: "Elektronische Benachrichtigung über die Erstattung zu Unrecht gezahlter Beiträge nach § 211 Satz 3 SGB VI"}
+  - {kennung: "BDV", bezeichnung: "Bundesagentur für Arbeit und den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BEA", bezeichnung: "Beitragserhebung der berufsständischen Versorgungseinrichtungen"}
+  - {kennung: "BGR", bezeichnung: "Übermittlung von Statistikdaten zum Bericht geriatrische Rehabilitation"}
+  - {kennung: "BIV", bezeichnung: "für die Datenübermittlung zwischen dem vdek / der ITSG (Pflegelotse) und der BIVA und zurück"}
+  - {kennung: "BJ", bezeichnung: "Betriebsnummerndatei Gesamtbestand 1 Mal pro Jahr"}
+  - {kennung: "BK", bezeichnung: "Betriebsprüfung; DA zwischen GKV und DRV"}
+  - {kennung: "BK", bezeichnung: "eGK-Verfahren; Bestandssystem Kasse an Kartenmanagementsystem"}
+  - {kennung: "BMA", bezeichnung: "Bestandsmeldungen der BA an die KK"}
+  - {kennung: "BMK", bezeichnung: "Bestandsmeldungen der OK an die KK"}
+  - {kennung: "BMZ", bezeichnung: "zugelassene kommunale Träger nach § 6a SGB II und den Krankenkassen oder zwischen den Krankenkassen / Weiterleitungsstellen oder der Bundesagentur für Arbeit und den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BNA", bezeichnung: "Beitragsnachweise Arbeitgeber an Krankenkassen oder Beitragsnachweise zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BNB", bezeichnung: "Beitragsnachweise für die Empfänger von Arbeitslosengeld"}
+  - {kennung: "BNJ", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen oder der Bundesagentur für Arbeit und den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BNK", bezeichnung: "zugelassene kommunalen Träger nach § 6a SGB II und den Krankenkassen oder zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BNM", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen oder der Bundesagentur für Arbeit und den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BNR", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen oder Bundesagentur für Arbeit und den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "BNU", bezeichnung: "Beitragsnachweise für die Empfänger von Übergangsgeld"}
+  - {kennung: "BNZ", bezeichnung: "Beitragsnachweise von Zahlstellen"}
+  - {kennung: "BPV", bezeichnung: "Erhebung und Nachweis der Elterneigenschaft gem. § 55a SGB XI"}
+  - {kennung: "BR", bezeichnung: "Update der Betriebsnummerndatei"}
+  - {kennung: "BS", bezeichnung: "Elektronisches Bescheinigungsverfahren gem. § 313a Abs. 2 SGB III i.V.m. § 312 Abs. 2 SGB III"}
+  - {kennung: "BSD", bezeichnung: "Betriebsnummerndatei an die Rentenversicherung"}
+  - {kennung: "BU", bezeichnung: "Betriebsprüfungsdaten von und zu den UVen"}
+  - {kennung: "BUB", bezeichnung: "Beantragung von Unbedenklichkeitsbescheinigungen nach § 108b SGB IV"}
+  - {kennung: "BUPDF", bezeichnung: "Betriebsprüfungsnotizen zu den Uven"}
+  - {kennung: "BV", bezeichnung: "eGK-Verfahren; Bestandsystem Kasse an Versichertenstammdatendienst"}
+  - {kennung: "BVP", bezeichnung: "Beschäftigtenverzeichnis der ambulanten Pflege nach § 293 Abs. 8 SGB V"}
+  - {kennung: "BVZ", bezeichnung: "Meldung zum Bereinigungsverzicht"}
+  - {kennung: "BW", bezeichnung: "Beitragsnachweis der Rentenversicherungsträger (entfallen)"}
+  - {kennung: "BWK", bezeichnung: "für Meldungen von Beitragsnachweise der privaten Pflegekassen"}
+  - {kennung: "BWW", bezeichnung: "für Meldungen von Beitragsnachweisen der Bundeswehr"}
+  - {kennung: "BWNAC", bezeichnung: "Interne Sammeldateien Beitragsnachweise"}
+  - {kennung: "CEH", bezeichnung: "eGK-Verfahren; Kartenmanagementsystem an Trust Center"}
+  - {kennung: "CER", bezeichnung: "eGK-Verfahren; Trust Center an Kartenmanagementsystem"}
+  - {kennung: "CP", bezeichnung: "CUP-Druckdaten"}
+  - {kennung: "CT", bezeichnung: "Einzugsstellenprüfung mit der AOK"}
+  - {kennung: "DAH", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DAR", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DDH", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DDR", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DE", bezeichnung: "Datenaustausch DEÜV zwischen Krankenkassen und Rentenversicherungsträgern sowie zwischen der Bundesagentur für Arbeit und Rentenversicherungsträgern"}
+  - {kennung: "DEH", bezeichnung: "DMP Depression"}
+  - {kennung: "DER", bezeichnung: "DMP Depression"}
+  - {kennung: "DGA", bezeichnung: "DiGA-Abrechnungsdaten"}
+  - {kennung: "DHH", bezeichnung: "DMP Herzinsuffizienz, Hinweg"}
+  - {kennung: "DHR", bezeichnung: "DMP Herzinsuffizienz, Rückweg"}
+  - {kennung: "DIR", bezeichnung: "Direkt-Abrechner mit Krankenkassen"}
+  - {kennung: "DJH", bezeichnung: "DMP Adipositas – Kinder und Jugendliche, Hinweg", gueltig_ab: 2026-07-01}
+  - {kennung: "DJR", bezeichnung: "DMP Adipositas – Kinder und Jugendliche, Rückweg", gueltig_ab: 2026-07-01}
+  - {kennung: "DK", bezeichnung: "RV-Krankenhäuser mit den Krankenkassen § 301 (EKRH)"}
+  - {kennung: "DKH", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DKR", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DMB", bezeichnung: "DTA mit Meldebehörde (über DRV -Bund)"}
+  - {kennung: "DMP", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DMT", bezeichnung: "DMP Teilnahme- und Einwilligungserklärung"}
+  - {kennung: "DOH", bezeichnung: "DMP Osteoporose"}
+  - {kennung: "DOR", bezeichnung: "DMP Osteoporose"}
+  - {kennung: "DPP", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DQH", bezeichnung: "DMP Rheumatoide Arthritis"}
+  - {kennung: "DQR", bezeichnung: "DMP Rheumatoide Arthritis"}
+  - {kennung: "DR", bezeichnung: "Es ist vereinbart, für alle Selektivverträge die Stellen 21-22 mit ‚DR’ zu belegen und eine weitere Spezifizierung in Stelle 23 vorzunehmen (Buchstaben A -Z)."}
+  - {kennung: "DRB", bezeichnung: "für hausarztzentrierte Versorgung"}
+  - {kennung: "DRC", bezeichnung: "für besondere ärztlich ambulante Versorgung (für Technische Anlage 2.0, anzuwenden für neue Verfahren ab sofort)"}
+  - {kennung: "DRH", bezeichnung: "DMP Rückenschmerz"}
+  - {kennung: "DRI", bezeichnung: "für Integrierte Versorgung"}
+  - {kennung: "DRM", bezeichnung: "Modellvorhaben nach § 64d SGB V"}
+  - {kennung: "DRR", bezeichnung: "DMP Rückenschmerz"}
+  - {kennung: "DRS", bezeichnung: "Verträge nach § 132e,f SGB V"}
+  - {kennung: "DSH", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DSR", bezeichnung: "Krankenkassen für Disease -Management -Programme"}
+  - {kennung: "DSV", bezeichnung: "Versicherungsnummern Abfrage"}
+  - {kennung: "DTE", bezeichnung: "elektronisch erstellte DMP-Teilnahme-/Einwilligungserklärungen"}
+  - {kennung: "DTI", bezeichnung: "Images (im Original papiergebundener) DMP -Teilnahme -/Einwilligungserklärungen"}
+  - {kennung: "DTV", bezeichnung: "Datentransparenz nach § 303b SGB V"}
+  - {kennung: "DUA", bezeichnung: "Arbeitgeber"}
+  - {kennung: "DUK", bezeichnung: "zugelassene kommunale Träger nach § 6a SGB II und den Krankenkassen oder zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "DUR", bezeichnung: "für Meldungen nach der DEÜV mit Optionskommunen"}
+  - {kennung: "DUT", bezeichnung: "Datenaustausch mit Unfallträgern"}
+  - {kennung: "DUV", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "DWH", bezeichnung: "DMP Adipositas – Erwachsene, Hinweg", gueltig_ab: 2026-07-01}
+  - {kennung: "DWR", bezeichnung: "DMP Adipositas – Erwachsene, Rückweg", gueltig_ab: 2026-07-01}
+  - {kennung: "DZH", bezeichnung: "Diabetes mellitus Typ 1 und 2, Hinweg"}
+  - {kennung: "DZR", bezeichnung: "Diabetes mellitus Typ 1 und 2, Rückweg"}
+  - {kennung: "EA", bezeichnung: "Maschinelles Erstattungsverfahren"}
+  - {kennung: "EAA", bezeichnung: "Anfrage eines Arbeitgeber bei der Krankenkasse zum Vorliegen einer eAU"}
+  - {kennung: "EAR", bezeichnung: "Rückmeldung der Krankenkasse an den Arbeitgeber zum Vorliegen einer eAU"}
+  - {kennung: "EAS", bezeichnung: "Anfrage zur Elektronischen Arbeitsunfähigkeitsbescheinigung"}
+  - {kennung: "EAU", bezeichnung: "Übermittlung einer Elektronischen Arbeitsunfähig keitsbescheinigung (eAU)"}
+  - {kennung: "EAV", bezeichnung: "Maschinelles Erstattungsverfahren"}
+  - {kennung: "EBE", bezeichnung: "euBP Entgeltbuchhaltung"}
+  - {kennung: "EBF", bezeichnung: "euBP Finanzbuchhaltung"}
+  - {kennung: "EBM", bezeichnung: "euBP Meldekorrektur"}
+  - {kennung: "EBP", bezeichnung: "euBP Prüfergebnis"}
+  - {kennung: "EBR", bezeichnung: "euBP Rückmeldung"}
+  - {kennung: "EBZ", bezeichnung: "für das Elektronisches Beantragungs- und Genehmigungsverfahren Zahnärzte"}
+  - {kennung: "EEF", bezeichnung: "Datenaustausch mit Finanzbehörden"}
+  - {kennung: "EEL", bezeichnung: "Entgeltersatzleistungen Arbeitgeber"}
+  - {kennung: "EEK", bezeichnung: "für Entgeltersatzleistungen für fachlichen Meldung an den Arbeitgeber (ab der Version 8.0)"}
+  - {kennung: "ED", bezeichnung: "Datenaustausch zwischen Krankenkassen und Rentenversicherungsträgern für Entgeltdaten nach §69 SGB IX"}
+  - {kennung: "EGK", bezeichnung: "eGK-Verfahren; Kartenmanagementsystem an Personalisierer"}
+  - {kennung: "EGQ", bezeichnung: "eGK-Verfahren; Personalisierer an Kartenmanagementsystem"}
+  - {kennung: "EGV", bezeichnung: "Entgeltdaten nach §69 SGB IX"}
+  - {kennung: "EL", bezeichnung: "Datenaustausch Entgeltersatzleistungen zwischen GKV und DRV oder zwischen DGUV und DRV oder zwischen BA und DRV"}
+  - {kennung: "EM", bezeichnung: "Austausch von Daten für Monatsabrechnungen zwischen GKV und"}
+  - {kennung: "DRV", bezeichnung: "oder zwischen BA und DRV oder zwischen DRV und BA S"}
+  - {kennung: "ES", bezeichnung: "MOASB Monatsabrechnung „Sonstiger Beitragszahler“ zwischen GKV und DRV oder zwischen DRV und BA S"}
+  - {kennung: "ERA", bezeichnung: "Datenlieferungen entsprechend technischer Spezifikation"}
+  - {kennung: "ERB", bezeichnung: "Datenlieferungen entsprechend technischer Spezifikation"}
+  - {kennung: "ERK", bezeichnung: "Datenlieferungen entsprechend technischer Spezifikation"}
+  - {kennung: "ESE", bezeichnung: "Entgeltschlüssel der Krankenhäuser"}
+  - {kennung: "FFX", bezeichnung: "Richtlinie zur Versorgung der hüftgelenknahen Femurfraktur"}
+  - {kennung: "FP", bezeichnung: "Ausgleichsfond Pflegeversicherung"}
+  - {kennung: "GA", bezeichnung: "Grundsicherungsdate nabgleich nach § 52 Absatz 1 Satz 1 Nummer 5 SGB II"}
+  - {kennung: "GAM", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "GF", bezeichnung: "Datenaustausch an den Gesundheitsfond (EBNK)"}
+  - {kennung: "GK", bezeichnung: "Grundsicherung sdatenabgleich nach § 52 Absatz 1 Satz 3 SGB II"}
+  - {kennung: "GKH", bezeichnung: "Grundsatz-Datenaustausch zwischen Krankenhäusern und Krankenkassen"}
+  - {kennung: "GLD", bezeichnung: "Lieferung von GAmSi -Daten an die ITSG"}
+  - {kennung: "GLR", bezeichnung: "Quittierung des Empfangs von GAmSi -Datenlieferungen"}
+  - {kennung: "GM", bezeichnung: "Gesonderte Meldungen"}
+  - {kennung: "GR", bezeichnung: "Grundsicherung sdatenabgleich nach § 52 Absatz 1 Satz 1 SGB II"}
+  - {kennung: "GRA", bezeichnung: "Fachliche Rückmeldungen der KK an die BA"}
+  - {kennung: "GRK", bezeichnung: "Fachliche Rückmeldungen der KK an die OK"}
+  - {kennung: "HAV", bezeichnung: "Übermittlung von Vertragspartnerlisten der Hebammen/ -verbände"}
+  - {kennung: "HEB", bezeichnung: "Sicherstellungszuschlag Hebammen"}
+  - {kennung: "HEG", bezeichnung: "Lieferung von Heilmitteldaten nach § 84 SGB V"}
+  - {kennung: "HEI", bezeichnung: "Lieferung von Heilmitteldaten nach § 302 SGB V"}
+  - {kennung: "HLD", bezeichnung: "Lieferung von HIS -Daten an die ITSG"}
+  - {kennung: "HLR", bezeichnung: "Quittierung des Empfangs von HIS -Datenlieferungen"}
+  - {kennung: "HLV", bezeichnung: "Heilmittelleistungserbringerverzeichnis"}
+  - {kennung: "HMK", bezeichnung: "Übermittlung von Statistikdaten zum Hilfsmittel -Mehrkostenbericht"}
+  - {kennung: "HMP", bezeichnung: "Heilmittelpreismonitoring"}
+  - {kennung: "HSD", bezeichnung: "Verteilung der Hochschuldatei an die DAVn"}
+  - {kennung: "HZH", bezeichnung: "Hausarztzentrierte Versorgung, Hinweg"}
+  - {kennung: "HZR", bezeichnung: "Hausarztzentrierte Versorgung, Rückweg"}
+  - {kennung: "IAS", bezeichnung: "Amtliche Statistik KM1 für das InBA"}
+  - {kennung: "IAV", bezeichnung: "Institut des Bewertungsausschusses"}
+  - {kennung: "IAW", bezeichnung: "Institut des Bewertungsausschusses"}
+  - {kennung: "IGS", bezeichnung: "Institut des Bewertungsausschusses"}
+  - {kennung: "IGW", bezeichnung: "Institut des Bewertungsausschusses"}
+  - {kennung: "IK", bezeichnung: "IK-Nummern-Austausch (DGUV)"}
+  - {kennung: "IKB", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "IKV", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "IKT", bezeichnung: "Übermittlung des reduzierten IK Verzeichnisses an die Trustcenter"}
+  - {kennung: "IMG", bezeichnung: "für die Imagedaten nach § 7 der Vereinbarung nach § 300 SGB V"}
+  - {kennung: "IQM", bezeichnung: "Krankenkassen mit der ITSG"}
+  - {kennung: "ISU", bezeichnung: "Krankenkassen mit der ITSG"}
+  - {kennung: "ITB", bezeichnung: "Krankenkassen mit der ITSG"}
+  - {kennung: "JQ", bezeichnung: "Fehlende Jahresmeldungen"}
+  - {kennung: "KAV", bezeichnung: "Datenaustausch nach § 294 ff. SGB V"}
+  - {kennung: "KB", bezeichnung: "eGK-Verfahren; Kartenmanagementsystem an Bestandssystem Kasse"}
+  - {kennung: "KIB", bezeichnung: "Kassenindividueller Zusatzbeitrag an GKV -SV"}
+  - {kennung: "KE", bezeichnung: "Erstattungsforderungen der Träger der Deutschen Rentenversicherung gegenüber EU -Trägern über die DVKA"}
+  - {kennung: "KHN", bezeichnung: "Krankenhaus Arztnummern Verzeichnis"}
+  - {kennung: "KKR", bezeichnung: "Abrechnungsdaten der Klinischen Krebsregister"}
+  - {kennung: "KM", bezeichnung: "Adressänderung der Meldebehörden; DA zwischen BA und DRV"}
+  - {kennung: "KP", bezeichnung: "Programmversand oder eGK-Verfahren Kartenmanagementsystem an Bildsystem"}
+  - {kennung: "KR", bezeichnung: "Datenaustausch zwischen Krankenkassen und Rentenversicherungsträgern"}
+  - {kennung: "KRH", bezeichnung: "Datenaustausch nach § 294 ff. SGB V"}
+  - {kennung: "KRV", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "KSK", bezeichnung: "Meldungen der Künstlersozialkasse"}
+  - {kennung: "KSV", bezeichnung: "Übermittlung von Daten zum Krankenhausstandortverzeichnis"}
+  - {kennung: "KUA", bezeichnung: "Anzeige Kurzarbeitergeld"}
+  - {kennung: "KUG", bezeichnung: "Antrag Kurzarbeitergeld"}
+  - {kennung: "KUL", bezeichnung: "Abrechnungsliste Kurzarbeitergeld"}
+  - {kennung: "KV", bezeichnung: "Datenaustausch § 301 Absatz 1 SGB V oder eGK -Verfahren Kartenmanagementsystem an Versichertenstammdatendienst"}
+  - {kennung: "KVC", bezeichnung: "Übermittlung KVNR -Clearing"}
+  - {kennung: "KVK", bezeichnung: "Ersteller von Versichertenkarten"}
+  - {kennung: "KVR", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "KWR", bezeichnung: "Elektronische Meldeverfahren zwischen den Krankenkassen nach §"}
+  - {kennung: "175", bezeichnung: "Abs. 2 SGB V bei Durchführung des Krankenkassenwechsels"}
+  - {kennung: "KZV", bezeichnung: "Datenaustausch nach § 294 ff. SGB V"}
+  - {kennung: "LEB", bezeichnung: "Datenübermittlung vdek für Pflegelotsen"}
+  - {kennung: "LEO", bezeichnung: "Datenübermittlung vdek für Transparenzberichte"}
+  - {kennung: "MAA", bezeichnung: "Meldungen von Leistungsbezug nach § 173 Abs. 5 SGB III", gueltig_ab: 2026-01-01}
+  - {kennung: "MAS", bezeichnung: "Rückmeldungen von Leistungsbezug nach § 173 Abs. 5 SGB III", gueltig_ab: 2026-01-01}
+  - {kennung: "MAU", bezeichnung: "Datenaustausch mit „MD Bereich Arbeitsunfähigkeit/Krankengeld“"}
+  - {kennung: "MAV", bezeichnung: "für Übermittlung der Steuernummer"}
+  - {kennung: "MBA", bezeichnung: "Maschineller Bestandsabgleich"}
+  - {kennung: "MDK", bezeichnung: "Krankenkassen mit dem medizinischen Dienst (MD/MD Bund) – Krankenhausdaten"}
+  - {kennung: "MDH", bezeichnung: "Datenaustausch mit „MD Bereich Hilfsmittel“"}
+  - {kennung: "MDP", bezeichnung: "Krankenkassen mit dem medizinischen Dienst (MD/MD Bund) – Pflegedaten"}
+  - {kennung: "MDQ", bezeichnung: "Datenaustausch Qualitätsprüfungen"}
+  - {kennung: "MDT", bezeichnung: "Medizinischer Dienst (MD) an DatenClearingStelle – Transparenzberichte Pflege"}
+  - {kennung: "MDW", bezeichnung: "Datenaustausch GKV – MD „Weitere Begutachtungsbereiche“"}
+  - {kennung: "MDR", bezeichnung: "Datenaustausch GKV – MD „Reha“"}
+  - {kennung: "MFV", bezeichnung: "für das Meldeverfahren Familienversicherung"}
+  - {kennung: "MIA", bezeichnung: "Meldeverfahren Impfstoffe nach §130a Abs.2 SGB V"}
+  - {kennung: "MMM", bezeichnung: "Datenaustausch GKV/SPV -MD „Mitteilungsmanagement“"}
+  - {kennung: "MMR", bezeichnung: "Übermittlung von Mindestmengen nach § 136 b SGB V"}
+  - {kennung: "MOA", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "MRS", bezeichnung: "Krankenkassen über die Spitzenverbände der Krankenkassen mit dem BAS"}
+  - {kennung: "MRZ", bezeichnung: "Meldeverfahren Rabattvereinbarungen Zytostatika"}
+  - {kennung: "MVA", bezeichnung: "Meldung von Versorgungsabgaben aus Kranken- und Pflegeunterstützungsgeld, sowie für Pflegepersonen (KK → BV)"}
+  - {kennung: "MVS", bezeichnung: "Meldung von Versorgungsabgaben aus Kranken- und Pflegeunterstützungsgeld, sowie für Pflegepersonen (BV → KK)"}
+  - {kennung: "MZ1", bezeichnung: "für Übermittlung der Beiträge"}
+  - {kennung: "MZ3", bezeichnung: "Übermittlung steuerfreier Zuschüsse und Erstattungen"}
+  - {kennung: "NAE", bezeichnung: "Nationale Datenübermittlung Nationale Anbindung EESSI"}
+  - {kennung: "PDK", bezeichnung: "Prüfdienste Kranken- und Pflegeversicherung"}
+  - {kennung: "PE", bezeichnung: "Betriebsprüfungsdaten"}
+  - {kennung: "PF", bezeichnung: "Betriebsprüfungsdaten (PDF -Dokumente)"}
+  - {kennung: "PFL", bezeichnung: "Datenaustausch nach § 105 SGB XI"}
+  - {kennung: "PFU", bezeichnung: "Elektronischer Urbeleg nach § 105 Abs. 2 SGB XI"}
+  - {kennung: "PH", bezeichnung: "Meldungen maschineller Prüfhilfen zwischen GKV und DRV oder zwischen BA und DRV"}
+  - {kennung: "PHI", bezeichnung: "für Meldungen maschineller Prüfhilfen"}
+  - {kennung: "PK", bezeichnung: "eGK-Verfahren; Bildsystem an Kartenmanagementsystem"}
+  - {kennung: "PPP", bezeichnung: "Personalausstattung Psychiatrie und Psychosomatik -Richtlinie des G-BA nach § 136a Absatz 2 Satz 1 SGB V"}
+  - {kennung: "PQD", bezeichnung: "Präqualifizierungsdaten nach § 126 Abs. 1a SGB V für Hilfsmittel"}
+  - {kennung: "PQV", bezeichnung: "Präqualifizierungsverzeichnis"}
+  - {kennung: "PRE", bezeichnung: "Betriebsprüfungen nach § 28p Abs. 1 SGB IV"}
+  - {kennung: "PRF", bezeichnung: "Betriebsprüfungen nach § 28p Abs. 1 SGB IV"}
+  - {kennung: "PRP", bezeichnung: "Krankenkassen mit dem medizinischen Dienst (MD/MD Bund)"}
+  - {kennung: "PRV", bezeichnung: "Übermittlung Krankenhausstatistik"}
+  - {kennung: "PRR", bezeichnung: "Übermittlung Krankenhausstatistik (Rückweg)"}
+  - {kennung: "PVS", bezeichnung: "Übermittlung von Statistikdaten der Pflegekassen an den GKV -Spitzenverband"}
+  - {kennung: "QPR", bezeichnung: "Prüfberichte und Anlagen aus Prüfungen ambulanter (und später stationärer) Pflegeeinrichtungen"}
+  - {kennung: "QSR", bezeichnung: "Daten zum QS -Reha Verfahren"}
+  - {kennung: "QSV", bezeichnung: "Vorabberichte zum QS -Reha Verfahren"}
+  - {kennung: "RBA", bezeichnung: "Rabattvereinbarungen nach § 31(2) SGB V in Verbindung mit § 130a(8) SGB V"}
+  - {kennung: "RBH", bezeichnung: "Rabattvereinbarungen nach § 31(2) SGB V in Verbindung mit § 130a(8) SGB V"}
+  - {kennung: "RBR", bezeichnung: "Rabattvereinbarungen nach § 31(2) SGB V in Verbindung mit § 130a(8) SGB V"}
+  - {kennung: "RA", bezeichnung: "Elektronische Übermittlung von ad hoc -Prüfaufträgen durch die Einzugsstellen"}
+  - {kennung: "RE", bezeichnung: "Reha-DEÜV"}
+  - {kennung: "REH", bezeichnung: "Datenaustausch nach § 294 ff. SGB V"}
+  - {kennung: "RM", bezeichnung: "Mitteilungsverfahren im Rahmen des DTA -Reha"}
+  - {kennung: "RPA", bezeichnung: "Antworten auf Anträge gemäß § 55a Abs. 4 Satz 3 SGB XI"}
+  - {kennung: "RSR", bezeichnung: "für das RSA-Rückmeldeverfahren"}
+  - {kennung: "RSU", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "RVA", bezeichnung: "Anlassbezogene Anforderung der in der EBV definierten Werte durch den RV -Träger (rvBEA)"}
+  - {kennung: "RVN", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "RW", bezeichnung: "Mitteilungsverfahren im Rahmen des DA -Reha, SWE"}
+  - {kennung: "RZK", bezeichnung: "Rückmeldung der zuständigen Krankenkasse"}
+  - {kennung: "SAG", bezeichnung: "Fachliche Rückmeldung der Krankenkasse"}
+  - {kennung: "SDD", bezeichnung: "Lieferung der Stammdatendatei an die DSRV"}
+  - {kennung: "SH", bezeichnung: "Sozialhilfedatenabgleich § 118 Absatz 1 Satz 1 Nummer 1 SGB XII"}
+  - {kennung: "SHT", bezeichnung: "Übermittlung der Daten nach §264 Abs. 1 und 2 SGB V"}
+  - {kennung: "SL", bezeichnung: "Datenaustausch der Reha -Kliniken mit den Krankenkassen (§ 302)"}
+  - {kennung: "SMK", bezeichnung: "Meldungen der Krankenkassen an die Hochschulen"}
+  - {kennung: "SMV", bezeichnung: "Meldungen der Hochschulen an die Krankenkassen"}
+  - {kennung: "SO", bezeichnung: "Sondersetzung, DA zwischen DRV und BA"}
+  - {kennung: "SOL", bezeichnung: "Datenaustausch nach § 294 ff. SGB V"}
+  - {kennung: "SQS", bezeichnung: "Sozialdaten der Krankenkassen für die Qualitätssicherung"}
+  - {kennung: "SVA", bezeichnung: "AG-Anträge nach 106c SGB IV inkl. Quittierungen und Fehler"}
+  - {kennung: "SVI", bezeichnung: "Krankenkassen mit der Sammel- und Verteilstelle Institutionskennzeichen (SVI)"}
+  - {kennung: "SVS", bezeichnung: "Ablehnung oder Bewilligung auf Anträge nach 106c SGB IV"}
+  - {kennung: "SY", bezeichnung: "Statistikdaten 1 Mal jährlich"}
+  - {kennung: "TBN", bezeichnung: "Für die Verteilung der Testbetriebsnummern -Datei"}
+  - {kennung: "TES", bezeichnung: "Spitzenverbände der Kassen mit Deutschen Verbindungsstelle Krankenversicherung -Ausland"}
+  - {kennung: "TM", bezeichnung: "Monatsabrechnungen Testdaten zwischen GKV und DRV oder zwischen DRV und BA S"}
+  - {kennung: "TR", bezeichnung: "Test"}
+  - {kennung: "TVB", bezeichnung: "Datenaustausch zum Teilhabeverfahrensbericht nach § 41 Abs. 1 SGB IX"}
+  - {kennung: "U1", bezeichnung: "Anforderungssätze / Leistungssätze ALGI"}
+  - {kennung: "U3", bezeichnung: "Versicherungsfreiheitssätze ALGI"}
+  - {kennung: "U5", bezeichnung: "Übergangsgeld"}
+  - {kennung: "UD", bezeichnung: "Zentrales Mitgliedsnummernverzeichnis (DGUV)"}
+  - {kennung: "UKR", bezeichnung: "Rückmeldemeldeverfahren der Urlaubs- und Lohnausgleichskasse der Bauwirtschaft"}
+  - {kennung: "UKV", bezeichnung: "Meldeverfahren der Urlaubs- und Lohnausgleichskasse der Bauwirtschaft"}
+  - {kennung: "UV", bezeichnung: "Lohnnachweisdaten"}
+  - {kennung: "UVG", bezeichnung: "Übermittlung des Gefahrtarifstellenverzeichnisses der Unfallversicherungsträger"}
+  - {kennung: "UVK", bezeichnung: "Verfahrenskennzeichen für die Datenlieferung entsprechend technischer Spezifikation"}
+  - {kennung: "UVL", bezeichnung: "für den elektronischen Lohnnachweis UV"}
+  - {kennung: "UVM", bezeichnung: "Übermittlung des Mitgliedsverzeichnisses der Unfallversicherungsträger"}
+  - {kennung: "UVS", bezeichnung: "für die Stammdaten -Abfrage UV"}
+  - {kennung: "UVT", bezeichnung: "Übermittlung der IK -Unfallversicherungsträger (UVT)"}
+  - {kennung: "UVU", bezeichnung: "Stammdatenübermittlung der UV an AG"}
+  - {kennung: "VA", bezeichnung: "Datensätze von Verleihbetrieben nach dem Arbeitnehmerüberlassungsgesetz"}
+  - {kennung: "VB", bezeichnung: "eGK-Verfahren; Versichertenstammdatendienst an Bestandssystem Kasse"}
+  - {kennung: "VBK", bezeichnung: "Entgeltersatzleistungen zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "VK", bezeichnung: "eGK-Verfahren; Versichertenstammdatendienst an Kartenmanagementsystem"}
+  - {kennung: "VKP", bezeichnung: "Verfahrenskennzeichen für die Verteilung von Kernprüfprogrammen"}
+  - {kennung: "VM", bezeichnung: "Datenübermittlung zwischen Reha -Kliniken und Krankenkassen, Mitteilungsverfahren"}
+  - {kennung: "VR", bezeichnung: "Datenübermittlung von Reha -Kliniken der RV an Krankenkassen"}
+  - {kennung: "VSA", bezeichnung: "Rückmeldungen Versicherungsnummern"}
+  - {kennung: "VW", bezeichnung: "Datenübermittlung von Reha -Kliniken an Krankenkassen, SWE"}
+  - {kennung: "VZX", bezeichnung: "Verteilung der Zahlstellendatei über die DAW des GKV -Spitzenverbandes an die DAVn im Format XML"}
+  - {kennung: "WAN", bezeichnung: "Weiterleitung der Anforderung einer elektronischen Arbeitsunfähigkeitsbescheinigung des Arbeitgebers nach § 109 SGB IV"}
+  - {kennung: "WAU", bezeichnung: "Weiterleitung der elektronischen Arbeitsunfähigkeitsbescheinigung nach § 304 Abs. 2 SGB V"}
+  - {kennung: "WPR", bezeichnung: "Datenaustausch zur Wirtschaftlichkeitsprüfung nach §106 ff SGB V in Verbindung mit §§269, 297 und 298 SGB V"}
+  - {kennung: "ZAA", bezeichnung: "Beantragung einer Zahlstellen- oder Absendernummer"}
+  - {kennung: "ZAS", bezeichnung: "Rückmeldung bei Beantragung einer Zahlstellen- oder Absendernummer"}
+  - {kennung: "ZAK", bezeichnung: "Krankenkasse mit Zahlstelle"}
+  - {kennung: "ZAV", bezeichnung: "Zahlstelle mit Krankenkasse"}
+  - {kennung: "ZLD", bezeichnung: "zwischen den Krankenkassen / Weiterleitungsstellen"}
+  - {kennung: "ZPP", bezeichnung: "Datenaustausch zwischen der Zentralen Prüfstelle für Prävention und den Krankenkassen"}

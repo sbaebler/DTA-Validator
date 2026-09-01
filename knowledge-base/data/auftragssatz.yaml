@@ -1,0 +1,639 @@
+# Feldkatalog des Auftragssatzes (Auftragsdatei)
+#
+# Quelle: Anlage 2 zu den Gemeinsamen Grundsaetzen Technik nach § 95 SGB IV,
+#         "Auftragsdatei (Auftragssatz)", Auftragssatz-Version 1.0,
+#         gueltig ab 01.01.2025, Stand 10.10.2024, 15 Seiten.
+#         https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/
+#         technische_spezifikationen/Anlage_2_-_Auftragsdatei.pdf
+#
+# Primaerdokument ausgewertet am 2026-09-01. Alle Feldeintraege: vertrauen = belegt.
+#
+# Der Auftragssatz ist logisch in vier Objekte gegliedert, physisch aber EIN
+# zusammenhaengender Satz fester Laenge. Alle Objekte muessen vorhanden sein.
+
+schema_version: 1
+stand: 2026-09-01
+
+quelle:
+  dokument: Anlage 2 GGT - Auftragsdatei (Auftragssatz)
+  auftragssatz_version: "1.0"
+  feld_version_wert: "01"          # Inhalt des Feldes VERSION
+  gueltig_ab: 2025-01-01
+  dokumentstand: 2024-10-10
+  seiten: 15
+  url: https://www.gkv-datenaustausch.de/media/dokumente/standards_und_normen/technische_spezifikationen/Anlage_2_-_Auftragsdatei.pdf
+  vertrauen: belegt
+
+format:
+  art: festsatz
+  satzlaenge_bytes: 348           # Konstante in LAENGE_AUFTRAG bei VERSION = '01'
+  zeichensatz: ISO 8859-1
+  zeichensatz_kennung: I1
+  zeilenumbruch: nein
+  trennzeichen: keine
+
+# Legende der Spalten des Feldkatalogs
+legende:
+  nutzungstyp:
+    R: Routing-Informationen
+    L: Logging- und Statusinformationen
+    K: Information fuer das KKS-Verfahren
+    D: Datentraegerspezifische Informationen
+    I: Interne Nutzung
+    A: Allgemeine Informationen
+    S: Informationen zur Verschluesselung
+  feldtyp:
+    N: {inhalt: "Ziffern 0-9 (HEX 30-39)", ausrichtung: rechtsbuendig, fuellzeichen: "0"}
+    A: {inhalt: "Buchstaben A-Z (HEX 41-5A)", ausrichtung: linksbuendig, fuellzeichen: " "}
+    AN: {inhalt: "Zeichenvorrat I1 nach ISO 8859-1", ausrichtung: linksbuendig, fuellzeichen: " "}
+  feldart:
+    M: Muss versorgt werden
+    m: bedingtes Mussfeld - Feldinhalte werden fachbezogen geprueft
+    K: >-
+      Kann versorgt werden, muss aber in jedem Fall mit dem Default-Wert des Feldtyps
+      belegt werden (N mit '0', A/AN mit Leerzeichen)
+
+# ---------------------------------------------------------------------------
+# Teil 1: Allgemeine Beschreibung der Krankenkassen-Kommunikation (Stellen 1-210)
+# ---------------------------------------------------------------------------
+felder:
+
+  - name: IDENTIFIKATOR
+    teil: 1
+    von: 1
+    bis: 6
+    laenge: 6
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    konstante: "500000"
+    beschreibung: Identifikator des Objektes "Krankenkassen-Kommunikation"
+
+  - name: VERSION
+    teil: 1
+    von: 7
+    bis: 8
+    laenge: 2
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    werte:
+      "01": erste Version des Verfahrens
+    beschreibung: >-
+      Version der Auftragssatzstruktur. Aendert sich, wenn Felder hinzugefuegt,
+      geloescht oder geaendert werden.
+
+  - name: LAENGE_AUFTRAG
+    teil: 1
+    von: 9
+    bis: 16
+    laenge: 8
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    konstante: "00000348"
+    konstante_bedingung: VERSION = '01'
+    beschreibung: Laenge der Auftragsdatei in Bytes
+
+  - name: SEQUENZ_NR
+    teil: 1
+    von: 17
+    bis: 19
+    laenge: 3
+    nutzungstyp: A
+    feldtyp: N
+    feldart: m
+    werte:
+      "000": Nachricht ist nicht segmentiert
+      "001-098": Teil 1 bis Teil 98 der Nachricht
+      "9xx": "Letzter Teil der Nachricht; xx = Nummer des letzten Teils"
+    beschreibung: >-
+      Laufende Nummer bei einer Teillieferung. Segmentierung darf nur nach bilateraler
+      Abstimmung genutzt werden.
+
+  - name: VERFAHREN_KENNUNG
+    teil: 1
+    von: 20
+    bis: 24
+    laenge: 5
+    nutzungstyp: R
+    feldtyp: AN
+    feldart: M
+    werteliste: verfahrenskennungen.yaml
+    beschreibung: >-
+      Dateityp. Werteliste in Anlage 4 GGT; unterliegt staendigen aufwaertskompatiblen
+      Aenderungen.
+
+  - name: TRANSFER_NUMMER
+    teil: 1
+    von: 25
+    bis: 27
+    laenge: 3
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    beschreibung: >-
+      Laufende Transfernummer zwischen zwei direkt verbundenen Kommunikationspartnern
+      gemaess KKS-Verfahren. Im KKS-Verfahren wird der Transferdateiname aus
+      VERFAHREN_KENNUNG und TRANSFER_NUMMER gebildet. Wird unabhaengig von
+      VERFAHREN_KENNUNG festgelegt, hat keinen Bezug zur lfd. Nr. des Vorlaufsatzes und
+      wird ab '999' wieder auf '0' gesetzt. Bei fehlerhafter Uebertragung bleibt sie
+      erhalten und wird bei der Wiederholung wiederverwendet.
+    folgerung: >-
+      Weil dieselbe Transfernummer wiederkehren kann, muss das empfangende System das
+      Dateipaar unmittelbar nach Empfang unter einem neuen systemeindeutigen Dateinamen
+      ablegen, damit keine Dateien ueberschrieben werden.
+
+  - name: VERFAHREN_KENNUNG_SPEZIFIKATION
+    teil: 1
+    von: 28
+    bis: 32
+    laenge: 5
+    nutzungstyp: R
+    feldtyp: AN
+    feldart: m
+    beschreibung: >-
+      Weitere Spezifikation des Verfahrens innerhalb des in VERFAHREN_KENNUNG
+      festgelegten Verfahrens. Werte je Verfahren, s. Anlage 4 GGT Kapitel 2.
+
+  - name: ABSENDER_EIGNER
+    teil: 1
+    von: 33
+    bis: 47
+    laenge: 15
+    nutzungstyp: R
+    feldtyp: AN
+    feldart: M
+    beschreibung: >-
+      Absendender Eigner der Nutzdaten. Der Eigner ist fuer die Korrektheit der Daten
+      verantwortlich und nimmt mit seinem Zertifikat Verschluesselung und Signierung vor.
+      Tauschen Leistungserbringer ueber Rechenzentren Daten aus, ist das Rechenzentrum
+      der Eigner.
+    identifikationstypen:
+      - {typ: IK, stellen: 9}
+      - {typ: Absendernummer (Betriebsnummer oder gesonderte Absendernummer), stellen: 8}
+      - {typ: KV-Identifikation, stellen: 4}
+      - {typ: KZV-Nummer, stellen: 5}
+
+  - name: ABSENDER_PHYSIKALISCH
+    teil: 1
+    von: 48
+    bis: 62
+    laenge: 15
+    nutzungstyp: R
+    feldtyp: AN
+    feldart: M
+    beschreibung: >-
+      Tatsaechlicher physikalischer Absender der Nutzdaten, Identifikation desselben Typs
+      wie ABSENDER_EIGNER. Hier steht ggf. auch eine Datenuebermittlungsstelle.
+
+  - name: EMPFAENGER_NUTZER
+    teil: 1
+    von: 63
+    bis: 77
+    laenge: 15
+    nutzungstyp: R
+    feldtyp: AN
+    feldart: M
+    beschreibung: >-
+      Empfaenger, der die Daten nutzen soll. Besitzt den Schluessel zum Entschluesseln und
+      nimmt die Weiterverarbeitung vor. Im Datenaustausch mit Leistungserbringern ist hier
+      die Datenannahmestelle mit Entschluesselungsbefugnis gemaess Kostentraegerdatei
+      einzutragen.
+
+  - name: EMPFAENGER_PHYSIKALISCH
+    teil: 1
+    von: 78
+    bis: 92
+    laenge: 15
+    nutzungstyp: R
+    feldtyp: AN
+    feldart: M
+    beschreibung: >-
+      Empfaenger, der die Daten physikalisch empfangen soll (naechster Empfaenger).
+      Hier steht ggf. auch eine Datenuebermittlungsstelle.
+
+  - name: FEHLER_NUMMER
+    teil: 1
+    von: 93
+    bis: 98
+    laenge: 6
+    nutzungstyp: R
+    feldtyp: N
+    feldart: M
+    werte: {"000000": kein Fehler}
+    beschreibung: Fehler-Nr. laut Fehlerkatalog bei Ruecksendungen von Dateien
+
+  - name: FEHLER_MASSNAHME
+    teil: 1
+    von: 99
+    bis: 104
+    laenge: 6
+    nutzungstyp: R
+    feldtyp: N
+    feldart: M
+    werte: {"000000": keine Massnahme erforderlich}
+    beschreibung: Durchzufuehrende Massnahme laut Fehlerkatalog
+
+  - name: DATEINAME
+    teil: 1
+    von: 105
+    bis: 115
+    laenge: 11
+    nutzungstyp: A
+    feldtyp: AN
+    feldart: M
+    beschreibung: >-
+      Der vom Anwendungssystem vergebene (logische) Dateiname, s. Kapitel 3.1 der
+      Anlage 2 GGT. Muss nicht identisch mit dem Transferdateinamen sein.
+    hinweis_sektor: >-
+      Im Datenaustausch nach § 294 ff. SGB V sind die Dateinamen in den technischen
+      Anlagen zu den vertraglichen Regelungen festgelegt. Fuer § 105 SGB XI: Anhang 3
+      zur Technischen Anlage 1, Abschnitt 2.2.1.
+
+  - name: DATUM_ERSTELLUNG
+    teil: 1
+    von: 116
+    bis: 129
+    laenge: 14
+    nutzungstyp: L
+    feldtyp: N
+    feldart: M
+    format: JHJJMMTThhmmss
+    beschreibung: >-
+      Erstellungsdatum der Datei aus der Anwendung. Aus ABSENDER_EIGNER,
+      VERFAHREN_KENNUNG und DATUM_ERSTELLUNG kann ein eindeutiger Sendungsidentifikator
+      gebildet werden; der Absender-Eigner muss sicherstellen, dass zwei unterschiedliche
+      Sendungen nicht denselben Identifikator tragen.
+
+  - name: DATUM_UEBERTRAGUNG_GESENDET
+    teil: 1
+    von: 130
+    bis: 143
+    laenge: 14
+    nutzungstyp: L
+    feldtyp: N
+    feldart: m
+    format: JHJJMMTThhmmss
+    beschreibung: Start der Uebermittlung der Datei, wird vom Absender ausgefuellt
+
+  - name: DATUM_UEBERTRAGUNG_EMPFANGEN_START
+    teil: 1
+    von: 144
+    bis: 157
+    laenge: 14
+    nutzungstyp: L
+    feldtyp: N
+    feldart: K
+    format: JHJJMMTThhmmss
+    beschreibung: >-
+      Start des Empfangs. Wird nur vom ersten Empfaenger ausgefuellt, der vertraglich die
+      annehmende Stelle ist und dessen Annahmezeit vertragliche Auswirkungen hat. Vom
+      ersten Absender mit numerischen Nullen zu fuellen.
+
+  - name: DATUM_UEBERTRAGUNG_EMPFANGEN_ENDE
+    teil: 1
+    von: 158
+    bis: 171
+    laenge: 14
+    nutzungstyp: L
+    feldtyp: N
+    feldart: K
+    format: JHJJMMTThhmmss
+    beschreibung: Ende der Empfangsuebertragung, wird vom Empfaenger ausgefuellt
+
+  - name: DATEIVERSION
+    teil: 1
+    von: 172
+    bis: 177
+    laenge: 6
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    konstante: "000000"
+    beschreibung: Versionsnummer der Datei - wird derzeit in keinem Verfahren benutzt
+
+  - name: KORREKTUR
+    teil: 1
+    von: 178
+    bis: 178
+    laenge: 1
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    konstante: "0"
+    beschreibung: Wird derzeit in keinem Verfahren benutzt
+
+  - name: DATEIGROESSE_NUTZDATEN
+    teil: 1
+    von: 179
+    bis: 190
+    laenge: 12
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    beschreibung: Dateigroesse der Nutzdatendatei in Bytes, unverschluesselt und unkomprimiert
+
+  - name: DATEIGROESSE_UEBERTRAGUNG
+    teil: 1
+    von: 191
+    bis: 202
+    laenge: 12
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    beschreibung: >-
+      Dateigroesse der uebertragenen Nutzdatendatei in Bytes, also nach eventueller
+      Verschluesselung, Unterschrift und Komprimierung
+
+  - name: ZEICHENSATZ
+    teil: 1
+    von: 203
+    bis: 204
+    laenge: 2
+    nutzungstyp: A
+    feldtyp: AN
+    feldart: M
+    werte:
+      I1: "ISO/IEC 8859-1:1998(E) bzw. DIN 66303:2000-06 (identisch)"
+      I5: ISO 8859-15
+      I7: "ISO 7-Bit, Code gemaess DIN 66003 DRV (Deutsche Referenzversion)"
+      I8: "DIN 66303 in der Fassung von 1986-11 (DRV8)"
+      EB: "EBCDIC - im Datenaustausch mit Leistungserbringern nach § 294 ff. SGB V NICHT zulaessig"
+      P8: "IBM-Codepage 850 - nur nach bilateraler Vereinbarung"
+      U8: "UTF-8 - Verwendung wird explizit im Fachverfahren festgelegt"
+      BI: Binaer
+    beschreibung: Zeichensatz der Nutzdatendatei
+
+  - name: KOMPRIMIERUNG
+    teil: 1
+    von: 205
+    bis: 206
+    laenge: 2
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    werte:
+      "00": keine
+      "01": keine Belegung
+      "02": gzip
+      "03": "ZIP (komprimierte Einzeldatei)"
+      "04": keine Belegung
+      "05": keine Belegung
+      "06": keine Belegung
+      "07": bzip2
+      "13": "ZIP ((komprimiertes) Archiv mit mehreren Dateien ohne Verzeichnisstruktur)"
+      "23": "ZIP (Archiv mit Verzeichnisstruktur - ausschliesslich fuer das Verfahren CDS)"
+    beschreibung: >-
+      Das Komprimierungsverfahren ist immer bilateral zwischen Absender und Empfaenger
+      abzustimmen. Die GKV nutzt als bevorzugtes Produkt gzip.
+
+  - name: VERSCHLUESSELUNGSART
+    teil: 1
+    von: 207
+    bis: 208
+    laenge: 2
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    werte:
+      "00": keine
+      "03": PKCS#7-Format
+    beschreibung: Nur in Kombination mit ELEKTRONISCHE_UNTERSCHRIFT zu belegen
+
+  - name: ELEKTRONISCHE_UNTERSCHRIFT
+    teil: 1
+    von: 209
+    bis: 210
+    laenge: 2
+    nutzungstyp: A
+    feldtyp: N
+    feldart: M
+    werte:
+      "00": keine
+      "03": PKCS#7-Format
+    beschreibung: Nur in Kombination mit VERSCHLUESSELUNGSART zu belegen
+
+  # -------------------------------------------------------------------------
+  # Teil 2: Spezifische Information zur Bandverarbeitung (Stellen 211-226)
+  # Bei Bandverarbeitung sind alle drei Felder auszufuellen.
+  # -------------------------------------------------------------------------
+  - name: SATZFORMAT
+    teil: 2
+    von: 211
+    bis: 213
+    laenge: 3
+    nutzungstyp: D
+    feldtyp: A
+    feldart: m
+    werte:
+      F: FIX
+      V: Variabel
+      U: Undefiniert
+      FB: FIX_geblockt
+      FBA: FIX_geblockt
+      VB: Variabel geblockt
+    bei_dfue: "'   ' (drei Leerzeichen)"
+    beschreibung: Satzformat der Datei auf dem Datentraeger
+
+  - name: SATZLAENGE
+    teil: 2
+    von: 214
+    bis: 218
+    laenge: 5
+    nutzungstyp: D
+    feldtyp: N
+    feldart: m
+    bei_dfue: "00000"
+    beschreibung: Satzlaenge bei fixem Satzformat
+
+  - name: BLOCKLAENGE
+    teil: 2
+    von: 219
+    bis: 226
+    laenge: 8
+    nutzungstyp: D
+    feldtyp: N
+    feldart: m
+    bei_dfue: "00000000"
+    beschreibung: Blocklaenge in Bytes, sofern geblockt
+
+  # -------------------------------------------------------------------------
+  # Teil 3: Spezifische Informationen fuer das KKS-Verfahren (Stellen 227-274)
+  # Diese Felder muessen vom Absender nicht ausgefuellt werden.
+  # -------------------------------------------------------------------------
+  - name: STATUS
+    teil: 3
+    von: 227
+    bis: 227
+    laenge: 1
+    nutzungstyp: K
+    feldtyp: AN
+    feldart: m
+    werte:
+      " ": Anlieferung durch das Abrechnungssystem
+      "0": Einstellung in Ordnung
+      "1": Aendern
+      "2": Suspendieren
+      "3": Loeschen
+      "4": Uebertragen
+      "5": Transferphase
+      "6": Keine Verbindung
+      "7": Fehlerhafter Transfer
+      "8": Statusabfrage
+    beschreibung: Verarbeitungskennzeichnung (Anwendung, FTAM)
+
+  - name: WIEDERHOLUNG
+    teil: 3
+    von: 228
+    bis: 229
+    laenge: 2
+    nutzungstyp: K
+    feldtyp: N
+    feldart: m
+    beschreibung: >-
+      Maximale Anzahl der Uebertragungswiederholungen bei fehlerhaften Uebertragungen.
+      Bei Ueberschreitung oder nicht behebbarem Fehler wird der Auftrag als nicht
+      durchfuehrbar mit einem Diagnosecode gekennzeichnet.
+
+  - name: UEBERTRAGUNGSWEG
+    teil: 3
+    von: 230
+    bis: 230
+    laenge: 1
+    nutzungstyp: K
+    feldtyp: N
+    feldart: m
+    werte:
+      "1": X.25
+      "2": ISDN
+      "3": "ISDN, bei Uebertragungsproblemen erneuter Versuch ueber X.25"
+      "4": "X.25, bei Uebertragungsproblemen erneuter Versuch ueber ISDN"
+      "5": anderer Weg
+
+  - name: VERZOEGERTER_VERSAND
+    teil: 3
+    von: 231
+    bis: 240
+    laenge: 10
+    nutzungstyp: K
+    feldtyp: N
+    feldart: m
+    format: JJMMTTSSmm
+    beschreibung: >-
+      Zeitpunkt, zu dem der Auftrag ausgefuehrt werden soll. Nicht gefuellt oder bereits
+      ueberschritten: Ausfuehrung zum naechstmoeglichen Zeitpunkt.
+
+  - name: INFO_UND_FEHLERFELDER
+    teil: 3
+    von: 241
+    bis: 246
+    laenge: 6
+    nutzungstyp: K
+    feldtyp: N
+    feldart: m
+    werte: {"000000": Auftrag erfolgreich ausgefuehrt}
+    beschreibung: Fehlernummer aus FTAM
+
+  - name: VARIABLES_INFO_FELD
+    teil: 3
+    von: 247
+    bis: 274
+    laenge: 28
+    nutzungstyp: K
+    feldtyp: AN
+    feldart: m
+    beschreibung: >-
+      Klartextfehlermeldung; bei erfolgreich ausgefuehrten Auftraegen leer. Im Verfahren
+      "PF" traegt die DRV hier auf dem Weg DRV -> GKV die Identifikationsnummer ein. Der
+      GKV-Kommunikationsserver setzt auf dem Weg GKV-KomServer -> DAV die 23-stellige
+      Tracking-ID ein.
+
+  # -------------------------------------------------------------------------
+  # Teil 4: Spezifische Information zur Verarbeitung innerhalb eines RZ
+  # (Stellen 275-348)
+  # -------------------------------------------------------------------------
+  - name: E-MAIL-ADRESSE_ABSENDER
+    teil: 4
+    von: 275
+    bis: 318
+    laenge: 44
+    nutzungstyp: I
+    feldtyp: AN
+    feldart: m
+    beschreibung: >-
+      Optionale E-Mail-Adresse des Absenders. Die Adresse wurde analog zum DSKO der DEUEV
+      auf 70 Zeichen erweitert: Das Feld beginnt weiterhin bei Stelle 275 und darf bei
+      Bedarf bis Stelle 344 in das Feld DATEI_BEZEICHNUNG hineinreichen.
+    alternative_nutzung: >-
+      Interne Kommunikation zwischen Organisationen der Krankenkassen; nutzbar als
+      DATEINAME_PHYSIKALISCH.
+
+  - name: DATEI_BEZEICHNUNG
+    teil: 4
+    von: 319
+    bis: 348
+    laenge: 30
+    nutzungstyp: I
+    feldtyp: AN
+    feldart: m
+    beschreibung: >-
+      Variabler Bereich fuer Zusatzinformationen zur Datei. Die Anzahl der Gesamtpakete
+      wird 2-stellig rechtsbuendig in den Stellen 347-348 gespeichert.
+    hinweis_sektor: >-
+      Fuer § 105 SGB XI belegt Anhang 1 der Technischen Anlage 1 die Stellen 319-320 mit
+      der Art der abgegebenen Leistung (Schluessel 2.4 der Technischen Anlage 3).
+
+# ---------------------------------------------------------------------------
+# Zulaessige Kombinationen VERSCHLUESSELUNGSART + ELEKTRONISCHE_UNTERSCHRIFT
+# Alle anderen Kombinationen sind unzulaessig.
+# ---------------------------------------------------------------------------
+kombinationen_krypto:
+  - {verschluesselungsart: "00", elektronische_unterschrift: "00", zulaessig: true,
+     bedeutung: keine Verschluesselung und keine elektronische Unterschrift}
+  - {verschluesselungsart: "03", elektronische_unterschrift: "03", zulaessig: true,
+     bedeutung: elektronische Unterschrift und Verschluesselung gemaess PKCS#7}
+  - {verschluesselungsart: "00", elektronische_unterschrift: "03", zulaessig: false}
+  - {verschluesselungsart: "03", elektronische_unterschrift: "00", zulaessig: false}
+
+# ---------------------------------------------------------------------------
+# Dateinamen (Kapitel 3.1 der Anlage 2 GGT)
+# ---------------------------------------------------------------------------
+dateinamen:
+  arbeitgeberverfahren:
+    aufbau: VERFAHREN_KENNUNG + 6-stellige lfd. Dateinummer aus dem Vorlaufsatz der Nutzdatendatei
+    gilt_auch_fuer: Verfahren der DRV
+  sgbv-294ff:
+    regelung: >-
+      In den technischen Anlagen zu den vertraglichen Regelungen nach § 294 ff. SGB V
+      festgelegt - nicht in Anlage 2 GGT.
+  amtliche_statistiken:
+    format: kkknnMMJHJJ
+    kassenart_kkk: [OKK, BKK, IKK, EAN, EAR, LAK, LBG, LKK, SEE, BKN, GKV]
+    satzart_nn:
+      KM1: "01"
+      KM6: "06"
+      KG1: "11"
+      KG2: "12"
+      KG3: "13"
+      KG4: "14"
+      KV451: "15"
+      KV452: "16"
+      KG8: "18"
+      KG5: "19"
+      KJ1: "21"
+      KJ2: "22"
+      KJA1: "23"
+      KJA2: "24"
+      SGB1K: "31"
+      PG1: "61"
+      PG2: "62"
+      PG4: "64"
+      PV45: "65"
+      PJ1: "66"
+      PG5: "69"
+      SGB1P: "81"
+    monat_MM: Monat, bei Jahresstatistiken "00"
+    jahr_JHJJ: vierstelliges Jahr
+  bemerkung: >-
+    Der Eintrag im Feld DATEINAME muss nicht identisch mit dem Transferdateinamen sein.
