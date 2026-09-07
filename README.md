@@ -50,6 +50,11 @@ Parser- und Regelentwicklung.
 |---|---|---|
 | [Pflege](beispiele/pflege-105-sgbxi/) | § 105 SGB XI (PLGA/PLAA) | Monatsabrechnung eines ambulanten Pflegedienstes, 2 Abrechnungsfälle, mit Urbelegen |
 
+Zum Pflegebeispiel gehört zusätzlich eine
+[Erfassungsanleitung](beispiele/pflege-105-sgbxi/erfassung-anleitung.md): wie aus den
+beiliegenden Urbelegen in einer Eingabemaske genau dieses Dateipärchen entsteht — und
+welche Felder dabei nie getippt werden dürfen.
+
 Alle Stammdaten sind erfunden. Struktur und Feldbelegung des Pflegebeispiels sind gegen
 die Primärdokumente gebaut (TA 1 6.4.0, TA 3 6.4.0, Anlage 2 und Anlage 4 GGT); Preise,
 Leistungskomplexnummern und Beteiligte sind synthetisch. Als Vorlage für die Erzeugung

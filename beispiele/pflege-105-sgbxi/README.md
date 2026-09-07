@@ -127,6 +127,7 @@ Vergütungsart: `01` → 2.7.1 (Leistungskomplexe, 3 Stellen), `06` → 2.7.5
 | [`urbeleg-leistungsnachweis.pdf`](urbeleg-leistungsnachweis.pdf) | dasselbe als PDF, A4 quer | 2 Seiten |
 | [`urbeleg-begleitzettel.pdf`](urbeleg-begleitzettel.pdf) | dasselbe als PDF, A4 hoch | 1 Seite |
 | [`beispiel-metadaten.yaml`](beispiel-metadaten.yaml) | Erwartungswerte für Tests | — |
+| [`erfassung-anleitung.md`](erfassung-anleitung.md) | Anleitung: aus den Urbelegen in einer Eingabemaske zum Dateipärchen | — |
 
 ### Zwei Dateinamen, zwei Systematiken
 
@@ -431,6 +432,13 @@ chromium --headless --no-pdf-header-footer \
 Maßgeblich ist die HTML-Datei; ändert sie sich, ist das PDF neu zu erzeugen. Die
 Seitengröße kommt aus dem `@page`-Block (`A4 landscape` für den Leistungsnachweis,
 `A4 portrait` für den Begleitzettel).
+
+### 6.4 Vom Beleg zur Datei
+
+Wie aus diesen beiden Urbelegen das Dateipärchen entsteht — Maskenschnitt, Feldherkunft,
+Prüfzeitpunkte und ein Durchlauf in vierzehn Schritten — steht in
+[`erfassung-anleitung.md`](erfassung-anleitung.md). Kernpunkt: Der Leistungsnachweis ist
+die **Eingabe**, der Begleitzettel die **Ausgabe** — er wird gedruckt, nicht erfasst.
 
 ## 7. Was dieses Beispiel prüfbar macht
 

@@ -51,10 +51,17 @@ entwickeln, auch wenn die Feldsemantik noch geraten ist.
 | `urbeleg-begleitzettel.html` | Deckblatt der Papiersendung an die Belegannahmestelle |
 | `urbeleg-*.pdf` | dieselben Belege als PDF, aus dem HTML gedruckt |
 | `beispiel-metadaten.yaml` | Erwartungswerte maschinenlesbar: Beteiligte, Summen, Zähler, erfüllte Regel-IDs |
+| `erfassung-anleitung.md` | optional: wie aus den Urbelegen in einer Eingabemaske das Dateipärchen entsteht |
 
 `beispiel-metadaten.yaml` folgt den Feldkonventionen aus
 [`knowledge-base/data/README.md`](../knowledge-base/data/README.md) — insbesondere
 `vertrauen: belegt | sekundaer | offen`.
+
+Nur das Pflegebeispiel trägt bisher eine Erfassungsanleitung:
+[`pflege-105-sgbxi/erfassung-anleitung.md`](pflege-105-sgbxi/erfassung-anleitung.md)
+beschreibt den Weg vom unterschriebenen Leistungsnachweis über eine Eingabemaske zum
+Dateipärchen — Maskenschnitt, Feldherkunft, Prüfzeitpunkte. Der Maskenschnitt selbst ist
+erfunden; kein ausgewertetes Primärdokument schreibt eine Oberfläche vor.
 
 ## Was noch fehlt
 
