@@ -7,6 +7,10 @@ gelten soll; hier liegt, *woran* man es ausprobieren kann.
 | Beispiel | Verfahren | Inhalt | Belastbarkeit |
 |---|---|---|---|
 | [`pflege-105-sgbxi/`](pflege-105-sgbxi/) | § 105 SGB XI (PLGA/PLAA) | Monatsabrechnung eines ambulanten Pflegedienstes, 2 Abrechnungsfälle, 1.671,00 EUR | ✅ **gegen die Primärdokumente gebaut** (TA 1 6.4.0, TA 3 6.4.0, Anlage 2 und 4 GGT); nur die Stammdaten sind erfunden |
+| [`pflege-105-sgbxi-negativfaelle/`](pflege-105-sgbxi-negativfaelle/) | § 105 SGB XI | 7 Dateipärchen des Positivfalls, je mit genau einem eingebauten Fehler | ✅ mechanische Einzelabweichungen vom obigen Positivfall, Diff pro Fall dokumentiert |
+| [`pflege-105-sgbxi-sammelrechnung/`](pflege-105-sgbxi-sammelrechnung/) | § 105 SGB XI, Rechnungsart 3 | Dieselbe Abrechnung über eine Abrechnungsstelle mit Inkassovollmacht, verschachtelte PLGA-Ebenen | ⚠️ Verschachtelung und Sammelrechnungs-Kennzeichen belegt; einzelne Feldzuordnungen bei Rechnungsart 3 sind offengelegte Interpretation |
+| [`pflege-105-sgbxi-kim/`](pflege-105-sgbxi-kim/) | § 105 SGB XI, TI/KIM | Dieselbe Abrechnung mit `IMG`-Segment und skizziertem KIM-Umschlag, ohne Auftragsdatei | ⚠️ EDIFACT-Teil so belastbar wie der Positivfall; der XML-Umschlag ist ausdrücklich eine unbelegte Skizze |
+| [`pflege-105-sgbxi-umlaute/`](pflege-105-sgbxi-umlaute/) | § 105 SGB XI | Dieselbe Abrechnung mit Umlauten und dem TA-1-eigenen Freigabezeichen-Beispiel („D?'Angelo") | ✅ Freigabezeichen-Fall wörtlich aus der TA 1 übernommen; Umlaut-Zulässigkeit selbst folgt nur aus der allgemeinen Zeichensatzregel |
 
 ## Grundsätze
 
@@ -54,12 +58,22 @@ entwickeln, auch wenn die Feldsemantik noch geraten ist.
 
 ## Was noch fehlt
 
-Zu jedem Positivfall gehört ein **Negativfall-Satz**: Dateien mit je genau einem
-eingebauten Fehler (falsche Prüfziffer, Zähler stimmt nicht, Summe weicht ab,
-Dateipärchen unvollständig, `UNA` vorhanden, Dezimalpunkt statt Komma, `ESK` unsortiert),
-damit sich für jede Regel nachweisen lässt, dass sie auch wirklich anschlägt. Für
-§ 105 SGB XI ist das jetzt möglich — die Fachstruktur ist nicht mehr geraten.
+Die sieben Negativfälle, die Sammelrechnung, die vollelektronische Abrechnung über
+KIM und die Umlaut-Konstellation sind jetzt vorhanden (siehe Tabelle oben) — alle
+für § 105 SGB XI, weil dort als einzigem Verfahren die Primärdokumente ausgewertet
+sind.
 
-Ebenfalls offen: eine **Sammelrechnung** (Rechnungsart `3`), die vollelektronische
-Abrechnung über KIM und ein **§ 302-Beispiel**, sobald die dortige Technische Anlage 1
-vorliegt.
+Offen bleibt:
+
+- **Weitere Negativfälle** für die übrigen rund 50 im Positivfall erfüllten Regeln —
+  die sieben vorhandenen decken je einen Fall aus den Prüfstufen 0, 3, 4 und 5 ab,
+  nicht die gesamte Regelliste.
+- **Feldgenaue Klärung von Rechnungsart 2/3.** Das Sammelrechnungs-Beispiel legt
+  offen, welche Feldzuordnungen dafür nur Interpretation sind (siehe dessen README,
+  Abschnitt „Offene Fragen") — eine Auswertung von TA 1 Abschnitt 4.5 im Detail
+  würde diese Lücke schließen.
+- **Der elektronische Leistungsnachweis selbst** (`PFL_LNW_2.2.0.xsd`) und die
+  übrigen KIM-Bestandteile (`PFL_basis_2.2.0.xsd`, `PFL_ABR_2.2.0.xsd`) — das
+  KIM-Beispiel bildet nur die grobe Hülle nach, nicht deren tatsächliche
+  XML-Struktur.
+- **Ein § 302-Beispiel**, sobald die dortige Technische Anlage 1 vorliegt.

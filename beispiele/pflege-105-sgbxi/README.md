@@ -522,12 +522,22 @@ KVNR-Richtlinie V3.4.0 diese Annahme, sind beide KVNR neu zu rechnen.
 
 ### Nächste sinnvolle Erweiterungen
 
-1. **Negativfixtures** je Prüfstufe — falsche `UNT`-Zähler, `UNA` vorhanden,
-   Dezimalpunkt statt Komma, `ESK` unsortiert, Pflegegrad *und* Pflegestufe belegt.
-2. **Sammelrechnung** (Rechnungsart `3`, Abrechnungsstelle mit Inkassovollmacht) — der
-   Dateiaufbau unterscheidet sich strukturell.
-3. **Vollelektronische Abrechnung über KIM** mit XML-Hülle, `IMG`-Segment und
-   elektronischem Leistungsnachweis — solange TA 1 6.4.0 gilt; ab 01.02.2027 wandert
-   dieser Teil in die neue Technische Anlage 5.
-4. **Umlaut-Variante**, sobald Anlage 15 GGT (Zeichensätze) ausgewertet ist.
+1. ✅ **Negativfixtures** je Prüfstufe — umgesetzt in
+   [`../pflege-105-sgbxi-negativfaelle/`](../pflege-105-sgbxi-negativfaelle/): falsche
+   IK-Prüfziffer, falscher `UNT`-Zähler, Summenabweichung, unvollständiges
+   Dateipärchen, `UNA` vorhanden, Dezimalpunkt statt Komma, `ESK` unsortiert. Offen
+   bleibt darin nur „Pflegegrad *und* Pflegestufe belegt" — dafür fehlt noch ein
+   achter Fall.
+2. ✅ **Sammelrechnung** (Rechnungsart `3`, Abrechnungsstelle mit Inkassovollmacht) —
+   umgesetzt in [`../pflege-105-sgbxi-sammelrechnung/`](../pflege-105-sgbxi-sammelrechnung/),
+   mit offengelegten Interpretationslücken bei einzelnen Feldzuordnungen.
+3. ✅ **Vollelektronische Abrechnung über KIM** mit `IMG`-Segment — umgesetzt in
+   [`../pflege-105-sgbxi-kim/`](../pflege-105-sgbxi-kim/); der EDIFACT-Teil ist
+   primärquellen-geprüft, der XML-Umschlag nur als unbelegte Skizze. Solange TA 1
+   6.4.0 gilt; ab 01.02.2027 wandert dieser Teil in die neue Technische Anlage 5.
+4. ✅ **Umlaut-Variante** — umgesetzt in
+   [`../pflege-105-sgbxi-umlaute/`](../pflege-105-sgbxi-umlaute/), inklusive des in
+   TA 1 Abschnitt 4.1 genannten Freigabezeichen-Beispiels „D?'Angelo". Anlage 15 GGT
+   (Zeichensätze) selbst bleibt unausgewertet — die Umlaut-Zulässigkeit stützt sich
+   nur auf die allgemeine ISO-8859-1-Festlegung.
 5. **§ 302-Beispiel**, sobald die dortige Technische Anlage 1 vorliegt.
