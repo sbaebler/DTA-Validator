@@ -1,0 +1,74 @@
+SKIZZE — keine belegte XML-Struktur, siehe README Abschnitt 3.
+
+Nachvollzieht die in knowledge-base/20-verfahren/05-para105-sgbxi-pflege.md
+Abschnitt 9 dokumentierte Grobstruktur (Header / Abrechnungsnachricht /
+Abrechnungsbegruendende Unterlagen) mit den Werten dieses Beispiels. Elementnamen,
+Attribute und Verschachtelung sind FREI GEWAEHLT, weil PFL_basis_2.2.0.xsd und
+PFL_ABR_2.2.0.xsd nicht ausgewertet vorliegen (siehe Dokumentenregister). Nur die in
+der Wissensbibliothek genannten Inhalte sind belegt: welche Angaben transportiert
+werden (Absender-KIM-Adresse+IK, Empfaenger-IK, Erstellungsdatum/-zeit, Datei-ID,
+Abrechnungsdaten base64, je Unterlage Leistungsnachweis-ID+Erstelldatum+Datei), nicht
+wie sie in XML heissen oder verschachtelt sind.
+
+================================================================================
+KIM-Nachricht
+--------------------------------------------------------------------------------
+Von:            pflegedienst-sonnenhof@kim.example
+An:             kostentraeger-muster-bkk@kim.example        (aus Kostentraegerdatei,
+                                                               VZD-Lookup ueber IK)
+Betreff:        TPFL0003                                    (= Dateiname ohne Endung)
+Body:           (leer — nur bei Fehlernachrichten Text)
+Anhang:         TPFL0003.xml
+                Content-Description: PFL
+                Content-Transfer-Encoding: base64
+                Groesse: < 15 MB
+
+================================================================================
+TPFL0003.xml (vor base64/Signatur, zur Lesbarkeit eingerueckt; Zeichensatz der
+Huelle: UTF-8 nach DIN SPEC 91379, kein BOM)
+--------------------------------------------------------------------------------
+<Nachricht>
+
+  <Header>                                    <!-- PFL_basis_2.2.0.xsd -->
+    <Absender kim-adresse="pflegedienst-sonnenhof@kim.example" ik="461100877"/>
+    <Empfaenger ik="109524616"/>
+    <Erstellungsdatum>20260805</Erstellungsdatum>
+    <Erstellungszeit>114700</Erstellungszeit>
+    <DateiID>714ada05-154b-4581-8af9-c69277cdbf68</DateiID>   <!-- UUID, neu je Datei -->
+  </Header>
+
+  <Abrechnungsnachricht>                       <!-- PFL_ABR_2.2.0.xsd -->
+
+    <Abrechnungsdaten signiert="true" format="EDIFACT">
+      <!-- base64(TPFL0003) — die Datei in diesem Verzeichnis, ISO-8859-1,
+           EINZELN signiert (CAdES enveloping, SMC-B), nicht die XML-Huelle -->
+    </Abrechnungsdaten>
+
+    <AbrechnungsbegruendendeUnterlagen anzahl="2">     <!-- 1..999 -->
+
+      <Unterlage>
+        <LeistungsnachweisID>03bd5493-fcb1-48b2-becb-894c67a0d45a</LeistungsnachweisID>
+        <!-- muss zur IMG-Angabe im PLAA-Abrechnungsfall 2607001 passen -->
+        <Erstelldatum>20260731</Erstelldatum>
+        <ProdmodID>PFL_LNW_2.2.0</ProdmodID>
+        <Datei signiert="true" inhaltstyp="application/xml" dateityp="PFL_LNW">
+          <!-- base64(elektronischer Leistungsnachweis Hanna Kerzenmacher, Juli 2026) -->
+        </Datei>
+      </Unterlage>
+
+      <Unterlage>
+        <LeistungsnachweisID>89307955-d530-4bfd-a77f-b532a25cb440</LeistungsnachweisID>
+        <!-- muss zur IMG-Angabe im PLAA-Abrechnungsfall 2607002 passen -->
+        <Erstelldatum>20260731</Erstelldatum>
+        <ProdmodID>PFL_LNW_2.2.0</ProdmodID>
+        <Datei signiert="true" inhaltstyp="application/xml" dateityp="PFL_LNW">
+          <!-- base64(elektronischer Leistungsnachweis Otto Brinkmeier, Juli 2026) -->
+        </Datei>
+      </Unterlage>
+
+    </AbrechnungsbegruendendeUnterlagen>
+
+  </Abrechnungsnachricht>
+
+</Nachricht>
+================================================================================
