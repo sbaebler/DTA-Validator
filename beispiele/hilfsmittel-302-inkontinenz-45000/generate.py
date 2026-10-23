@@ -105,6 +105,7 @@ def erzeuge(n_pos: int, seed: int):
     summe_pos = 0
     summe_gesamt = 0
     kennzahlen = []
+    fall_daten = []     # strukturierte Faelle, fuer abgeleitete Beispiele
     seg.append("UNB+UNOC:3+%s+%s+%s:%s+1+%s+0" % (ik_le, ik_dan, ERSTELLT, UHRZEIT, DATEINAME_APPREF))
 
     def nachricht(typ, inhalt):
@@ -131,8 +132,10 @@ def erzeuge(n_pos: int, seed: int):
             geb = "%04d%02d%02d" % (rnd.randrange(1925, 2018), rnd.randrange(1, 13), rnd.randrange(1, 29))
             slla.append("INV+%s+%07d" % (kv, belegnr))
             slla.append("NAD+%s+%s+%s" % (name, vorname, geb))
-            slla.append("ESK+%s%02d" % (LEISTUNGSMONAT, rnd.randrange(1, 29)))
+            tag = LEISTUNGSMONAT + "%02d" % rnd.randrange(1, 29)
+            slla.append("ESK+" + tag)
             fall_ct = 0
+            positionen = []
             kategorie = rnd.choice(PRODUKTE)
             for p in range(POS_JE_FALL):
                 # Versorgung besteht meist aus 1-2 Produktarten: Hauptprodukt + Zubehoer
@@ -148,12 +151,16 @@ def erzeuge(n_pos: int, seed: int):
                 anzahl = rnd.choice([1, 1, 1, 2])
                 ges = preis * anzahl
                 fall_ct += ges
+                positionen.append(dict(hmnr=hmnr, anzahl=anzahl, preis=preis, gesamt=ges, bez=bez, packung=pack))
                 slla.append("EHE+%s+00+%d+%s+%s+07" % (hmnr, anzahl, eur(preis), eur(ges)))
                 zeilen.append("%s|%07d|%s|%s|00|%d|%s|%s|%s" % (
                     kv, belegnr, ik_kt, hmnr, anzahl, eur(preis), eur(ges), bez))
                 kt_pos += 1
             zuz_ct = 0 if rnd.random() < 0.18 else min(1000, int((Decimal(fall_ct) / 10).quantize(Decimal("1"), ROUND_HALF_UP)))
             slla.append("IAF+%s+%s++%s" % (eur(fall_ct), eur(zuz_ct), eur(fall_ct - zuz_ct)))
+            fall_daten.append(dict(kt=kt_nr, ik_kt=ik_kt, kvnr=kv, belegnr=belegnr, name=name, vorname=vorname,
+                                   geburt=geb, leistungstag=tag,
+                                   positionen=positionen, brutto=fall_ct, zuzahlung=zuz_ct))
             kt_brutto += fall_ct
             kt_zuz += zuz_ct
         slga = [fkt, rec, "UST+DE999999999+J+01",
@@ -165,19 +172,19 @@ def erzeuge(n_pos: int, seed: int):
         summe_gesamt += kt_brutto
         kennzahlen.append((kt_nr, ik_kt, rechnr, n_k, kt_pos, kt_brutto, kt_zuz))
     seg.append("UNZ+%d+1" % unh_nr)
-    meta = dict(ik_le=ik_le, ik_dan=ik_dan, positionen=summe_pos, faelle=fall_nr, nachrichten=unh_nr,
+    meta = dict(faelle_daten=fall_daten, ik_le=ik_le, ik_dan=ik_dan, positionen=summe_pos, faelle=fall_nr, nachrichten=unh_nr,
                 segmente=len(seg), gesamt_ct=summe_gesamt, kt=kennzahlen)
     return "'".join(seg) + "'", zeilen, meta
 
 
-def auftragssatz(meta, groesse):
+def auftragssatz(meta, groesse, transfer="001", appref=DATEINAME_APPREF, erstellt=ERSTELLT):
     def N(v, l): return str(v).rjust(l, "0")
     def A(v, l): return str(v).ljust(l)
     felder = [
-        N(500000, 6), "01", N(348, 8), N(0, 3), "TSOL0", "001", A("", 5),
+        N(500000, 6), "01", N(348, 8), N(0, 3), "TSOL0", transfer, A("", 5),
         A(meta["ik_le"], 15), A(meta["ik_le"], 15), A(meta["ik_dan"], 15), A(meta["ik_dan"], 15),
-        N(0, 6), N(0, 6), DATEINAME_APPREF,
-        ERSTELLT + UHRZEIT + "00", ERSTELLT + UHRZEIT + "30", N(0, 14), N(0, 14),
+        N(0, 6), N(0, 6), appref,
+        erstellt + UHRZEIT + "00", erstellt + UHRZEIT + "30", N(0, 14), N(0, 14),
         N(0, 6), "0", N(groesse, 12), N(groesse, 12), "I1", "00", "00", "00",
         A("", 3), N(0, 5), N(0, 8), " ", N(0, 2), "5", N(0, 10), N(0, 6),
         A("", 28), A("", 44), "01" + " " * 26 + "01",
