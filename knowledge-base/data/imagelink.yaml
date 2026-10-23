@@ -1,0 +1,156 @@
+# Imageverfahren ("ImageLink") fuer sonstige Leistungserbringer nach § 302 SGB V
+#
+# Quelle: Anlage 1 (Technische Anlage), Anhang 4a "Imageverfahren (Schnittstellenbeschreibung)",
+#         Stand 14.07.2022, Version 001, anzuwenden ab 01.09.2022, 23 Seiten.
+#         https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/
+#         technische_anlagen_aktuell_4/Anhang_04a_Anlage_1_TP5_20220714.pdf
+#         Anhang 4b (XML-Schema), Datei Anhang_04b_Anlage_1_TP5_20220519.xsd, 10.098 Byte,
+#         SHA-256 50ae21b0fd9412e3a6c88ac2a76858558ebcc74f4845826d40561f637f539aab
+#
+# Kopie des XSD fuer Tests: knowledge-base/data/schemas/Anhang_04b_Anlage_1_TP5_20220519.xsd (unveraendert, SHA-256 siehe oben).
+#
+# Primaerdokument ausgewertet am 2026-10-23. Textextraktion des PDF und Abruf des XSD erfolgten
+# direkt; die XSD-Typen wurden gegen die Datei geprueft.
+#
+# WICHTIG: Es gibt keine einzelne "Image-Link-Datei". Das Verfahren liefert je Urbeleg ein PAAR
+# aus PDF-Image und XML-Metadatendatei, gepackt in eine ZIP-Datei. Die Zuordnung zum DTA-
+# Rechnungssatz laeuft ueber Dateiname und XML-Nutzdaten (Rechnungsnummern, Belegnummer).
+#
+# Einschraenkungen laut Dokument: Nutzung optional, nur nach Vereinbarung zwischen Lieferant und
+# Kostentraeger. Das Dokument ist erkennbar von AOK Systems gepraegt (Feld Beschreibung fest
+# "AOK Systems GmbH", Referenzbeschreibung "Multicom-Nutzer"), enthaelt Tippfehler und
+# Widersprueche (siehe widersprueche) und wurde fuer § 302 Hilfsmittel, Heilmittel u. a.
+# gemeinsam beschrieben. Ob alle Kostentraeger das Verfahren einheitlich anwenden, ist offen.
+
+schema_version: 1
+stand: 2026-10-23
+
+quelle:
+  dokument: Anlage 1 Anhang 4a - Imageverfahren (Schnittstellenbeschreibung)
+  stand: 2022-07-14
+  version: "001"
+  anzuwenden_ab: 2022-09-01
+  vertrauen: belegt
+  hinweis: "Auf dem Portal ohne Gueltigkeitsende gefuehrt (Abschnitt 'aktuelle technische Anlagen')."
+
+begriffe:
+  einzelrechnung: "= Abrechnungsfall im Sinne des DTA 302"
+  sammelrechnung: "= Kostentraegerebene (alle zu einer Sammelrechnung gebuendelten Einzelrechnungen eines Leistungserbringers)"
+  dokument: "logisches Dokument, kann aus n Seiten bestehen; je Dokument ein (Multi-)PDF"
+  vorgang: "Abrechnungsfall bzw. Abrechnungsbeleg inklusive aller zugehoerigen Dokumente (Anhaenge, Genehmigungen)"
+
+lieferung:
+  restriktionen:
+    - "Zu jedem Image eines Urbelegs wird eine XML-Datei mit Daten erwartet."
+    - "Je Abrechnungsbeleg/Belegnummer koennen mehrere Dokumente vorliegen, ueblicherweise je Dokument ein dediziert signiertes PDF."
+    - "Alle PDF und XML werden in eine Ordnerstruktur gestellt und als ZIP-Datei uebermittelt."
+  groessen:
+    max_zip_bytes: "2 GB"
+    max_images_je_ordner: 500        # also 1000 Dateien je Ordner (je ein XML und ein PDF)
+  ordnername:
+    abrechnungszentrum: "<ABR-Kuerzel 3>_<Sammelrechnungsnr 14><Zaehler 2, ab 01>"
+    selbstabrechner: "<IK 9>_<laufende Nummer 8><Zaehler 2>"   # 20 Stellen
+    beispiel_abrechnungszentrum: "ABR_EAN1601155504001"
+    bemerkung: "Ordnername dient als Job-ID/Stapelname."
+  dateinamen:
+    regeln:
+      - "max. 40 Stellen"
+      - "XML und PDF tragen identische Namen, nur die Endung unterscheidet sich; darueber entsteht der Bezug"
+      - "Endung der Metadatendatei .XML (Grossbuchstaben)"
+      - "unzulaessig: ASCII-Steuerzeichen, Umlaute, Leerzeichen, Sonderzeichen (ggf. durch Unterstrich ersetzen)"
+    dokumentidentifikator_abrechnungszentrum: "<ABR-Kuerzel>_<Sammelrechnungsnr 14><Einzelrechnungsnr 6><DTA-Belegnummer 10><Zaehler 2>"
+    vorgangsidentifikator_abrechnungszentrum: "wie Dokumentidentifikator ohne Zaehler"
+    dokumentidentifikator_selbstabrechner: "<IK 9>_<laufende Nummer 27><Zaehler 2>"   # 40 Stellen
+    vorgangsidentifikator_selbstabrechner: "<IK 9>_<laufende Nummer 27>"             # 38 Stellen
+    beispiel_dateiname: "ODADATA_EAN16011555040000001000000000001.XML"
+    beispiel_zerlegung: {praefix: "ODADATA_ (8 Zeichen; Text nennt 3-stelliges ABR-Kuerzel)", sammelrechnungsnr: "EAN16011555040", einzelrechnungsnr: "000001", dta_belegnummer: "0000000000", zaehler: "01", gesamtlaenge: 40}
+    abr_kuerzel: "Vergabe durch die zulassende Kasse; einheitlich fuer alle Kassen zu verwenden (z. B. ODA = opta data, DMR = DMRZ)."
+  zaehler: "2-stellig, numerisch, beginnt bei 01, nummeriert die Dokumente innerhalb eines Vorgangs"
+  vorgangsumfang: "Anzahl der Dokumente im Vorgang (NUMC 3)"
+
+transport:
+  uebertragung: "SFTP, Push-Verfahren (Lieferant sendet), Codepage I1 / ISO 8859-1"
+  dateien: "Auftragsdatei (.AUF) + ZIP-Nutzdatendatei (ohne Endung .zip)"
+  namen: "Djjmmtt.Thhmmss.a1IMvnnn  (a: E Echt / T Test; 1IM Verfahren; v Version 0; nnn Transfernummer) und .AUF"
+  beispiel: "D160304.T121314.E1IM0123 / D160304.T121314.E1IM0123.AUF"
+  auftragssatz:
+    verfahren_kennung_20_24: "E1IM0 (T1IM0 fuer Test)"
+    transfernummer_25_27: "000-999, moeglichst lueckenlos"
+    zeichensatz_203_204: "I1"
+    komprimierung_205_206: "03 (ZIP)"
+    verschluesselungsart_207_208: "03 (PKCS#7)"
+    elektronische_unterschrift_209_210: "03 (PKCS#7)"
+  sicherheit: "Signatur und Verschluesselung nach PKCS#7 (Anlage 16 GGT)"
+  verweise:
+    - "Auftragsdatei: Anlage 2 GGT"
+    - "Security: Anlage 16 GGT"
+    - "SFTP: Anlage 9 GGT"
+  zip_aufbau: "flache Ordnerstruktur: Ordner (JOB-ID) / PROZESS-ID.PDF + PROZESS-ID.XML"
+
+dokumentklassen:
+  einzelrechnung:
+    muster: "ER_SOLE_<Prozess>_<Art>"
+    art:
+      ON: "zahlungsbegruendender Beleg mit Signatur, primaer die Verordnung; weitere Belege (z. B. Empfangsbestaetigung) moeglich, Erfordernis zwischen Abrechner und Kasse zu vereinbaren"
+      M: "Merge-Dokument; nur noetig, wenn die Anlagen mehr als das primaere Dokument umfassen; keine Signatur noetig, niedrige Aufloesung genuegt"
+    prozesse: [HIMI, HEIMI, HKP, HAHI, KRTL, HEBA, DIAL, RESP, FUTR, SONST, PRAEV, ERGRE, SOPAED, SOZTHERA, SAPV]
+    hilfsmittel: [ER_SOLE_HIMI_ON, ER_SOLE_HIMI_M]
+  sammelrechnung:
+    muster: "SR_SOLE_<Prozess>_ON"
+    hilfsmittel: SR_SOLE_HIMI_ON
+    hinweis: "Ausprägung orientiert sich am Sammelgruppenschluessel der TA zum DTA 302."
+
+xml:
+  schema: "Anhang 4b, Wurzelelement eAkte_Dokumentdatensatz, ohne Namespace"
+  codierung: UTF-8
+  wurzel_attribute:
+    Versionsnummer: {typ: positiveInteger, pflicht: true, wert: "100 (im Beispiel 00000100)"}
+    Beschreibung: {typ: string, pflicht: true, wert: "fest 'AOK Systems GmbH' (laut XSD; laut Dokument 'von annehmender Stelle zu definieren')"}
+  eAkte_Dokument_attribute:
+    Dokumentidentifikator: {typ: "string, max 40", pflicht: true, bedeutung: "= Dateiname ohne Endung"}
+    Vorgangsidentifikator: {typ: "string, max 255 (Dokument) / ohne Laenge (XSD)", pflicht: true}
+    Vorgangsumfang: {typ: "positiveInteger, max 3 Stellen", pflicht: true}
+  eAkte_Dokument_elemente_in_reihenfolge:
+    - {name: Dokumentklasse, typ: "string, max 255", pflicht: true}
+    - {name: Eingangskanal, typ: "positiveInteger, max 2 Stellen", pflicht: true, werte: "XSD erlaubt 1-6 und 91-95; Dokument verlangt konstant 2 (Eingangsdokument)"}
+    - {name: Erstellungszeitpunkt, typ: "dateTime", pflicht: true, format: "YYYY-MM-DDTHH:MM:SSZ"}
+    - {name: Zugriffschutz, typ: "0 oder 1", pflicht: true}
+    - {name: KassenInstitutionskennzeichen, typ: "9 Stellen, 100000000-199999999", pflicht: true, inhalt: "IK Kostentraeger der zugehoerigen Einzelrechnung"}
+    - {name: Reserve, pflicht: false, inhalt: "bis zu 3 Reservefeld mit Attribut Bezeichner (max 50)"}
+    - {name: Ordnungsbegriffe, pflicht: true, inhalt: "mind. 1 Ordnungsbegriff mit Attribut Ordnungsbegriffstyp"}
+    - {name: VariableNutzdaten, pflicht: true}
+  ordnungsbegriffstypen_xsd: [FKAG, PKKV, PKKVDE, LEIK, PKRV, "00", GPALT, AANR, FKBW, FKPU, FKRT, FKVOLL, FKWL, FKZS, GPEXT, HSBN, LEBSNR, LELANR, LEZANR, STBN]
+  ordnungsbegriffe_laut_dokument:
+    sammelrechnung: [{typ: LEIK, pflicht: false, inhalt: "IK Leistungserbringer"}, {typ: PKKVDE, pflicht: true, inhalt: "10-stellige lebenslange KVNR"}, {typ: "00", pflicht: false, inhalt: "Dummy-Ordnungsbegriff, falls keiner ermittelbar"}]
+    einzelrechnung: [{typ: PKKVDE, pflicht: false, inhalt: "10-stellige KVNR"}, {typ: "00", pflicht: false, inhalt: "Dummy"}]
+  nutzdaten_einzelrechnung:       # Bezeichner im Attribut VariablesNutzdatum/@Bezeichner
+    - {bezeichner: Sammelrechnungsnummer, typ: "String, 14", quelle: "REC in SLLA/PLAA"}
+    - {bezeichner: Einzelrechnungsnummer, typ: "String, 6", quelle: "REC in SLLA/PLAA"}
+    - {bezeichner: Rechnungsdatum, typ: "Date JJJJ-MM-TT, 10", quelle: "REC in SLLA/PLAA"}
+    - {bezeichner: Rechnungsart, typ: "String, 1", quelle: "REC in SLLA/PLAA"}
+    - {bezeichner: Belegnummer, typ: "String, 10", quelle: "INV in SLLA/PLAA"}
+    - {bezeichner: Leistungserbringer, typ: "Integer, 9", quelle: "IK Leistungserbringer"}
+  nutzdaten_sammelrechnung:
+    - {bezeichner: Sammelrechnungsnummer, typ: "String, 14", quelle: "REC in SLGA/PLGA"}
+    - {bezeichner: Einzelrechnungsnummer, typ: "String, 6", quelle: "REC in SLGA/PLGA"}
+    - {bezeichner: Rechnungsdatum, typ: "Date", quelle: "REC in SLGA/PLGA"}
+    - {bezeichner: Rechnungsart, typ: "String, 1", quelle: "REC in SLGA/PLGA"}
+    - {bezeichner: "Abrechner oder Rechnungssteller-IK", typ: "NUMC 9", pflicht: true}
+  nutzdatentypen_xsd: [NutzdatumString, NutzdatumInteger, NutzdatumDate, NutzdatumFloat, NutzdatumTime, NutzdatumDateTime]
+  nutzdatum_element: "VariablesNutzdatum[@Bezeichner] enthaelt genau ein Nutzdatum-Element (choice)"
+
+zuordnungslogik:
+  schluessel_einzelrechnung: [Sammelrechnungsnummer, Einzelrechnungsnummer, Belegnummer, Leistungserbringer-IK, "KassenInstitutionskennzeichen"]
+  hinweis: >-
+    Die Zuordnung eines Image zum DTA-Rechnungssatz ist bereits im Namen (Dokumentidentifikator) und
+    in den Nutzdaten der XML-Datei kodiert. Der Vorgang bildet alle Dokumente eines Abrechnungsfalls.
+
+offene_punkte_und_widersprueche:
+  - "Laenge Abrechner-Kuerzel: Text sagt 3 Stellen, Beispieldateiname beginnt mit 'ODADATA' (7 Zeichen)."
+  - "Eingangskanal: Dokument 'konstant 2', XSD erlaubt mehrere Werte."
+  - "Beschreibung: XSD fixiert 'AOK Systems GmbH', Dokument nennt 'von annehmender Stelle zu definieren'."
+  - "Beispiel-XML enthaelt offensichtliche Tippfehler ('XMLns', '<Eingangskaaoknal>') und Elementnamen, die vom Feldkatalog abweichen (KassenInstitutionskennzeichen vs. 'Institutionskennzeichen der Krankenkasse'; Dokumentidentifikator als Attribut vs. Feld)."
+  - "Verfahrenskennung: Text nennt 'Stellen 21 bis 23 = 1IM'; die Verfahrenskennung '1IM' ist in der ausgewerteten Anlage 4 GGT (Fassung 01.01.2026) nicht als eigener Eintrag gefuehrt."
+  - "Die Zuordnung von Sammel- und Einzelrechnungsnummer zu den Rechnungsebenen ist mehrdeutig (Einzelrechnung = Abrechnungsfall laut Anmerkung, Nummer laut Text aus REC der Nachricht). Die Fixtures unter beispiele/ultra-big-bills folgen einer Auslegung."
+  - "Anhang 4a nennt keine Vorgabe zu Bildformat, Aufloesung oder Farbtiefe der PDF ausser 'Multi-PDF' und 'Merge: niedrige Aufloesung'."
+  - "Es ist nicht geklaert, ob alle Kostentraeger E1IM0/ImageLink gleich anwenden; Nutzung nur nach Vereinbarung."

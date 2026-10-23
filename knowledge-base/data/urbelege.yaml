@@ -1,0 +1,105 @@
+# Urbelege und Begleitzettel nach § 302 SGB V (sonstige Leistungserbringer)
+#
+# Quellen (beide direkt als PDF geladen und per Textextraktion ausgewertet am 2026-10-23):
+#   Anlage 4 "Begleitzettel fuer Urbelege", Stand 01.11.2006, Version 2.0, anzuwenden ab 01.12.2006, 2 Seiten
+#     https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anlage_4_061101.pdf
+#   Anlage 5 "Inhalte der Urbelege", Stand 27.09.2018, Version 4.0, anzuwenden ab 27.09.2018, 24 Seiten
+#     https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anlage_5_TP5_V4_0_20180927.pdf
+#   Stand der Richtlinien in beiden: 20.11.2006.
+#
+# Beide Anlagen beschreiben Papier-Urbelege (Verordnungsblaetter nach Mustern der Vertragsaerzte).
+# Sie sind aelter als das ImageLink-Verfahren (imagelink.yaml, 2022) und aeltere Musterstaende;
+# ob und wie sie fuer elektronische Verordnungen fortgelten, ist hier nicht geklaert.
+
+schema_version: 1
+stand: 2026-10-23
+
+quelle_anlage_4: {version: "2.0", stand: 2006-11-01, anzuwenden_ab: 2006-12-01, seiten: 2, vertrauen: belegt}
+quelle_anlage_5: {version: "4.0", stand: 2018-09-27, anzuwenden_ab: 2018-09-27, seiten: 24, vertrauen: belegt}
+
+begleitzettel:
+  pflicht: "zwingend erforderlich"
+  zweck: "ordnungsgemaesse Abrechnung und spaetere schnellere Zuordnung der Urbelege (Verordnungsblaetter, Berechtigungs-/Reparaturscheine, Kostenvoranschlaege) bei der Krankenkasse bzw. beauftragten Stelle"
+  haeufigkeit: "je Gesamtrechnung ein Begleitzettel"
+  abrechnungsstelle: "Begleitzettel fuer jede Gesamtrechnung innerhalb einer Sammelrechnung mitliefern"
+  inhalt:
+    - IK der Krankenkasse
+    - Name der Krankenkasse
+    - Name/Anschrift des Leistungserbringers bzw. der Abrechnungsstelle
+    - IK des Leistungserbringers bzw. der Abrechnungsstelle
+    - Rechnungsnummer der Gesamtrechnung
+    - Rechnungsdatum der Gesamtrechnung
+    - Anzahl der Urbelege
+  zusaetzlich_abrechnungsstelle: "je Gesamtrechnung innerhalb einer Sammelrechnung die erste und letzte Belegnummer der zugehoerigen Urbelege"
+  nicht_geregelt: "Format des Begleitzettels (Papier/elektronisch), Papiergroesse, Bezug zum ImageLink-Paket"
+
+urbelege_allgemein:
+  - "Anlage 5 beschreibt die Inhalte der aerztlichen Verordnungsblaetter sowie der Berechtigungs- und Reparaturscheine, die der Abrechnung nach § 302 Abs. 2 zugrunde liegen."
+  - "Nicht in der Anlage benannte Verordnungen erhalten durch vertragliche Vereinbarung Gueltigkeit."
+  - "Die Inhalte sind in die entsprechenden Felder des Datensatzes einzutragen (soweit vorhanden)."
+  - "Anlage 5 wird unabhaengig von den Richtlinien fortgeschrieben."
+
+abschnitte:
+  - {nr: 2, urbeleg: "Heilmittelverordnung Physikalische Therapie (auch Podologie)", muster: "13 (7.2004)", hilfsmittel: false}
+  - {nr: 3, urbeleg: "Heilmittelverordnung Stimm-, Sprech-, Sprachtherapie", muster: "14", hilfsmittel: false}
+  - {nr: 4, urbeleg: "Heilmittelverordnung Ergotherapie", muster: "18", hilfsmittel: false}
+  - {nr: 5, urbeleg: "Verordnungsblatt Arznei- und Hilfsmittel", muster: "16 (4.2004)", hilfsmittel: true}
+  - {nr: 6, urbeleg: "Sehhilfenverordnung", muster: "8 (7.2004)", hilfsmittel: true}
+  - {nr: 7, urbeleg: "Verordnung vergroessernder Sehhilfen", muster: "8a (10.2005)", hilfsmittel: true}
+  - {nr: 8, urbeleg: "Ohrenaerztliche Verordnung einer Hoerhilfe", muster: "15 (4.2002)", hilfsmittel: true}
+  - {nr: 9, urbeleg: "Verordnung haeuslicher Krankenpflege", muster: "12 (7.2000)", hilfsmittel: false}
+  - {nr: 10, urbeleg: "Verordnung einer Krankenbefoerderung", muster: "4", hilfsmittel: false}
+  - {nr: 11, urbeleg: "Verordnung des Kurarztes", muster: "25", hilfsmittel: false}
+  - {nr: 12, urbeleg: "Verordnung Soziotherapie nach § 37a", muster: "26 (7.2017)", hilfsmittel: false}
+  - {nr: 13, urbeleg: "Berechtigungsschein", muster: null, hilfsmittel: "bei Abgabe aufgrund eines Berechtigungsscheins"}
+
+# Fuer Inkontinenzhilfsmittel einschlaegig: Abschnitt 5 (Muster 16) bzw. Berechtigungsschein.
+# Hinweis: "Hilfsmittel" ist auf dem Muster 16 ein Kennzeichen (Feld o); Inkontinenzprodukte sind nicht
+# gesondert genannt.
+muster_16_verordnungsblatt_arznei_hilfsmittel:
+  stand_muster: "4.2004"
+  felder:
+    a: Institutionskennzeichen der Krankenkasse (Kassen-Nr.)
+    b: Name der Krankenkasse
+    c: "Versichertennummer (entfaellt im Ersatzverfahren ohne Karte)"
+    d: Name und Vorname des Versicherten
+    e: Anschrift des Versicherten
+    f: Geburtsdatum des Versicherten
+    g: Versichertenstatus
+    h: "Gueltigkeit der Versichertenkarte (entfaellt im Ersatzverfahren)"
+    i: Vertragsarztnummer / Vertragszahnarztnummer (§ 293 Abs. 4)
+    j: Vertragsarztstempel / Vertragszahnarztstempel
+    k: Unterschrift des Vertragsarztes / Vertragszahnarztes
+    l: Ausstellungsdatum des Verordnungsblattes
+    m: Art und Menge der verordneten Leistung
+    n: "Diagnose und Diagnoseschluessel (soweit angegeben)"
+    o: 'Kennzeichnung "Gebuehr pfl.", "Gebuehr frei", "Sonstige", "Unfall", "Arbeitsunfall", "BVG", "Hilfsmittel", "Begr.-Pflicht" (soweit angegeben)'
+    p: "Unfalltag, Unfallbetrieb oder Arbeitgebernummer (soweit angegeben)"
+    q: "Rechnungsnummer mit Belegnummer (bis ein eigenes Feld ergaenzt wird: oben rechts auf der Vorderseite oder im Feld Apotheken-Nummer/IK)"
+    r: Hilfsmittelnummer, Faktor, Taxe
+    s: Stempel des Leistungserbringers
+    t: Gesamtsumme (brutto) je Verordnungsblatt
+    u: "gesetzlicher Zuzahlungsbetrag je Verordnungsblatt (soweit vorgesehen)"
+    v: Bestaetigung des Versicherten ueber den Erhalt der Leistung (Unterschrift und Datum am Tag der Leistungserbringung)
+    w: Vermerk der Krankenkasse
+    x: Unfalltag (bei Arbeitsunfall)
+    y: Unfallbetrieb oder Arbeitgebernummer (bei Arbeitsunfall)
+  folgerungen:
+    - "Die Empfangsbestaetigung des Versicherten (v) steht AUF dem Verordnungsblatt. Ein gesonderter Lieferschein/Leistungsnachweis ist in Anlage 5 nicht vorgesehen; er braeuchte eine vertragliche Vereinbarung."
+    - "Rechnungsnummer mit Belegnummer (q) steht auf dem Urbeleg, ebenso Gesamtsumme brutto (t) und Zuzahlung (u): Grundlage fuer Zuordnung ueber Belegnummer und Betragsabgleich."
+    - "Hilfsmittelnummer, Faktor, Taxe (r) stehen auf dem Beleg: Abgleich mit den Positionen des DTA moeglich."
+
+# Erklaerung zu den Sehhilfen/Hoerhilfen: jeweils eigene Felder fuer IK des Leistungserbringers,
+# Rechnungsnummer, Belegnummer, Hilfsmittelpositionsnummer (10-stellig), Betrag, Empfangsbestaetigung.
+sehhilfen_hoerhilfen_gemeinsam:
+  felder_auf_dem_beleg: [IK des Leistungserbringers, Rechnungsnummer, Belegnummer, Hilfsmittelpositionsnummer, Betrag, Rechnungsbetrag, Empfangsbestaetigung des Versicherten]
+
+berechtigungsschein:
+  gilt_wenn: "Abgabe aufgrund eines Berechtigungsscheins"
+  mindestens: [IK der Krankenkasse, Name der Krankenkasse, Versichertennummer, Name und Vorname, Anschrift, Geburtsdatum, Versichertenstatus, Gueltigkeit der Karte, Unfall/Unfallfolgen, Versorgungsleiden/Berufskrankheit, Rechnungsnummer, Belegnummer, IK des Leistungserbringers, Erklaerung des Leistungserbringers, 10-stellige Hilfsmittelpositionsnummer, Faktor, Betrag/Gesamtbetrag, Stempel/Datum/Unterschrift des Leistungserbringers, Empfangsbestaetigung des Versicherten, Kostenuebernahme durch den Kostentraeger]
+
+offene_punkte:
+  - "Ob die Mustervorgaben (Stand 2000-2017) fuer elektronische Verordnungen unveraendert gelten, ist nicht geklaert."
+  - "Anlage 5 nennt keine Belegart 'Lieferschein' oder 'Empfangsbestaetigung' als eigenstaendigen Urbeleg."
+  - "Anlage 4 regelt weder Papierformat noch elektronische Form des Begleitzettels; Zusammenspiel mit ImageLink (Anhang 4a) ist offen."
+  - "Welche Dokumentklasse (ER_SOLE_HIMI_ON vs. _M) welche Belegart traegt, steht in Anhang 4a nur als Beispiel (Verordnung, Empfangsbestaetigung)."

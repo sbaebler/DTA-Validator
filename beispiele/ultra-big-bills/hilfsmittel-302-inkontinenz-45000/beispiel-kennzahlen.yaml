@@ -3,12 +3,12 @@ positionen: 45000
 abrechnungsfaelle: 9000
 nachrichten: 6
 segmente: 81035
-nutzdaten_bytes: 2357531
-nutzdaten_sha256: c3892e830f8e7d9633f64cf3c299db214cacdf9ca0c90e600b45bb67987dd8c3
+nutzdaten_bytes: 2384585
+nutzdaten_sha256: d54526929e7693aca7aa6c0d335c37b503cf8ee4fa040eb06b1f1a8dcea929b5
 gesamtbrutto_eur: "1554345,30"
 ik_leistungserbringer: "591120416"
 ik_datenannahmestelle: "661100423"
 rechnungen:
-  - {rechnungsnummer: "2026100001:0", ik_kostentraeger: "109524616", faelle: 4000, positionen: 20000, brutto_eur: "691423,80", zuzahlung_eur: "32475,03"}
-  - {rechnungsnummer: "2026100002:0", ik_kostentraeger: "105312075", faelle: 3000, positionen: 15000, brutto_eur: "518823,10", zuzahlung_eur: "23868,33"}
-  - {rechnungsnummer: "2026100003:0", ik_kostentraeger: "108433180", faelle: 2000, positionen: 10000, brutto_eur: "344098,40", zuzahlung_eur: "16116,22"}
+  - {rechnungsnummer: "HC202610050001:000001", ik_kostentraeger: "109524616", faelle: 4000, positionen: 20000, brutto_eur: "691423,80", zuzahlung_eur: "32475,03"}
+  - {rechnungsnummer: "HC202610050002:000001", ik_kostentraeger: "105312075", faelle: 3000, positionen: 15000, brutto_eur: "518823,10", zuzahlung_eur: "23868,33"}
+  - {rechnungsnummer: "HC202610050003:000001", ik_kostentraeger: "108433180", faelle: 2000, positionen: 10000, brutto_eur: "344098,40", zuzahlung_eur: "16116,22"}

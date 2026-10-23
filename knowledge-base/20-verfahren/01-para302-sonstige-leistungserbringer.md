@@ -30,8 +30,8 @@ Bekannte Anlagenstruktur (⚠️ teilweise unvollständig — Titel gegen die Po
 | **Anlage 1** | Technische Anlage für die maschinelle Abrechnung (elektronische Datenübermittlung) — Datensatz-/Segmentbeschreibung | ⚠️ [Q1] |
 | **Anlage 2** | ❓ nicht belegt | ❓ |
 | **Anlage 3** | Schlüsselverzeichnisse zu den Datensätzen — **Version 22 vom 21.05.2026, anzuwenden ab 01.02.2027**; Version 21 verliert nach 3-monatiger Übergangsfrist am **30.04.2027** ihre Gültigkeit | ⚠️ [Q1] |
-| **Anlage 4** | Begleitzettel für Urbelege | ✅ [Q36] |
-| **Anlage 5** | Inhalt der Urbelege (Stand 27.09.2018) | ⚠️ [Q1] |
+| **Anlage 4** | Begleitzettel für Urbelege (V 2.0, ab 01.12.2006) — ausgewertet | ✅ [Q36] |
+| **Anlage 5** | Inhalt der Urbelege (V 4.0, Stand 27.09.2018) — ausgewertet | ✅ |
 | **Anlage 6** | ❓ nicht belegt | ❓ |
 | Zusatz | Gemeinsame Umsetzungsempfehlungen zum Korrekturverfahren Heilmittel (13.02.2025) | ✅ [Q25] |
 
@@ -110,12 +110,25 @@ vom 13.02.2025 ✅ [Q25].
 
 ## 5. Urbelege
 
-Zur elektronischen Abrechnung gehören die **Urbelege** (Verordnungen, Leistungsnachweise):
+Zur elektronischen Abrechnung gehören die **Urbelege** (Verordnungen, Berechtigungs- und Reparaturscheine).
+Auswertung der Primärdokumente: [`data/urbelege.yaml`](../data/urbelege.yaml), ImageLink-Übermittlung:
+[`data/imagelink.yaml`](../data/imagelink.yaml).
 
-- **Anlage 4** definiert den *Begleitzettel für Urbelege* ✅ [Q36]
-- **Anlage 5** definiert den *Inhalt der Urbelege* (Stand 27.09.2018) ⚠️ [Q1]
+- **Anlage 4** (V 2.0, ab 01.12.2006) — *Begleitzettel*, ✅ ausgewertet [Q36]: zwingend, **je Gesamtrechnung** einer;
+  Inhalt: IK und Name der Krankenkasse, Name/Anschrift und IK des Leistungserbringers bzw. der Abrechnungsstelle,
+  Rechnungsnummer und -datum der Gesamtrechnung, Anzahl der Urbelege. Abrechnungsstellen liefern ihn für jede
+  Gesamtrechnung innerhalb einer Sammelrechnung und nennen zusätzlich **erste und letzte Belegnummer**.
+- **Anlage 5** (V 4.0, ab 27.09.2018) — *Inhalte der Urbelege*, ✅ ausgewertet: beschreibt Felder der Verordnungsblätter
+  (Muster 13, 14, 18, **16**, 8, 8a, 15, 12, 4, 25, 26) und des Berechtigungsscheins. Für Hilfsmittel einschlägig:
+  **Muster 16** (Abschnitt 5) mit Rechnungsnummer + Belegnummer, Hilfsmittelnummer/Faktor/Taxe, Gesamtsumme brutto, Zuzahlung
+  und **Empfangsbestätigung des Versicherten auf dem Verordnungsblatt**. Ein eigenständiger Lieferschein ist nicht genannt;
+  nicht benannte Belege gelten nur durch vertragliche Vereinbarung.
 - Urbelege gehen an die **Belegannahmestelle** laut Kostenträgerdatei ⚠️ [Q15]
 - Seit Mitte 2025 auch über KIM übermittelbar; Papierform noch bis **30.09.2027** zulässig ⚠️ [Q18b]
+- Elektronische Übermittlung als Images: ImageLink (Anlage 1 Anhang 4a/4b), optional nach Vereinbarung ✅ [Q41][Q42]
+
+> ⚠️ Beide Anlagen sind **Papier-Urbeleg-Beschreibungen** mit Musterständen von 2000 bis 2017. Ob sie für elektronische
+> Verordnungen unverändert gelten, ist nicht geklärt.
 
 ## 6. Erprobungs-/Testverfahren
 

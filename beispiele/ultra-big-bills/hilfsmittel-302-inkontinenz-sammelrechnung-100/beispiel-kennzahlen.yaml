@@ -3,12 +3,12 @@ faelle: 100
 positionen: 500
 nachrichten: 9
 segmente: 953
-nutzdaten_bytes: 27773
-nutzdaten_sha256: de8a886f15a4959a6e59e2983ead5ae5958d4bcdeb13b9804c582ae75c85c178
+nutzdaten_bytes: 28154
+nutzdaten_sha256: df2c1c8438c44dea0e8824a70f9513c8b21589cfce360cc794c1679cd65adfd7
 ik_abrechnungsstelle: "661233445"
 ik_leistungserbringer: "591120416"
 gesamtbrutto_eur: "17350,20"
 sammelrechnungen:
-  - {sammelrechnungsnummer: "2026100190", ik_kostentraeger: "109524616", faelle: 50, positionen: 250, brutto_eur: "8629,20", zuzahlung_eur: "434,12"}
-  - {sammelrechnungsnummer: "2026100290", ik_kostentraeger: "105312075", faelle: 30, positionen: 150, brutto_eur: "5317,40", zuzahlung_eur: "225,63"}
-  - {sammelrechnungsnummer: "2026100390", ik_kostentraeger: "108433180", faelle: 20, positionen: 100, brutto_eur: "3403,60", zuzahlung_eur: "176,81"}
+  - {sammelrechnungsnummer: "SU202610120001", einzelrechnungsnummer: "000001", ik_kostentraeger: "109524616", faelle: 50, positionen: 250, brutto_eur: "8629,20", zuzahlung_eur: "434,12"}
+  - {sammelrechnungsnummer: "SU202610120002", einzelrechnungsnummer: "000001", ik_kostentraeger: "105312075", faelle: 30, positionen: 150, brutto_eur: "5317,40", zuzahlung_eur: "225,63"}
+  - {sammelrechnungsnummer: "SU202610120003", einzelrechnungsnummer: "000001", ik_kostentraeger: "108433180", faelle: 20, positionen: 100, brutto_eur: "3403,60", zuzahlung_eur: "176,81"}

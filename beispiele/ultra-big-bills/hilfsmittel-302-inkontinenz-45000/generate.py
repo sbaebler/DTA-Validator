@@ -21,6 +21,20 @@ HIER = os.path.dirname(os.path.abspath(__file__))
 POS_JE_FALL = 5
 LEISTUNGSMONAT = "202609"
 ERSTELLT = "20261005"
+
+# Nummernformate nach Anlage 1 Anhang 4a (ImageLink): Sammelrechnungsnummer 14, Einzelrechnungsnummer 6,
+# Belegnummer 10 Stellen, jeweils alphanumerisch. REC traegt "<Sammelrechnungsnr>:<Einzelrechnungsnr>".
+EINZELRECHNUNGSNR = "000001"
+
+
+def sammelrechnungsnr(praefix, datum, kt):
+    nr = "%s%s00%02d" % (praefix, datum, int(kt))
+    assert len(nr) == 14
+    return nr
+
+
+def belegnr_str(n):
+    return "%010d" % n
 UHRZEIT = "0812"
 DATEINAME_APPREF = "SL076001SBK"   # Anwendungsreferenz, Muster wie im Pflege-Beispiel (11 Stellen)
 
@@ -118,7 +132,8 @@ def erzeuge(n_pos: int, seed: int):
 
     for kt_nr, n_k in verteilung:
         ik_kt = kostentraeger[kt_nr]
-        rechnr = "20261%05d:0" % int(kt_nr)
+        sammel = sammelrechnungsnr("HC", ERSTELLT, kt_nr)
+        rechnr = "%s:%s" % (sammel, EINZELRECHNUNGSNR)
         fkt = "FKT+01+%s+%s+%s" % (ik_le, ik_kt, ik_le)
         rec = "REC+%s+%s+1+EUR" % (rechnr, ERSTELLT)
         slla = [fkt, rec]
@@ -130,7 +145,7 @@ def erzeuge(n_pos: int, seed: int):
             kv = kvnr(chr(65 + rnd.randrange(26)), "%08d" % rnd.randrange(10**7, 10**8))
             name, vorname = rnd.choice(NAMEN), rnd.choice(VORNAMEN)
             geb = "%04d%02d%02d" % (rnd.randrange(1925, 2018), rnd.randrange(1, 13), rnd.randrange(1, 29))
-            slla.append("INV+%s+%07d" % (kv, belegnr))
+            slla.append("INV+%s+%s" % (kv, belegnr_str(belegnr)))
             slla.append("NAD+%s+%s+%s" % (name, vorname, geb))
             tag = LEISTUNGSMONAT + "%02d" % rnd.randrange(1, 29)
             slla.append("ESK+" + tag)
@@ -153,8 +168,8 @@ def erzeuge(n_pos: int, seed: int):
                 fall_ct += ges
                 positionen.append(dict(hmnr=hmnr, anzahl=anzahl, preis=preis, gesamt=ges, bez=bez, packung=pack))
                 slla.append("EHE+%s+00+%d+%s+%s+07" % (hmnr, anzahl, eur(preis), eur(ges)))
-                zeilen.append("%s|%07d|%s|%s|00|%d|%s|%s|%s" % (
-                    kv, belegnr, ik_kt, hmnr, anzahl, eur(preis), eur(ges), bez))
+                zeilen.append("%s|%s|%s|%s|00|%d|%s|%s|%s" % (
+                    kv, belegnr_str(belegnr), ik_kt, hmnr, anzahl, eur(preis), eur(ges), bez))
                 kt_pos += 1
             zuz_ct = 0 if rnd.random() < 0.18 else min(1000, int((Decimal(fall_ct) / 10).quantize(Decimal("1"), ROUND_HALF_UP)))
             slla.append("IAF+%s+%s++%s" % (eur(fall_ct), eur(zuz_ct), eur(fall_ct - zuz_ct)))
@@ -177,15 +192,16 @@ def erzeuge(n_pos: int, seed: int):
     return "'".join(seg) + "'", zeilen, meta
 
 
-def auftragssatz(meta, groesse, transfer="001", appref=DATEINAME_APPREF, erstellt=ERSTELLT):
+def auftragssatz(meta, groesse, transfer="001", appref=DATEINAME_APPREF, erstellt=ERSTELLT, verfahren="TSOL0",
+                 komprimierung="00", verschluesselung="00", unterschrift="00", empfaenger=None, uhrzeit=UHRZEIT):
     def N(v, l): return str(v).rjust(l, "0")
     def A(v, l): return str(v).ljust(l)
     felder = [
-        N(500000, 6), "01", N(348, 8), N(0, 3), "TSOL0", transfer, A("", 5),
-        A(meta["ik_le"], 15), A(meta["ik_le"], 15), A(meta["ik_dan"], 15), A(meta["ik_dan"], 15),
+        N(500000, 6), "01", N(348, 8), N(0, 3), verfahren, transfer, A("", 5),
+        A(meta["ik_le"], 15), A(meta["ik_le"], 15), A(empfaenger or meta["ik_dan"], 15), A(empfaenger or meta["ik_dan"], 15),
         N(0, 6), N(0, 6), appref,
-        erstellt + UHRZEIT + "00", erstellt + UHRZEIT + "30", N(0, 14), N(0, 14),
-        N(0, 6), "0", N(groesse, 12), N(groesse, 12), "I1", "00", "00", "00",
+        erstellt + uhrzeit + "00", erstellt + uhrzeit + "30", N(0, 14), N(0, 14),
+        N(0, 6), "0", N(groesse, 12), N(groesse, 12), "I1", komprimierung, verschluesselung, unterschrift,
         A("", 3), N(0, 5), N(0, 8), " ", N(0, 2), "5", N(0, 10), N(0, 6),
         A("", 28), A("", 44), "01" + " " * 26 + "01",
     ]
