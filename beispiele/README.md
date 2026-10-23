@@ -11,6 +11,7 @@ gelten soll; hier liegt, *woran* man es ausprobieren kann.
 | [`pflege-105-sgbxi-sammelrechnung/`](pflege-105-sgbxi-sammelrechnung/) | § 105 SGB XI, Rechnungsart 3 | Dieselbe Abrechnung über eine Abrechnungsstelle mit Inkassovollmacht, verschachtelte PLGA-Ebenen | ⚠️ Verschachtelung und Sammelrechnungs-Kennzeichen belegt; einzelne Feldzuordnungen bei Rechnungsart 3 sind offengelegte Interpretation |
 | [`pflege-105-sgbxi-kim/`](pflege-105-sgbxi-kim/) | § 105 SGB XI, TI/KIM | Dieselbe Abrechnung mit `IMG`-Segment und skizziertem KIM-Umschlag, ohne Auftragsdatei | ⚠️ EDIFACT-Teil so belastbar wie der Positivfall; der XML-Umschlag ist ausdrücklich eine unbelegte Skizze |
 | [`pflege-105-sgbxi-umlaute/`](pflege-105-sgbxi-umlaute/) | § 105 SGB XI | Dieselbe Abrechnung mit Umlauten und dem TA-1-eigenen Freigabezeichen-Beispiel („D?'Angelo") | ✅ Freigabezeichen-Fall wörtlich aus der TA 1 übernommen; Umlaut-Zulässigkeit selbst folgt nur aus der allgemeinen Zeichensatzregel |
+| [`hilfsmittel-302-inkontinenz-45000/`](hilfsmittel-302-inkontinenz-45000/) | § 302 SGB V (SLGA/SLLA), Hilfsmittel | Lasttest: 45.000 Inkontinenz-Positionen, 9.000 Fälle, 3 Kostenträger, 2,4 MB, reproduzierbar per `generate.py` | ❌ nur Auftragssatz belegt; die Fachsegmente sind eine Skizze, da die TA 1 zu § 302 fehlt |
 
 ## Grundsätze
 
