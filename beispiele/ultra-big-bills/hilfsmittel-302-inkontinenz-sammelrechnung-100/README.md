@@ -16,7 +16,7 @@ und Beträge sind identisch zum Original (`INV`-Belegnummern `0000001`–`000005
 >
 > - Die **Sammelrechnungs-Verschachtelung** (Sammel-`SLGA` mit `FKT`-Kennzeichen `J` → `SLGA` → `SLLA`
 >   je Kostenträger) ist aus dem § 105-Verfahren **analog übernommen** (siehe
->   [`pflege-105-sgbxi-sammelrechnung/`](../pflege-105-sgbxi-sammelrechnung/)), für § 302 nicht belegt.
+>   [`pflege-105-sgbxi-sammelrechnung/`](../../pflege-105-sgbxi-sammelrechnung/)), für § 302 nicht belegt.
 > - Die IK-Zuordnung im `FKT` bei Rechnungsart 3 ist dieselbe offene Interpretation wie dort.
 > - **Leistungsnachweise und Begleitzettel sind Skizzen.** Anlage 5 (Inhalt der Urbelege) und
 >   Anlage 4 (Begleitzettel) zu § 302 liegen nicht vor; Inhalt und Layout sind erfunden.
@@ -48,5 +48,5 @@ Alle Daten sind synthetisch (REQ-DSGVO-03).
 ## Neu erzeugen
 
 ```bash
-python3 beispiele/hilfsmittel-302-inkontinenz-sammelrechnung-100/generate.py --pdf
+python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-sammelrechnung-100/generate.py --pdf
 ```

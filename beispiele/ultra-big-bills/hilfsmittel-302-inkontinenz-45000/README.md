@@ -56,8 +56,8 @@ ausschließbar und ohne Bedeutung.
 ## Neu erzeugen
 
 ```bash
-python3 beispiele/hilfsmittel-302-inkontinenz-45000/generate.py            # 45.000 Positionen
-python3 beispiele/hilfsmittel-302-inkontinenz-45000/generate.py --positionen 10000 --seed 7
+python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-45000/generate.py            # 45.000 Positionen
+python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-45000/generate.py --positionen 10000 --seed 7
 ```
 
 Die Positionszahl muss ein Vielfaches von 5 sein.
