@@ -192,15 +192,16 @@ def erzeuge(n_pos: int, seed: int):
     return "'".join(seg) + "'", zeilen, meta
 
 
-def auftragssatz(meta, groesse, transfer="001", appref=DATEINAME_APPREF, erstellt=ERSTELLT):
+def auftragssatz(meta, groesse, transfer="001", appref=DATEINAME_APPREF, erstellt=ERSTELLT, verfahren="TSOL0",
+                 komprimierung="00", verschluesselung="00", unterschrift="00", empfaenger=None, uhrzeit=UHRZEIT):
     def N(v, l): return str(v).rjust(l, "0")
     def A(v, l): return str(v).ljust(l)
     felder = [
-        N(500000, 6), "01", N(348, 8), N(0, 3), "TSOL0", transfer, A("", 5),
-        A(meta["ik_le"], 15), A(meta["ik_le"], 15), A(meta["ik_dan"], 15), A(meta["ik_dan"], 15),
+        N(500000, 6), "01", N(348, 8), N(0, 3), verfahren, transfer, A("", 5),
+        A(meta["ik_le"], 15), A(meta["ik_le"], 15), A(empfaenger or meta["ik_dan"], 15), A(empfaenger or meta["ik_dan"], 15),
         N(0, 6), N(0, 6), appref,
-        erstellt + UHRZEIT + "00", erstellt + UHRZEIT + "30", N(0, 14), N(0, 14),
-        N(0, 6), "0", N(groesse, 12), N(groesse, 12), "I1", "00", "00", "00",
+        erstellt + uhrzeit + "00", erstellt + uhrzeit + "30", N(0, 14), N(0, 14),
+        N(0, 6), "0", N(groesse, 12), N(groesse, 12), "I1", komprimierung, verschluesselung, unterschrift,
         A("", 3), N(0, 5), N(0, 8), " ", N(0, 2), "5", N(0, 10), N(0, 6),
         A("", 28), A("", 44), "01" + " " * 26 + "01",
     ]

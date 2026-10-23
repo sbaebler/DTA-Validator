@@ -7,6 +7,8 @@
 #         Anhang 4b (XML-Schema), Datei Anhang_04b_Anlage_1_TP5_20220519.xsd, 10.098 Byte,
 #         SHA-256 50ae21b0fd9412e3a6c88ac2a76858558ebcc74f4845826d40561f637f539aab
 #
+# Kopie des XSD fuer Tests: knowledge-base/data/schemas/Anhang_04b_Anlage_1_TP5_20220519.xsd (unveraendert, SHA-256 siehe oben).
+#
 # Primaerdokument ausgewertet am 2026-10-23. Textextraktion des PDF und Abruf des XSD erfolgten
 # direkt; die XSD-Typen wurden gegen die Datei geprueft.
 #

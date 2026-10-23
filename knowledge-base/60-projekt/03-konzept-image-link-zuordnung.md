@@ -205,6 +205,10 @@ Die Eingaben enthalten **Sozialdaten**.
 | 9.000 Einzelbelege zuordnen (Stufe 1–2) und in 18 Ordner à ≤ 500 Images verpacken | < 3 min ohne OCR |
 | OCR-Anteil | über Worker-Zahl skalierbar, Fortschrittsanzeige |
 
+**Referenzfall vorhanden:** `beispiele/ultra-big-bills/…-sammelrechnung-100/imagelink-paket/` enthält ein von Hand gebautes, XSD-valides
+Paket (100 PDF/XML-Paare, 3 ZIP, 3 `.AUF`) samt Prüfer (`pruefe_paket.py`, Prüfcodes P01–P08) und Negativtests; der Paket-Builder des Dienstes
+soll dieselben Bytes liefern.
+
 Testbasis (alle synthetisch): `beispiele/ultra-big-bills/…-45000/` (Lastfall) und `…-sammelrechnung-100/` mit
 `leistungsnachweise.pdf` (eine PDF, 100 Seiten, Belegnummer im Text, Reihenfolge wie DTA) — **Abnahmetest für Splitter und
 Stufe 3**: 100 Belege, 100 eindeutige Zuordnungen, 100 PDF/XML-Paare, XSD-valide. Zu ergänzen: Negativfälle (fehlender Beleg, doppelter Beleg, vertauschte

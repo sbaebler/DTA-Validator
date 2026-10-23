@@ -51,8 +51,47 @@ Je Kostenträger drei Nachrichten: Sammel-`SLGA` (`FKT`: `J`), `SLGA` (mit `UST`
 Leistungserbringer-IK `591120416`, Abrechnungsstelle `661233445`, Datenannahme `661100423`.
 Alle Daten sind synthetisch (REQ-DSGVO-03).
 
+## ImageLink-Lieferpaket (`imagelink-paket/`)
+
+Aus den 100 Leistungsnachweisen entsteht ein Paket nach [Anhang 4a/4b](../../../knowledge-base/data/imagelink.yaml):
+je Beleg ein **PDF + XML-Paar**, je Sammelrechnung **eine ZIP-Datei** (Name ohne Endung) mit **Auftragsdatei**.
+
+| Datei | Inhalt |
+|---|---|
+| `D261012.T081200.T1IM0001` / `.AUF` | 50 Belege, Sammelrechnung `SU202610120001`, Transfernummer 001 |
+| `D261012.T081200.T1IM0002` / `.AUF` | 30 Belege, Sammelrechnung `SU202610120002`, Transfernummer 002 |
+| `D261012.T081200.T1IM0003` / `.AUF` | 20 Belege, Sammelrechnung `SU202610120003`, Transfernummer 003 |
+| `zuordnung.csv` | je Beleg: ZIP, Ordner, Dokument-/Vorgangsidentifikator, Sammel-/Einzelrechnungsnr, Belegnummer, KVNR, Kostenträger-IK, Seite in `leistungsnachweise.pdf`, SHA-256 des PDF |
+
+Aufbau im ZIP: Ordner `SUE_SU2026101200nn01/` (`<ABR 3>_<Sammelrechnungsnr 14><Zähler 2>`) mit je Beleg
+`SUE_<Sammel 14><Einzel 6><Beleg 10><Zähler 01>.PDF` und `.XML` (36 Zeichen, Grenze 40). Dokumentklasse `ER_SOLE_HIMI_ON`,
+Eingangskanal 2, Vorgangsumfang 001, Nutzdaten Sammel-/Einzelrechnungsnummer, Rechnungsdatum, Rechnungsart `3`, Belegnummer,
+Leistungserbringer-IK, KVNR als Ordnungsbegriff `PKKVDE`. Die Zuordnung Seite → Beleg wird beim Bau über den Seitentext
+(Belegnummer, KVNR) geprüft.
+
+**Abweichungen vom Echtbetrieb (bewusst):**
+
+- **Nicht signiert/verschlüsselt:** Spezifikation verlangt PKCS#7 (`VERSCHLUESSELUNGSART` und `ELEKTRONISCHE_UNTERSCHRIFT` = `03`).
+  Das Fixture führt `00`; `KOMPRIMIERUNG` = `03` (ZIP) stimmt.
+- **`Beschreibung`** fest `AOK Systems GmbH`, weil das XSD den Wert festschreibt; das Dokument nennt ihn „von annehmender Stelle zu definieren".
+- **ABR-Kürzel** `SUE` (3 Stellen laut Text; das Beispiel der Spezifikation zeigt 7 Zeichen).
+- **`DATEINAME`-Feld** im Auftragssatz und Empfänger-IK (`661100559`, Belegannahme) sind erfunden; die Spezifikation regelt sie nicht.
+- **Dokumentklasse:** Der Nachweis ist ein Lieferschein; `ER_SOLE_HIMI_ON` erlaubt laut Anhang 4a neben der Verordnung auch weitere Belege
+  (z. B. Empfangsbestätigung), das Erfordernis ist zu vereinbaren. Sammelrechnungs-Images (`SR_SOLE_HIMI_ON`) und Begleitzettel werden
+  nicht ins Paket gelegt (Zusammenspiel ungeklärt).
+- **`Erstellungszeitpunkt`** ist für alle Belege `2026-10-12T08:12:00Z` (synthetisch).
+- ZIP und PDF sind reproduzierbar (feste Zeitstempel, normalisierte PDF-`/ID`).
+
+**Prüfung:** `pruefe_paket.py` prüft XSD-Validität (`knowledge-base/data/schemas/`), Dateinamen, Identifikatoren, Ordner- und
+Größengrenzen, Auftragssatz und den Abgleich jedes Dokuments mit dem DTA-Fall in `TSOL0002`; `test_pruefe_paket.py` baut
+zehn Fehlerfälle und erwartet die richtigen Befunde.
+
 ## Neu erzeugen
 
 ```bash
-python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-sammelrechnung-100/generate.py --pdf
+python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-sammelrechnung-100/generate.py --pdf     # DTA, Auftragssatz, Nachweise
+python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-sammelrechnung-100/build_imagelink.py     # ImageLink-Paket
+python3 beispiele/ultra-big-bills/hilfsmittel-302-inkontinenz-sammelrechnung-100/pruefe_paket.py        # prüfen
 ```
+
+Voraussetzungen: Python 3 mit `lxml`, poppler-utils (`pdfseparate`, `pdftotext`, `pdfinfo`), für `--pdf` Chromium.
