@@ -14,6 +14,13 @@ Ein serverseitiger Dienst, der
 Nicht zugeordnete Belege und Fälle ohne Beleg werden nicht still verworfen, sondern in einem
 Prüfbericht und einer Review-Queue ausgewiesen.
 
+**Zielbild „Big Bill Booster":** Die Serveranwendung ist für **sehr große, einzelne, klar definierte Fälle** gedacht — eine Abrechnung
+(eine DTA, ein Belegbestand) mit zehntausenden Positionen und Tausenden Belegen, die zuverlässig zugeordnet und als ImageLink-Paket
+bereitgestellt werden muss. Das bestimmt die Prioritäten: Durchsatz und Speicherdisziplin (Streaming-Parser, parallele Belegverarbeitung),
+Wiederaufsetzbarkeit großer Läufe, eindeutige Ergebnisse mit Review nur für Ausnahmen. Kein Ziel sind allgemeine Massenabrechnung über viele
+Mandanten oder ein Dauerbetrieb mit ständigem Eingang; das Mandantenmodell (offener Punkt 8) kann daher einfach bleiben.
+Referenzfälle: `beispiele/ultra-big-bills/` (45.000 Positionen; 100-Fälle-Sammelrechnung mit Paket).
+
 ## 1a. Außerhalb des Umfangs (Entscheidung vom 23.10.2026)
 
 **Signatur und Verschlüsselung sind vorerst out of scope.** Das betrifft die PKCS#7-Signatur der Belege (Dokumentklasse `…_ON`),
