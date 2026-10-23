@@ -27,8 +27,8 @@ verteilt auf drei Kostenträger. Gedacht für Performance-, Speicher- und Regelt
 
 | Datei | Inhalt |
 |---|---|
-| `TSOL0001` | Nutzdaten, EDIFACT, ISO 8859-1, **ohne Zeilenumbrüche** (wie im Echtbetrieb), 2,36 MB, 81.035 Segmente |
-| `TSOL0001.AUF` | Auftragssatz, 348 Byte; `DATEIGROESSE_NUTZDATEN` = `DATEIGROESSE_UEBERTRAGUNG` = 2357531 |
+| `TSOL0001` | Nutzdaten, EDIFACT, ISO 8859-1, **ohne Zeilenumbrüche** (wie im Echtbetrieb), 2,38 MB, 81.035 Segmente |
+| `TSOL0001.AUF` | Auftragssatz, 348 Byte; `DATEIGROESSE_NUTZDATEN` = `DATEIGROESSE_UEBERTRAGUNG` = 2384585 |
 | `TSOL0001.zeilen.txt` | Lesefassung: **genau 45.000 Zeilen**, je Zeile eine Position (`KVNR\|Beleg\|IK KT\|Pos.-Nr.\|Kz\|Menge\|Einzelpreis\|Gesamt\|Bezeichnung`) |
 | `beispiel-kennzahlen.yaml` | Erwartungswerte: Zahlen, Summen je Rechnung, SHA-256 |
 | `generate.py` | Deterministischer Generator (`--positionen`, `--seed`); gleiche Parameter ergeben identische Bytes |
@@ -39,13 +39,15 @@ verteilt auf drei Kostenträger. Gedacht für Performance-, Speicher- und Regelt
 
 | Rechnung | IK Kostenträger | Fälle | Positionen | Brutto EUR |
 |---|---|---:|---:|---:|
-| `2026100001:0` | `109524616` | 4.000 | 20.000 | 691.423,80 |
-| `2026100002:0` | `105312075` | 3.000 | 15.000 | 518.823,10 |
-| `2026100003:0` | `108433180` | 2.000 | 10.000 | 344.098,40 |
+| `HC202610050001:000001` | `109524616` | 4.000 | 20.000 | 691.423,80 |
+| `HC202610050002:000001` | `105312075` | 3.000 | 15.000 | 518.823,10 |
+| `HC202610050003:000001` | `108433180` | 2.000 | 10.000 | 344.098,40 |
 | **Summe** | | **9.000** | **45.000** | **1.554.345,30** |
 
 Leistungserbringer-IK `591120416` (Klassifikation 59), Datenannahmestelle `661100423`.
 Alle IK tragen eine gerechnete Prüfziffer. Je Fall: `INV NAD ESK EHE×5 IAF`.
+
+**Nummernformate** wie im ImageLink-Verfahren (Anlage 1 Anhang 4a) verlangt: Sammelrechnungsnummer 14 Stellen (`HC` + Erstelldatum + `00` + laufende Nr. je Kostenträger), Einzelrechnungsnummer 6 Stellen (`000001`), Belegnummer 10 Stellen (`0000000001` …); `REC` trägt `<Sammel>:<Einzel>`. Die Zuordnung von Sammel- und Einzelrechnungsnummer zu den Ebenen (Kostenträger/Gesamtrechnung) ist eine Auslegung.
 
 ## Datenschutz
 

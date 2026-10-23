@@ -36,9 +36,9 @@ Quellen Q41/Q42. Die Kernpunkte, die das Konzept bestimmen:
 und sagt **nichts** zu Bildformat, Auflösung, Farbtiefe der PDF. Ob jede Kasse es gleich anwendet, ist offen.
 Die Urbeleg-Inhalte regelt Anlage 5 (V 4.0, 27.09.2018), den Begleitzettel Anlage 4 (V 2.0, 2006); beide sind ausgewertet (Abschnitt 2a).
 
-**Passung zu den Beispieldaten:** Die Fixtures unter `beispiele/ultra-big-bills/` verwenden Rechnungsnummern
-wie `2026100190:0` und 7-stellige Belegnummern; die Spezifikation nennt 14 / 6 / 10 Stellen. Das ist
-im Fixture anzupassen, bevor es als ImageLink-Testbasis taugt.
+**Passung zu den Beispieldaten:** Die Fixtures unter `beispiele/ultra-big-bills/` verwenden seit dem 23.10.2026 die Nummernformate
+der Spezifikation (Sammelrechnungsnr 14, Einzelrechnungsnr 6, Belegnummer 10 Stellen; `REC+<Sammel>:<Einzel>`). Welche Rechnungsebene
+die Einzelrechnungsnummer trägt, ist eine Auslegung.
 
 **Scope-Konflikt:** Das Projekt erklärt „Erzeugung von DTA-Dateien" als Out of Scope. Das ImageLink-Paket ist ein
 erzeugtes Artefakt. Vorschlag: eigenes Modul `imagelink` neben dem Validator, das die DTA nur **liest** und nie
@@ -207,8 +207,7 @@ Die Eingaben enthalten **Sozialdaten**.
 
 Testbasis (alle synthetisch): `beispiele/ultra-big-bills/…-45000/` (Lastfall) und `…-sammelrechnung-100/` mit
 `leistungsnachweise.pdf` (eine PDF, 100 Seiten, Belegnummer im Text, Reihenfolge wie DTA) — **Abnahmetest für Splitter und
-Stufe 3**: 100 Belege, 100 eindeutige Zuordnungen, 100 PDF/XML-Paare, XSD-valide. Voraussetzung: Fixture auf Nummernformate
-der Spezifikation anpassen (Abschnitt 2). Zu ergänzen: Negativfälle (fehlender Beleg, doppelter Beleg, vertauschte
+Stufe 3**: 100 Belege, 100 eindeutige Zuordnungen, 100 PDF/XML-Paare, XSD-valide. Zu ergänzen: Negativfälle (fehlender Beleg, doppelter Beleg, vertauschte
 Belegnummer, falscher Betrag, Beleg ohne Satz, unlesbarer Scan, > 500 Images, ungültiger Dateiname, XSD-Verstoß, DTA nach
 Zuordnung geändert).
 
@@ -235,7 +234,7 @@ Zuordnung geändert).
 2. **Kassenvereinbarung:** Das Verfahren ist optional und je Kostenträger zu vereinbaren. Welche Kassen nutzen es, mit welchen Abweichungen (Kürzel, `Beschreibung`, Dokumentklassen, SFTP-Ziele)?
 3. **Widersprüche** der Spezifikation (Liste in `imagelink.yaml`) mit einer annehmenden Stelle klären: Länge ABR-Kürzel, Eingangskanal, `Beschreibung`, Verfahrenskennung `1IM` (in unserer Auswertung von Anlage 4 GGT nicht als Eintrag geführt).
 4. **PDF-Anforderungen** (Auflösung, Farbtiefe, PDF/A, Signaturform) — Anhang 4a sagt dazu nichts.
-5. **Belegnummer-Format:** Wie wird die 10-stellige DTA-Belegnummer auf die 7-stellige der Praxissoftware abgebildet; Fixture anpassen.
+5. **Nummernebenen:** Zuordnung von Sammel- und Einzelrechnungsnummer zu Kostenträger-/Gesamtrechnung ist in Anhang 4a mehrdeutig (Einzelrechnung = Abrechnungsfall, Nummer laut Text aus `REC`); mit einer annehmenden Stelle klären. Fixture folgt einer Auslegung.
 6. **Neuere Fassung**: Das Portal führt Anhang 4a (14.07.2022) als aktuell; ob TA 1 V22 (21.05.2026, ab 01.02.2027) oder neue Anhänge (z. B. „Anhang 6 — Elektronische Leistungsbestätigung", laut Portalrecherche aufgeführt, Fundstelle nicht selbst geprüft, **nicht ausgewertet**) das Verfahren berühren, ist zu prüfen.
 7. **Zertifikate und Schlüssel** für PKCS#7: Wer signiert und verschlüsselt (Leistungserbringer oder Abrechner), welche Zertifikate, welche Empfänger-Schlüssel?
 8. **Einbindung in die Abrechnungskette** vor der SECON-Verschlüsselung der DTA; Mandantenmodell (ein Leistungserbringer oder viele).
@@ -245,7 +244,7 @@ Zuordnung geändert).
 
 | Phase | Inhalt |
 |---|---|
-| 0 | Offene Punkte 1–4 klären, Begleitzettel-Generator auf Anlage 4 prüfen, Fixture auf Spezifikationsformate anpassen |
+| 0 | Offene Punkte 1–4 klären, Begleitzettel-Generator auf Anlage 4 prüfen |
 | 1 | Poller, DTA-Index, Dateinamen-Zuordnung (Stufe 1), XML-Builder mit XSD-Validierung, Prüfbericht (ohne Signatur) |
 | 2 | Splitter, PDF-Text, Belegnummer-Extraktion (Stufe 3), Gegenprüfung (Stufe 4), Stapelbildung, ZIP, `.AUF` |
 | 3 | Review-UI, Rollen, Audit, Betrieb |

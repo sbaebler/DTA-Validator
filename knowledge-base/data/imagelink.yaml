@@ -149,6 +149,6 @@ offene_punkte_und_widersprueche:
   - "Beschreibung: XSD fixiert 'AOK Systems GmbH', Dokument nennt 'von annehmender Stelle zu definieren'."
   - "Beispiel-XML enthaelt offensichtliche Tippfehler ('XMLns', '<Eingangskaaoknal>') und Elementnamen, die vom Feldkatalog abweichen (KassenInstitutionskennzeichen vs. 'Institutionskennzeichen der Krankenkasse'; Dokumentidentifikator als Attribut vs. Feld)."
   - "Verfahrenskennung: Text nennt 'Stellen 21 bis 23 = 1IM'; die Verfahrenskennung '1IM' ist in der ausgewerteten Anlage 4 GGT (Fassung 01.01.2026) nicht als eigener Eintrag gefuehrt."
-  - "Die Sammelrechnungsnummer ist hier 14-stellig, Einzelrechnungsnummer 6-stellig, DTA-Belegnummer 10-stellig; das Pflege-Format 'REC+2026080001:0' und die 7-stelligen Belegnummern der Beispielfixtures entsprechen dem nicht."
+  - "Die Zuordnung von Sammel- und Einzelrechnungsnummer zu den Rechnungsebenen ist mehrdeutig (Einzelrechnung = Abrechnungsfall laut Anmerkung, Nummer laut Text aus REC der Nachricht). Die Fixtures unter beispiele/ultra-big-bills folgen einer Auslegung."
   - "Anhang 4a nennt keine Vorgabe zu Bildformat, Aufloesung oder Farbtiefe der PDF ausser 'Multi-PDF' und 'Merge: niedrige Aufloesung'."
   - "Es ist nicht geklaert, ob alle Kostentraeger E1IM0/ImageLink gleich anwenden; Nutzung nur nach Vereinbarung."

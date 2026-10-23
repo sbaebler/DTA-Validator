@@ -54,19 +54,19 @@ def nutzdaten(sel, ik_le):
     for kt in ANTEIL:
         fs = [f for f in sel if f["kt"] == kt]
         ik_kt = fs[0]["ik_kt"]
-        sammel_nr = "2026100%d90" % int(kt)
+        sammel_nr = g.sammelrechnungsnr("SU", ERSTELLT, kt)
         brutto = sum(f["brutto"] for f in fs)
         zuz = sum(f["zuzahlung"] for f in fs)
         ges = "GES+%s+%s++%s+%s" % (g.eur(brutto), g.eur(zuz), g.eur(brutto - zuz), g.eur(g.mwst_ct(brutto)))
         nam = "NAM+Abrechnungsstelle Sued GmbH+Inkassovollmacht " + NAME_LE
         nachricht("SLGA", ["FKT+01+J+%s+%s++%s" % (IK_ABR, ik_kt, IK_ABR),
-                           "REC+%s:0+%s+3+EUR" % (sammel_nr, ERSTELLT), ges, nam])
+                           "REC+%s:000000+%s+3+EUR" % (sammel_nr, ERSTELLT), ges, nam])
         fkt = "FKT+01+%s+%s+%s" % (ik_le, ik_kt, IK_ABR)
-        rec = "REC+%s:1+%s+3+EUR" % (sammel_nr, ERSTELLT)
+        rec = "REC+%s:%s+%s+3+EUR" % (sammel_nr, g.EINZELRECHNUNGSNR, ERSTELLT)
         nachricht("SLGA", ["FKT+01++%s+%s+%s" % (IK_ABR, ik_kt, IK_ABR), rec, "UST+DE999999999+J+01", ges, nam])
         slla = [fkt, rec]
         for f in fs:
-            slla += ["INV+%s+%07d" % (f["kvnr"], f["belegnr"]),
+            slla += ["INV+%s+%s" % (f["kvnr"], g.belegnr_str(f["belegnr"])),
                      "NAD+%s+%s+%s" % (f["name"], f["vorname"], f["geburt"]),
                      "ESK+" + f["leistungstag"]]
             slla += ["EHE+%s+00+%d+%s+%s+07" % (p["hmnr"], p["anzahl"], g.eur(p["preis"]), g.eur(p["gesamt"]))
@@ -113,7 +113,7 @@ def leistungsnachweis(f, lfd):
 <h2>Versicherte(r)</h2><table>
 <tr><th>Name</th><td>%s, %s</td><th>Geburtsdatum</th><td>%s.%s.%s</td></tr>
 <tr><th>KVNR</th><td>%s</td><th>Kostenträger-IK</th><td>%s</td></tr>
-<tr><th>Belegnummer</th><td>%07d</td><th>Rechnungsnummer</th><td>%s</td></tr></table>
+<tr><th>Belegnummer</th><td>%s</td><th>Rechnungsnummer</th><td>%s</td></tr></table>
 <h2>Gelieferte Hilfsmittel</h2><table><thead><tr><th>Pos.</th><th>Hilfsmittelpositionsnr.</th><th>Bezeichnung</th><th class=r>Menge</th><th class=r>Einzelpreis EUR</th><th class=r>Gesamt EUR</th></tr></thead>
 <tbody>%s</tbody><tfoot><tr><td colspan=5>Bruttobetrag (MwSt. 7 %%: %s EUR enthalten)</td><td class=r>%s</td></tr>
 <tr><td colspan=5>Gesetzliche Zuzahlung (Versicherte/r)</td><td class=r>%s</td></tr>
@@ -122,8 +122,8 @@ def leistungsnachweis(f, lfd):
 <div class=sig><div><div class=linie></div>Ort, Datum</div><div><div class=linie></div>Unterschrift Versicherte(r) / Bevollmächtigte(r)</div></div>
 <footer>Synthetischer Beleg zu den Beispieldaten des DTA-Validators. Anlage 5 sieht die Empfangsbestätigung auf dem Verordnungsblatt vor; ein eigener Lieferschein gilt nur kraft Vereinbarung. Layout ist erfunden.</footer></section>""" % (
         d[6:8], d[4:6], d[0:4], lfd, NAME_LE, F_IK_LE, html.escape(f["name"]), html.escape(f["vorname"]),
-        f["geburt"][6:8], f["geburt"][4:6], f["geburt"][0:4], f["kvnr"], f["ik_kt"], f["belegnr"],
-        "2026100%d90:1" % int(f["kt"]), zeilen, g.eur(g.mwst_ct(f["brutto"])), g.eur(f["brutto"]),
+        f["geburt"][6:8], f["geburt"][4:6], f["geburt"][0:4], f["kvnr"], f["ik_kt"], g.belegnr_str(f["belegnr"]),
+        "%s:%s" % (g.sammelrechnungsnr("SU", ERSTELLT, f["kt"]), g.EINZELRECHNUNGSNR), zeilen, g.eur(g.mwst_ct(f["brutto"])), g.eur(f["brutto"]),
         g.eur(f["zuzahlung"]), g.eur(f["brutto"] - f["zuzahlung"]))
 
 
@@ -144,11 +144,11 @@ def begleitzettel(sel, summen):
 <h2>Krankenkasse</h2><table><tr><th>Name der Krankenkasse</th><td>%s</td><th>IK der Krankenkasse</th><td>%s</td></tr></table>
 <h2>Abrechnungsstelle (Rechnungssteller)</h2><table><tr><th>Name/Anschrift</th><td>Abrechnungsstelle Sued GmbH, %s</td><th>IK</th><td>%s</td></tr></table>
 <h2>Leistungserbringer</h2><table><tr><th>Name/Anschrift</th><td>%s, %s</td><th>IK</th><td>%s</td></tr></table>
-<h2>Gesamtrechnung</h2><table><tr><th>Rechnungsnummer</th><td>%s:1</td><th>Rechnungsdatum</th><td>12.10.2026</td></tr>
-<tr><th>Anzahl der Urbelege</th><td>%d</td><th>Erste / letzte Belegnummer</th><td>%07d / %07d</td></tr></table>
+<h2>Gesamtrechnung</h2><table><tr><th>Rechnungsnummer</th><td>%s:%s</td><th>Rechnungsdatum</th><td>12.10.2026</td></tr>
+<tr><th>Anzahl der Urbelege</th><td>%d</td><th>Erste / letzte Belegnummer</th><td>%s / %s</td></tr></table>
 <footer>Synthetisch. Pflichtinhalt nach Anlage 4 (V 2.0, 2006). Format und Zusammenspiel mit dem ImageLink-Paket sind dort nicht geregelt. Summen (nicht Teil von Anlage 4): Brutto %s EUR, Zuzahlungen %s EUR.</footer></section>""" % (
-            sn, KASSENNAMEN[kt], ik_kt, ANSCHRIFT_ABR, IK_ABR, NAME_LE, ANSCHRIFT_LE, F_IK_LE, sn, nf,
-            belege[0]["belegnr"], belege[-1]["belegnr"], g.eur(br), g.eur(zu)))
+            sn, KASSENNAMEN[kt], ik_kt, ANSCHRIFT_ABR, IK_ABR, NAME_LE, ANSCHRIFT_LE, F_IK_LE, sn, g.EINZELRECHNUNGSNR, nf,
+            g.belegnr_str(belege[0]["belegnr"]), g.belegnr_str(belege[-1]["belegnr"]), g.eur(br), g.eur(zu)))
     return "".join(out)
 
 
@@ -188,8 +188,8 @@ def main():
                 % (len(raw), hashlib.sha256(raw).hexdigest(), IK_ABR, F_IK_LE))
         f.write("gesamtbrutto_eur: \"%s\"\nsammelrechnungen:\n" % g.eur(sum(s[5] for s in summen)))
         for kt, ik_kt, sn, nf, npos, br, zu in summen:
-            f.write("  - {sammelrechnungsnummer: \"%s\", ik_kostentraeger: \"%s\", faelle: %d, positionen: %d, "
-                    "brutto_eur: \"%s\", zuzahlung_eur: \"%s\"}\n" % (sn, ik_kt, nf, npos, g.eur(br), g.eur(zu)))
+            f.write("  - {sammelrechnungsnummer: \"%s\", einzelrechnungsnummer: \"%s\", ik_kostentraeger: \"%s\", faelle: %d, positionen: %d, "
+                    "brutto_eur: \"%s\", zuzahlung_eur: \"%s\"}\n" % (sn, g.EINZELRECHNUNGSNR, ik_kt, nf, npos, g.eur(br), g.eur(zu)))
     print(len(sel), "Faelle,", len(raw), "Byte,", n_nachr, "Nachrichten")
 
 
