@@ -129,6 +129,9 @@ Vollständig aus der Portalseite [Q12] übernommen (Abruf 01.09.2026). Eine Anla
 | Q24 | DMRZ — Positionsnummern für Sonstige Leistungserbringer | https://www.dmrz.de/wissen/ratgeber/alle-positionsnummern-fuer-sonstige-leistungserbringer-in-der-uebersicht |
 | Q24b | GKV-Hilfsmittelverzeichnis (REHADAT) | https://www.rehadat-gkv.de/ |
 | Q25b | Physio Deutschland — Korrekturverfahren § 302 ab 01.07.2020 | https://www.physio-deutschland.de/fachkreise/news-bundesweit/einzelansicht/artikel/neues-korrekturverfahren-im-rahmen-der-abrechnung-gemaess-302-sgb-v-ab-dem-01-juli-2020.html |
+| Q41 | § 302 Anlage 1 Anhang 4a — Imageverfahren (Schnittstellenbeschreibung), Stand 14.07.2022, V 001 | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anhang_04a_Anlage_1_TP5_20220714.pdf |
+| Q42 | § 302 Anlage 1 Anhang 4b — Imageverfahren (XML-Schema), Datei vom 19.05.2022 | https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anhang_04b_Anlage_1_TP5_20220519.xsd |
+| Q43 | AOK Systems — ImageLink Rechnung (Systematic 6/2020), nur in Suchtreffer gesehen, Abruf scheiterte (DNS) | https://www.aok-systems.de/systematic-archiv/ausgabe-sechs-2020/papierlos.html |
 | Q37 | KBS/Knappschaft — Datenaustausch für Leistungserbringer (Erprobungsverfahren) | https://www.kbs.de/DE/Services/FuerLeistungserbringer/Datenaustausch/302/datenaustausch_node.html |
 | Q18b | medisign — Pflegeleistungen vollelektronisch via KIM abrechnen | https://www.medisign.de/blog/pflegeleistungen-vollelektronisch-via-kim-abrechnen/ |
 | Q38 | BSI TR-02102 — Kryptographische Verfahren: Empfehlungen und Schlüssellängen | https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr02102/tr02102_node.html |

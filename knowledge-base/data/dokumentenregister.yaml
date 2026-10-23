@@ -203,6 +203,25 @@ sektorregelwerke:
         stand: 2018-09-27
         vertrauen: sekundaer
         beschafft: false
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anlage_5_TP5_V4_0_20180927.pdf
+      - nr: "1-Anhang-4a"
+        titel: Imageverfahren (Schnittstellenbeschreibung, ImageLink)
+        version: "001"
+        stand: 2022-07-14
+        anzuwenden_ab: 2022-09-01
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anhang_04a_Anlage_1_TP5_20220714.pdf
+        vertrauen: belegt
+        beschafft: true
+        ausgewertet: 2026-10-23
+        auswertung: knowledge-base/data/imagelink.yaml
+      - nr: "1-Anhang-4b"
+        titel: Imageverfahren (XML-Schema)
+        stand: 2022-05-19
+        url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Anhang_04b_Anlage_1_TP5_20220519.xsd
+        vertrauen: belegt
+        beschafft: true
+        ausgewertet: 2026-10-23
+        auswertung: knowledge-base/data/imagelink.yaml
     zusatzdokumente:
       - titel: Gemeinsame Umsetzungsempfehlungen zum Korrekturverfahren Heilmittel
         url: https://www.gkv-datenaustausch.de/media/dokumente/leistungserbringer_1/sonstige_leistungserbringer/technische_anlagen_aktuell_4/Gemeinsame_Umsetzungsempfehlungen_zum_Korrekturverfahren_Heilmittel_20250213.pdf
