@@ -14,6 +14,18 @@ Ein serverseitiger Dienst, der
 Nicht zugeordnete Belege und Fälle ohne Beleg werden nicht still verworfen, sondern in einem
 Prüfbericht und einer Review-Queue ausgewiesen.
 
+## 1a. Außerhalb des Umfangs (Entscheidung vom 23.10.2026)
+
+**Signatur und Verschlüsselung sind vorerst out of scope.** Das betrifft die PKCS#7-Signatur der Belege (Dokumentklasse `…_ON`),
+die PKCS#7-Signatur und -Verschlüsselung der Lieferung (Auftragssatz `03`/`03`), Zertifikate, Schlüsselverwaltung und die Ver-/Entschlüsselung
+der DTA (SECON, Anlage 16 GGT). Konsequenzen für dieses Konzept:
+
+- Der Dienst liest **nur Klartext-DTA** und erzeugt **unsignierte, unverschlüsselte** Pakete (Auftragssatz `VERSCHLUESSELUNGSART` = `00`,
+  `ELEKTRONISCHE_UNTERSCHRIFT` = `00`). Solche Pakete sind **nicht einreichbar**; sie dienen Entwicklung, Test und Vorprüfung.
+- Die Architektur hält eine **Nahtstelle** für einen späteren Schritt „signieren/verschlüsseln" offen (Ausgabe als Klartext-Paket, danach separater Schritt),
+  baut ihn aber nicht.
+- Der Prüfer behandelt `00` als zulässig und weist das Paket im Bericht als „unsigniert/unverschlüsselt" aus.
+
 ## 2. Die Spezifikation (belegt)
 
 Das Verfahren ist in **Anlage 1 Anhang 4a** (Stand 14.07.2022, V 001, ab 01.09.2022, 23 Seiten) und dem
@@ -82,8 +94,7 @@ Auswertung: [`data/urbelege.yaml`](../data/urbelege.yaml). Was für den Dienst f
   Marker (`.ready`) vorliegt. Auf SMB/NFS sind Dateisystem-Events unzuverlässig, daher **Polling** als Grundlage.
 - **Verschlüsselung:** Echte DTA sind vor dem Versand SECON-verschlüsselt. Der Dienst arbeitet auf der
   **Klartext-Nutzdatei**; ein verschlüsseltes Pärchen (`VERSCHLUESSELUNGSART` ≠ `00`) wird erkannt und abgelehnt.
-  Das **ausgehende** ImageLink-Paket wird dagegen selbst signiert und verschlüsselt (PKCS#7, Anlage 16 GGT) — das braucht
-  Zertifikate des Leistungserbringers bzw. Abrechners und eine Schlüsselverwaltung.
+  Signatur und Verschlüsselung des **ausgehenden** Pakets (PKCS#7) sind **out of scope** (Abschnitt 1a); das Paket bleibt vorerst Klartext.
 - **Beleg-Container:** Scanner liefern oft *eine* PDF mit vielen Seiten (so das Beispiel `leistungsnachweise.pdf`).
   Ein **Splitter** zerlegt in Einzelbelege (Trennblatt-Barcode, Wechsel der erkannten Belegnummer oder feste Seitenzahl).
   Die Spezifikation spricht von „Vorgangstrennblättern" als Mittel der Vorgangsbildung.
@@ -126,7 +137,7 @@ zwischen Stufe 3 und 4 führen **nicht** zur automatischen Zuordnung, sondern zu
 ```
 Eingang erkannt → stabil? → klassifiziert → DTA-Parser (Streaming) → Index der Rechnungssätze
    Belege splitten → Merkmale extrahieren → Zuordnungskaskade → Vollständigkeitsprüfung
-   → Review (falls nötig) → Paket bauen (Ordner, XML je PDF, ZIP, .AUF) → signieren/verschlüsseln
+   → Review (falls nötig) → Paket bauen (Ordner, XML je PDF, ZIP, .AUF)  [Signatur/Verschlüsselung: out of scope]
    → Nachprüfung → Archivierung + Bericht
 ```
 
@@ -142,7 +153,7 @@ Zustände je Lauf: `ERKANNT → EINGELESEN → ZUGEORDNET → IN_PRUEFUNG → FR
 
 Je Beleg wird erzeugt:
 
-- `<Dokumentidentifikator>.PDF` — das Image (Multi-PDF, bei Dokumentklasse `…_ON` signiert),
+- `<Dokumentidentifikator>.PDF` — das Image (Multi-PDF; Signatur laut Spezifikation bei `…_ON`, hier out of scope),
 - `<Dokumentidentifikator>.XML` — Wurzel `eAkte_Dokumentdatensatz`, `Versionsnummer` 100, `Dokumentklasse`, `Eingangskanal` 2,
   `Erstellungszeitpunkt`, `Zugriffschutz`, `KassenInstitutionskennzeichen`, `Ordnungsbegriffe` (z. B. `PKKVDE`),
   `VariableNutzdaten` (Sammel-/Einzelrechnungsnummer, Rechnungsdatum, Rechnungsart, Belegnummer, Leistungserbringer).
@@ -162,7 +173,7 @@ Pflichtprüfungen **vor** dem Schreiben (Standard = Fehler):
 | Jeder Satz mit Urbeleg-Pflicht hat ≥ 1 Dokument der erwarteten Klasse | Fehler |
 | Jeder Beleg ist genau einem Satz (oder erlaubtem Sammelbezug) zugeordnet | Fehler |
 | ≤ 500 Images je Ordner, ZIP ≤ 2 GB | Fehler |
-| Auftragssatz: `E1IM0`/`T1IM0`, Komprimierung 03, Verschlüsselung 03, Unterschrift 03, Größen stimmen | Fehler |
+| Auftragssatz: `E1IM0`/`T1IM0`, Komprimierung 03, Größen stimmen; Verschlüsselung/Unterschrift `00` zulässig (Bericht: „unsigniert“), `03` nur mit Signaturmodul | Fehler |
 | Betragsabgleich Beleg ↔ Satz | Warnung |
 | Begleitzettel je Gesamtrechnung vorhanden, Anzahl Urbelege und erste/letzte Belegnummer stimmen mit der Zuordnung | Fehler |
 | Offene Review-Fälle | Blocker für Freigabe |
@@ -175,7 +186,7 @@ Nach dem Schreiben: ZIP entpacken und gegen das Modell prüfen; optional Lauf de
  Verzeichnis-Poller ─► Job-Queue ─► Worker ─┬─ DTA-Parser (Streaming, aus Validator-Kern)
                                             ├─ Beleg-Pipeline (Splitter, PDF-Text, OCR, Barcode)
                                             ├─ Zuordnungs-Engine (Kaskade, Konfidenz)
-                                            └─ Paket-Builder (XML, ZIP, .AUF, PKCS#7) + Prüfregeln
+                                            └─ Paket-Builder (XML, ZIP, .AUF) + Prüfregeln   (Signatur/Verschlüsselung: out of scope)
  Datenbank (PostgreSQL; SQLite für Einzelplatz)   Objektablage = Dateisystem (Hash-adressiert)
  HTTP-API + Web-UI (Review, Berichte, Konfiguration)   Audit-Log (append-only)
 ```
@@ -183,8 +194,7 @@ Nach dem Schreiben: ZIP entpacken und gegen das Modell prüfen; optional Lauf de
 Wiederverwendung: DTA-Parser sowie IK-/KVNR-Prüfungen aus dem Validator-Kern. Nebenläufigkeit: je Mandant ein Lauf zugleich,
 Beleg-Pipeline parallelisierbar. Betrieb als Container oder systemd-Dienste, YAML-Konfiguration je Mandant, Metriken und
 Health-Endpunkt. Technologie (Vorschlag, offen): Python mit Hintergrund-Workern; Tesseract (OCR), poppler/pdfminer (PDF-Text),
-zxing/zbar (Barcode), XML-Validierung mit lxml gegen das XSD, PKCS#7 über eine geprüfte Bibliothek (Referenz:
-`DieTechniker/secon-tool`, Q40).
+zxing/zbar (Barcode), XML-Validierung mit lxml gegen das XSD.
 
 ## 9. Sicherheit und Datenschutz
 
@@ -193,7 +203,7 @@ Die Eingaben enthalten **Sozialdaten**.
 - Mandantentrennung (IK) und Rollen: Betrieb, Sachbearbeitung (Review), Lesen (Bericht).
 - Verschlüsselung der Ablage, TLS für API/UI, keine Klartext-KVNR in Logs und Fehlermeldungen (maskiert).
 - Dienstkonto mit **Nur-Lese-Zugriff** auf `dta/eingang`; Schreibzugriff nur auf `ausgang`, `arbeit`, `archiv`.
-- **Private Schlüssel** für PKCS#7-Signatur/Verschlüsselung in HSM/Keystore, nicht im Dateisystem der Eingaben.
+- Private Schlüssel entfallen, solange Signatur/Verschlüsselung out of scope sind; kommen sie hinzu, gehören sie in HSM/Keystore.
 - Aufbewahrung/Löschung je Mandant konfigurierbar, Löschung protokolliert. Auftragsverarbeitung (Art. 28 DSGVO), wenn der Dienst für Dritte läuft.
 - Revisionssicherheit: Hash jeder Eingabe und Ausgabe, append-only Audit-Log, Freigabe nur namentlich.
 
@@ -240,8 +250,8 @@ Zuordnung geändert).
 4. **PDF-Anforderungen** (Auflösung, Farbtiefe, PDF/A, Signaturform) — Anhang 4a sagt dazu nichts.
 5. **Nummernebenen:** Zuordnung von Sammel- und Einzelrechnungsnummer zu Kostenträger-/Gesamtrechnung ist in Anhang 4a mehrdeutig (Einzelrechnung = Abrechnungsfall, Nummer laut Text aus `REC`); mit einer annehmenden Stelle klären. Fixture folgt einer Auslegung.
 6. **Neuere Fassung**: Das Portal führt Anhang 4a (14.07.2022) als aktuell; ob TA 1 V22 (21.05.2026, ab 01.02.2027) oder neue Anhänge (z. B. „Anhang 6 — Elektronische Leistungsbestätigung", laut Portalrecherche aufgeführt, Fundstelle nicht selbst geprüft, **nicht ausgewertet**) das Verfahren berühren, ist zu prüfen.
-7. **Zertifikate und Schlüssel** für PKCS#7: Wer signiert und verschlüsselt (Leistungserbringer oder Abrechner), welche Zertifikate, welche Empfänger-Schlüssel?
-8. **Einbindung in die Abrechnungskette** vor der SECON-Verschlüsselung der DTA; Mandantenmodell (ein Leistungserbringer oder viele).
+7. *(zurückgestellt)* **Signatur und Verschlüsselung** (PKCS#7, SECON): wer signiert, welche Zertifikate und Empfängerschlüssel — siehe Abschnitt 1a.
+8. **Einbindung in die Abrechnungskette:** Der Dienst braucht die Klartext-DTA vor der SECON-Verschlüsselung; Mandantenmodell (ein Leistungserbringer oder viele).
 9. Entscheidung Scope: eigenes Modul im Repository oder eigenes Projekt mit dem Validator-Kern als Bibliothek.
 
 ## 13. Vorgehen
@@ -252,4 +262,4 @@ Zuordnung geändert).
 | 1 | Poller, DTA-Index, Dateinamen-Zuordnung (Stufe 1), XML-Builder mit XSD-Validierung, Prüfbericht (ohne Signatur) |
 | 2 | Splitter, PDF-Text, Belegnummer-Extraktion (Stufe 3), Gegenprüfung (Stufe 4), Stapelbildung, ZIP, `.AUF` |
 | 3 | Review-UI, Rollen, Audit, Betrieb |
-| 4 | PKCS#7-Signatur/-Verschlüsselung, OCR/Barcode, Validator-Gegenprüfung, Lasttests |
+| 4 | OCR/Barcode, Validator-Gegenprüfung, Lasttests (Signatur/Verschlüsselung zurückgestellt, siehe 1a) |

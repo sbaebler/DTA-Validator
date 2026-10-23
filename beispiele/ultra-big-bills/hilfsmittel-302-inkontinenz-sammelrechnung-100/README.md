@@ -71,8 +71,8 @@ Leistungserbringer-IK, KVNR als Ordnungsbegriff `PKKVDE`. Die Zuordnung Seite �
 
 **Abweichungen vom Echtbetrieb (bewusst):**
 
-- **Nicht signiert/verschlüsselt:** Spezifikation verlangt PKCS#7 (`VERSCHLUESSELUNGSART` und `ELEKTRONISCHE_UNTERSCHRIFT` = `03`).
-  Das Fixture führt `00`; `KOMPRIMIERUNG` = `03` (ZIP) stimmt.
+- **Nicht signiert/verschlüsselt (out of scope, Entscheidung 23.10.2026):** Spezifikation verlangt PKCS#7 (`VERSCHLUESSELUNGSART` und
+  `ELEKTRONISCHE_UNTERSCHRIFT` = `03`). Das Fixture führt `00` und ist **nicht einreichbar**; `KOMPRIMIERUNG` = `03` (ZIP) stimmt.
 - **`Beschreibung`** fest `AOK Systems GmbH`, weil das XSD den Wert festschreibt; das Dokument nennt ihn „von annehmender Stelle zu definieren".
 - **ABR-Kürzel** `SUE` (3 Stellen laut Text; das Beispiel der Spezifikation zeigt 7 Zeichen).
 - **`DATEINAME`-Feld** im Auftragssatz und Empfänger-IK (`661100559`, Belegannahme) sind erfunden; die Spezifikation regelt sie nicht.
