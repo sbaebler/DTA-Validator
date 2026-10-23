@@ -34,7 +34,7 @@ Quellen Q41/Q42. Die Kernpunkte, die das Konzept bestimmen:
 „AOK Systems GmbH", Referenzbeschreibung „Multicom-Nutzer"), enthält Tippfehler und Widersprüche (Liste in
 `imagelink.yaml`, u. a. Länge des ABR-Kürzels, Eingangskanal, Verfahrenskennung `1IM` ist in unserer Auswertung von Anlage 4 GGT nicht als Eintrag geführt)
 und sagt **nichts** zu Bildformat, Auflösung, Farbtiefe der PDF. Ob jede Kasse es gleich anwendet, ist offen.
-Die Urbeleg-Inhalte regelt Anlage 5 (Stand 27.09.2018, **noch nicht ausgewertet**).
+Die Urbeleg-Inhalte regelt Anlage 5 (V 4.0, 27.09.2018), den Begleitzettel Anlage 4 (V 2.0, 2006); beide sind ausgewertet (Abschnitt 2a).
 
 **Passung zu den Beispieldaten:** Die Fixtures unter `beispiele/ultra-big-bills/` verwenden Rechnungsnummern
 wie `2026100190:0` und 7-stellige Belegnummern; die Spezifikation nennt 14 / 6 / 10 Stellen. Das ist
@@ -43,6 +43,25 @@ im Fixture anzupassen, bevor es als ImageLink-Testbasis taugt.
 **Scope-Konflikt:** Das Projekt erklärt „Erzeugung von DTA-Dateien" als Out of Scope. Das ImageLink-Paket ist ein
 erzeugtes Artefakt. Vorschlag: eigenes Modul `imagelink` neben dem Validator, das die DTA nur **liest** und nie
 verändert; Ergebnis wird mit dem Validator gegengeprüft (Abschnitt 7).
+
+## 2a. Urbelege und Begleitzettel (Anlage 4 und 5, belegt)
+
+Auswertung: [`data/urbelege.yaml`](../data/urbelege.yaml). Was für den Dienst folgt:
+
+- **Der Urbeleg trägt die Zuordnungsmerkmale selbst.** Auf dem Verordnungsblatt (Hilfsmittel: Muster 16) stehen
+  *Rechnungsnummer mit Belegnummer*, *Hilfsmittelnummer/Faktor/Taxe*, *Gesamtsumme brutto* und *Zuzahlungsbetrag*; bei Seh- und
+  Hörhilfen sowie Berechtigungsschein zusätzlich IK des Leistungserbringers. Das trägt Stufe 3 (Belegnummer) und
+  Stufe 4 (Betrag, Positionsnummern) der Zuordnung unmittelbar.
+- **Die Empfangsbestätigung steht auf der Verordnung** (Feld v), nicht auf einem eigenen Lieferschein. Ein getrennter
+  Leistungsnachweis ist in Anlage 5 nicht vorgesehen und gilt nur kraft Vereinbarung. Die synthetischen „Leistungsnachweise"
+  der Beispieldaten sind daher eine Variante, kein Regelfall.
+- **Begleitzettel (Anlage 4):** zwingend, **je Gesamtrechnung**; bei Abrechnungsstellen für jede Gesamtrechnung innerhalb
+  einer Sammelrechnung. Pflichtinhalt: IK und Name der Krankenkasse, Name/Anschrift und IK des Leistungserbringers bzw. der
+  Abrechnungsstelle, Rechnungsnummer und -datum, Anzahl der Urbelege; Abrechnungsstellen zusätzlich **erste und letzte
+  Belegnummer**. Der Dienst kann ihn vollständig aus DTA und Zuordnung erzeugen, braucht dazu aber Name der Krankenkasse
+  (aus Kostenträgerdatei) und Anschrift des Leistungserbringers (Mandantenstammdaten).
+- **Offen:** Ob und wie der Begleitzettel im ImageLink-Paket mitgeliefert wird, regeln weder Anlage 4 noch Anhang 4a.
+  Beide Anlagen beschreiben Papierbelege mit Musterständen 2000–2017.
 
 ## 3. Verzeichnisse und Eingaben
 
@@ -78,6 +97,7 @@ verändert; Ergebnis wird mit dem Validator gegengeprüft (Abschnitt 7).
 | `Rechnungssatz` | Einzelrechnungsnummer (6), Belegnummer (10), KVNR, Leistungsdatum, Brutto, Zuzahlung, Positionszahl; personenbezogene Felder nur verschlüsselt/im Speicher |
 | `Beleg` | Dateiname, SHA-256, Seitenbereich, Dokumentklasse (`ER_SOLE_HIMI_ON`/`_M`), erkannte Merkmale |
 | `Zuordnung` | Beleg ↔ Rechnungssatz, Verfahren (Regel/OCR/manuell), Konfidenz, Status, Bearbeiter |
+| `Begleitzettel` | je Gesamtrechnung: Kassen-IK/-Name, Rechnungsnummer/-datum, Anzahl Urbelege, erste/letzte Belegnummer |
 | `Paket` | Stapel/Ordner, Dokumentidentifikatoren, Zähler, ZIP-Hash, `.AUF`, Transfernummer |
 | `Lauf` | Eingaben (Hashes), Konfiguration, Ergebnis, Prüfbericht |
 
@@ -144,6 +164,7 @@ Pflichtprüfungen **vor** dem Schreiben (Standard = Fehler):
 | ≤ 500 Images je Ordner, ZIP ≤ 2 GB | Fehler |
 | Auftragssatz: `E1IM0`/`T1IM0`, Komprimierung 03, Verschlüsselung 03, Unterschrift 03, Größen stimmen | Fehler |
 | Betragsabgleich Beleg ↔ Satz | Warnung |
+| Begleitzettel je Gesamtrechnung vorhanden, Anzahl Urbelege und erste/letzte Belegnummer stimmen mit der Zuordnung | Fehler |
 | Offene Review-Fälle | Blocker für Freigabe |
 
 Nach dem Schreiben: ZIP entpacken und gegen das Modell prüfen; optional Lauf des Validators auf Nutzdatei + Paket.
@@ -206,10 +227,11 @@ Zuordnung geändert).
 | REQ-IL-09 | Review-Oberfläche für offene und konfliktbehaftete Zuordnungen. | SOLL |
 | REQ-IL-10 | Kassenspezifische Abweichungen (Beschreibung, Eingangskanal, Dokumentklassen) sind konfigurierbar. | SOLL |
 | REQ-IL-11 | Ergebnis wird mit dem Validator gegengeprüft. | SOLL |
+| REQ-IL-12 | Je Gesamtrechnung wird ein Begleitzettel nach Anlage 4 mit Anzahl Urbelege sowie erster und letzter Belegnummer erzeugt oder geprüft. | MUSS |
 
 ## 12. Offene Punkte
 
-1. **Anlage 5** (Inhalt der Urbelege, Stand 27.09.2018) und **Anlage 4** (Begleitzettel) auswerten: welche Belegarten sind je Leistungsbereich Pflicht, braucht das ImageLink-Paket zusätzlich einen Begleitzettel?
+1. **Anlage 4/5 sind ausgewertet.** Offen bleibt: Gelten die Musterstände (2000–2017) für elektronische Verordnungen unverändert? Wird der Begleitzettel im ImageLink-Paket mitgeliefert (und in welcher Form)? Sind Lieferschein/Empfangsbestätigung als eigener Beleg zu liefern (nur kraft Vereinbarung)?
 2. **Kassenvereinbarung:** Das Verfahren ist optional und je Kostenträger zu vereinbaren. Welche Kassen nutzen es, mit welchen Abweichungen (Kürzel, `Beschreibung`, Dokumentklassen, SFTP-Ziele)?
 3. **Widersprüche** der Spezifikation (Liste in `imagelink.yaml`) mit einer annehmenden Stelle klären: Länge ABR-Kürzel, Eingangskanal, `Beschreibung`, Verfahrenskennung `1IM` (in unserer Auswertung von Anlage 4 GGT nicht als Eintrag geführt).
 4. **PDF-Anforderungen** (Auflösung, Farbtiefe, PDF/A, Signaturform) — Anhang 4a sagt dazu nichts.
@@ -223,7 +245,7 @@ Zuordnung geändert).
 
 | Phase | Inhalt |
 |---|---|
-| 0 | Offene Punkte 1–4 klären, Fixture auf Spezifikationsformate anpassen |
+| 0 | Offene Punkte 1–4 klären, Begleitzettel-Generator auf Anlage 4 prüfen, Fixture auf Spezifikationsformate anpassen |
 | 1 | Poller, DTA-Index, Dateinamen-Zuordnung (Stufe 1), XML-Builder mit XSD-Validierung, Prüfbericht (ohne Signatur) |
 | 2 | Splitter, PDF-Text, Belegnummer-Extraktion (Stufe 3), Gegenprüfung (Stufe 4), Stapelbildung, ZIP, `.AUF` |
 | 3 | Review-UI, Rollen, Audit, Betrieb |

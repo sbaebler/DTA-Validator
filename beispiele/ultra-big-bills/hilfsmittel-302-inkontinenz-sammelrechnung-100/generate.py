@@ -120,28 +120,35 @@ def leistungsnachweis(f, lfd):
 <tr><td colspan=5>Rechnungsbetrag an Kostenträger</td><td class=r>%s</td></tr></tfoot></table>
 <h2>Empfangsbestätigung</h2><div>Die Lieferung wurde vollständig und unbeschädigt entgegengenommen.</div>
 <div class=sig><div><div class=linie></div>Ort, Datum</div><div><div class=linie></div>Unterschrift Versicherte(r) / Bevollmächtigte(r)</div></div>
-<footer>Synthetischer Beleg zu den Beispieldaten des DTA-Validators. Aufbau ist eine Skizze: Anlage 5 (Inhalt der Urbelege) zu § 302 liegt nicht vor.</footer></section>""" % (
+<footer>Synthetischer Beleg zu den Beispieldaten des DTA-Validators. Anlage 5 sieht die Empfangsbestätigung auf dem Verordnungsblatt vor; ein eigener Lieferschein gilt nur kraft Vereinbarung. Layout ist erfunden.</footer></section>""" % (
         d[6:8], d[4:6], d[0:4], lfd, NAME_LE, F_IK_LE, html.escape(f["name"]), html.escape(f["vorname"]),
         f["geburt"][6:8], f["geburt"][4:6], f["geburt"][0:4], f["kvnr"], f["ik_kt"], f["belegnr"],
         "2026100%d90:1" % int(f["kt"]), zeilen, g.eur(g.mwst_ct(f["brutto"])), g.eur(f["brutto"]),
         g.eur(f["zuzahlung"]), g.eur(f["brutto"] - f["zuzahlung"]))
 
 
+KASSENNAMEN = {"1": "Muster BKK", "2": "Muster Betriebskrankenkasse Nord", "3": "Muster Ersatzkasse"}
+ANSCHRIFT_LE = "Gewerbering 5, 12345 Musterstadt"
+ANSCHRIFT_ABR = "Rechenzentrumsallee 2, 12345 Musterstadt"
+
+
 def begleitzettel(sel, summen):
+    """Je Gesamtrechnung ein Begleitzettel. Inhalt nach Anlage 4 (V 2.0): IK/Name Krankenkasse,
+    Name/Anschrift und IK Leistungserbringer bzw. Abrechnungsstelle, Rechnungsnummer und -datum,
+    Anzahl Urbelege; bei Abrechnungsstellen erste und letzte Belegnummer."""
     out = []
     for kt, ik_kt, sn, nf, npos, br, zu in summen:
         belege = [f for f in sel if f["kt"] == kt]
         out.append("""<section class=beleg><div class=band>SYNTHETISCHER URBELEG — KEINE ECHTEN DATEN</div>
-<h1>Begleitzettel für Urbelege</h1><div>Sammelrechnung %s &middot; Rechnungsdatum 12.10.2026</div>
-<h2>Absender</h2><table><tr><th>Rechnungssteller</th><td>Abrechnungsstelle Sued GmbH</td><th>IK</th><td>%s</td></tr>
-<tr><th>Leistungserbringer</th><td>%s</td><th>IK</th><td>%s</td></tr></table>
-<h2>Empfänger</h2><table><tr><th>Kostenträger-IK</th><td>%s</td></tr></table>
-<h2>Inhalt der Sendung</h2><table><tr><th>Leistungsnachweise</th><td>%d</td></tr><tr><th>Positionen</th><td>%d</td></tr>
-<tr><th>Belegnummern</th><td>%07d bis %07d</td></tr><tr><th>Bruttobetrag EUR</th><td>%s</td></tr>
-<tr><th>Zuzahlungen EUR</th><td>%s</td></tr><tr><th>Rechnungsbetrag EUR</th><td>%s</td></tr></table>
-<footer>Synthetisch. Anlage 4 zu § 302 (Begleitzettel) liegt nicht vor; Felder sind eine Skizze.</footer></section>""" % (
-            sn, IK_ABR, NAME_LE, F_IK_LE, ik_kt, nf, npos, belege[0]["belegnr"], belege[-1]["belegnr"],
-            g.eur(br), g.eur(zu), g.eur(br - zu)))
+<h1>Begleitzettel für Urbelege</h1><div>Gesamtrechnung %s &middot; Rechnungsdatum 12.10.2026</div>
+<h2>Krankenkasse</h2><table><tr><th>Name der Krankenkasse</th><td>%s</td><th>IK der Krankenkasse</th><td>%s</td></tr></table>
+<h2>Abrechnungsstelle (Rechnungssteller)</h2><table><tr><th>Name/Anschrift</th><td>Abrechnungsstelle Sued GmbH, %s</td><th>IK</th><td>%s</td></tr></table>
+<h2>Leistungserbringer</h2><table><tr><th>Name/Anschrift</th><td>%s, %s</td><th>IK</th><td>%s</td></tr></table>
+<h2>Gesamtrechnung</h2><table><tr><th>Rechnungsnummer</th><td>%s:1</td><th>Rechnungsdatum</th><td>12.10.2026</td></tr>
+<tr><th>Anzahl der Urbelege</th><td>%d</td><th>Erste / letzte Belegnummer</th><td>%07d / %07d</td></tr></table>
+<footer>Synthetisch. Pflichtinhalt nach Anlage 4 (V 2.0, 2006). Format und Zusammenspiel mit dem ImageLink-Paket sind dort nicht geregelt. Summen (nicht Teil von Anlage 4): Brutto %s EUR, Zuzahlungen %s EUR.</footer></section>""" % (
+            sn, KASSENNAMEN[kt], ik_kt, ANSCHRIFT_ABR, IK_ABR, NAME_LE, ANSCHRIFT_LE, F_IK_LE, sn, nf,
+            belege[0]["belegnr"], belege[-1]["belegnr"], g.eur(br), g.eur(zu)))
     return "".join(out)
 
 

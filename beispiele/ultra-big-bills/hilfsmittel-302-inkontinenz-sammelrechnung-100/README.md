@@ -18,8 +18,13 @@ und Beträge sind identisch zum Original (`INV`-Belegnummern `0000001`–`000005
 >   je Kostenträger) ist aus dem § 105-Verfahren **analog übernommen** (siehe
 >   [`pflege-105-sgbxi-sammelrechnung/`](../../pflege-105-sgbxi-sammelrechnung/)), für § 302 nicht belegt.
 > - Die IK-Zuordnung im `FKT` bei Rechnungsart 3 ist dieselbe offene Interpretation wie dort.
-> - **Leistungsnachweise und Begleitzettel sind Skizzen.** Anlage 5 (Inhalt der Urbelege) und
->   Anlage 4 (Begleitzettel) zu § 302 liegen nicht vor; Inhalt und Layout sind erfunden.
+> - **Begleitzettel:** Pflichtinhalt nach **Anlage 4 (V 2.0) ausgewertet und umgesetzt** (IK/Name Krankenkasse, Name/Anschrift
+>   und IK von Abrechnungsstelle und Leistungserbringer, Rechnungsnummer/-datum, Anzahl Urbelege, erste/letzte Belegnummer).
+>   Layout erfunden; Anlage 4 regelt kein Format.
+> - **Leistungsnachweise sind eine Variante, kein Regelfall:** Laut **Anlage 5 (V 4.0)** steht die Empfangsbestätigung auf dem
+>   Verordnungsblatt (Muster 16); ein eigener Lieferschein gilt nur kraft Vereinbarung. Layout erfunden.
+> - Nummernformate (Rechnungs-/Belegnummer) entsprechen **nicht** der ImageLink-Spezifikation (14/6/10 Stellen), siehe
+>   [`imagelink.yaml`](../../../knowledge-base/data/imagelink.yaml).
 
 ## Dateien
 
@@ -27,7 +32,7 @@ und Beträge sind identisch zum Original (`INV`-Belegnummern `0000001`–`000005
 |---|---|
 | `TSOL0002` / `TSOL0002.AUF` | Nutzdaten (9 Nachrichten, 953 Segmente, 27.773 Byte) und Auftragssatz (348 Byte, Absender = Abrechnungsstelle `661233445`, Transfernummer `002`) |
 | `leistungsnachweise.html` / `.pdf` | **100 Leistungsnachweise** (Lieferschein mit Empfangsbestätigung), eine A4-Seite je Fall, Reihenfolge wie in der Datei; Unterschriftsfelder bewusst leer |
-| `begleitzettel.html` / `.pdf` | 3 Begleitzettel, einer je Kostenträger-Sammelrechnung |
+| `begleitzettel.html` / `.pdf` | 3 Begleitzettel, je Gesamtrechnung einer (Anlage 4) |
 | `beispiel-kennzahlen.yaml` | Erwartungswerte und SHA-256 |
 | `generate.py` | Erzeugt alles aus dem Original-Generator; `--pdf` benötigt Chromium |
 
